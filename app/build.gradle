@@ -36,10 +36,19 @@ android {
 
 dependencies {
 
+    def retrofit_version = "2.9.0"
+    def gson_version = "2.10.1"
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // A type-safe HTTP client for Android and Java
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    // Library that can be used to convert Java Objects into their JSON representation
+    implementation "com.google.code.gson:gson:$gson_version"
+    // A Retrofit Converter which uses Gson for serialization
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
