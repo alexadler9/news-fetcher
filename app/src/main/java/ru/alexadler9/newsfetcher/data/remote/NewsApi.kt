@@ -2,8 +2,8 @@ package ru.alexadler9.newsfetcher.data.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Query
+import ru.alexadler9.newsfetcher.BuildConfig
 import ru.alexadler9.newsfetcher.data.remote.model.ArticlesRemoteModel
-import ru.alexadler9.newsfetcher.di.NEWS_API_KEY
 
 interface NewsApi {
 
@@ -15,6 +15,6 @@ interface NewsApi {
     @GET("v2/top-headlines")
     suspend fun getArticles(
         @Query("country") country: String = "us",
-        @Query("apiKey") apiKey: String = NEWS_API_KEY
+        @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY
     ): ArticlesRemoteModel
 }
