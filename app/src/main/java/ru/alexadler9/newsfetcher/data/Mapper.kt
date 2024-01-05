@@ -1,7 +1,7 @@
 package ru.alexadler9.newsfetcher.data
 
 import ru.alexadler9.newsfetcher.data.remote.model.ArticleRemoteModel
-import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model.ArticleModel
 
 /**
  * Mappers from remote news models to local models.

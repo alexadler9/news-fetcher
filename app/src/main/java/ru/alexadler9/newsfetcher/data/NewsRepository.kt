@@ -1,11 +1,19 @@
 package ru.alexadler9.newsfetcher.data
 
-import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.data.remote.NewsRemoteSource
+import ru.alexadler9.newsfetcher.di.scopes.AppScope
+import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model.ArticleModel
+import javax.inject.Inject
 
-interface NewsRepository {
+@AppScope
+class NewsRepository @Inject constructor(private val source: NewsRemoteSource) {
 
     /**
      * Get live top articles headlines.
      */
-    suspend fun getArticles(): List<ArticleModel>
+    suspend fun getArticles(): List<ArticleModel> {
+        return source.getArticles().articleList.map {
+            it.toDomain()
+        }
+    }
 }

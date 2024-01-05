@@ -1,8 +1,11 @@
 package ru.alexadler9.newsfetcher.data.remote
 
 import ru.alexadler9.newsfetcher.data.remote.model.ArticlesRemoteModel
+import ru.alexadler9.newsfetcher.di.scopes.AppScope
+import javax.inject.Inject
 
-class NewsRemoteSource(private val api: NewsService) {
+@AppScope
+class NewsRemoteSource @Inject constructor(private val api: NewsApi) {
 
     /**
      * Get live top articles headlines.
