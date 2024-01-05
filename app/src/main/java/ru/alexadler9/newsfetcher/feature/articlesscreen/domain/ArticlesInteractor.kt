@@ -1,14 +1,14 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.domain
 
+import dagger.hilt.android.scopes.ViewModelScoped
 import ru.alexadler9.newsfetcher.base.ext.attempt
 import ru.alexadler9.newsfetcher.data.NewsRepository
-import ru.alexadler9.newsfetcher.di.scopes.AppScope
 import javax.inject.Inject
 
 /**
  * Articles interactor.
  */
-@AppScope
+@ViewModelScoped
 class ArticlesInteractor @Inject constructor(private val repository: NewsRepository) {
 
     /**

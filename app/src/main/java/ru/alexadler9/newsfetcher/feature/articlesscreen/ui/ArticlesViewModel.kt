@@ -1,12 +1,14 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.BaseViewModel
 import ru.alexadler9.newsfetcher.base.Event
 import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.ArticlesInteractor
 import javax.inject.Inject
 
+@HiltViewModel
 class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInteractor) :
     BaseViewModel<ViewState>() {
 

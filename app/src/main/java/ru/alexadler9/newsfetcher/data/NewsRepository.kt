@@ -1,11 +1,11 @@
 package ru.alexadler9.newsfetcher.data
 
 import ru.alexadler9.newsfetcher.data.remote.NewsRemoteSource
-import ru.alexadler9.newsfetcher.di.scopes.AppScope
 import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model.ArticleModel
 import javax.inject.Inject
+import javax.inject.Singleton
 
-@AppScope
+@Singleton
 class NewsRepository @Inject constructor(private val source: NewsRemoteSource) {
 
     /**

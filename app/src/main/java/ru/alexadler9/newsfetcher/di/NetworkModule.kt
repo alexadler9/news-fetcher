@@ -2,25 +2,28 @@ package ru.alexadler9.newsfetcher.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.alexadler9.newsfetcher.data.remote.NewsApi
-import ru.alexadler9.newsfetcher.di.scopes.AppScope
+import javax.inject.Singleton
 
 private const val NEWS_BASE_URL = "https://newsapi.org/"
 const val NEWS_API_KEY = "0806d961609147c0a84f3c3de3c9b67b"
 
 @Module
+@InstallIn(SingletonComponent::class)
 class NetworkModule {
 
-    @AppScope
+    @Singleton
     @Provides
     fun provideApi(retrofit: Retrofit): NewsApi {
         return retrofit.create(NewsApi::class.java)
     }
 
-    @AppScope
+    @Singleton
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
@@ -30,7 +33,7 @@ class NetworkModule {
             .build()
     }
 
-    @AppScope
+    @Singleton
     @Provides
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
