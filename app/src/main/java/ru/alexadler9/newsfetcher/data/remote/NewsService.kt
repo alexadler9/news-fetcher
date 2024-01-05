@@ -6,6 +6,11 @@ import ru.alexadler9.newsfetcher.data.remote.model.ArticlesRemoteModel
 
 interface NewsService {
 
+    /**
+     * Get live top articles headlines.
+     * @param country The 2-letter ISO 3166-1 code of the country you want to get headlines for.
+     * @param apiKey Unique API key.
+     */
     @GET("v2/top-headlines")
     suspend fun getArticles(
         @Query("country") country: String = "us",
