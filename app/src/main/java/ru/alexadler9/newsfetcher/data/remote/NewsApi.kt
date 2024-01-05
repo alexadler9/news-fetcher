@@ -1,30 +1,20 @@
 package ru.alexadler9.newsfetcher.data.remote
 
-import okhttp3.OkHttpClient
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.http.GET
+import retrofit2.http.Query
+import ru.alexadler9.newsfetcher.data.remote.model.ArticlesRemoteModel
+import ru.alexadler9.newsfetcher.di.NEWS_API_KEY
 
-private const val NEWS_BASE_URL = "https://newsapi.org/"
-const val NEWS_API_KEY = "0806d961609147c0a84f3c3de3c9b67b"
+interface NewsApi {
 
-class NewsApi {
-
-    companion object {
-        @Volatile
-        private var INSTANCE: NewsService? = null
-        fun getInstance(): NewsService {
-            synchronized(this) {
-                var instance = INSTANCE
-                if (instance == null) {
-                    instance = Retrofit.Builder()
-                        .baseUrl(NEWS_BASE_URL)
-                        .addConverterFactory(GsonConverterFactory.create())
-                        .client(OkHttpClient.Builder().build())
-                        .build()
-                        .create(NewsService::class.java)
-                }
-                return instance!!
-            }
-        }
-    }
+    /**
+     * Get live top articles headlines.
+     * @param country The 2-letter ISO 3166-1 code of the country you want to get headlines for.
+     * @param apiKey Unique API key.
+     */
+    @GET("v2/top-headlines")
+    suspend fun getArticles(
+        @Query("country") country: String = "us",
+        @Query("apiKey") apiKey: String = NEWS_API_KEY
+    ): ArticlesRemoteModel
 }

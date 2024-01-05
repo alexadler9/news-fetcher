@@ -1,7 +1,7 @@
-package ru.alexadler9.newsfetcher.ui
+package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
 import ru.alexadler9.newsfetcher.base.Event
-import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model.ArticleModel
 
 sealed class State {
     object Load : State()

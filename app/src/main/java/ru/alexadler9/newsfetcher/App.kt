@@ -1,13 +1,12 @@
 package ru.alexadler9.newsfetcher
 
 import android.app.Application
-import ru.alexadler9.newsfetcher.data.remote.NewsApi
+import dagger.hilt.android.HiltAndroidApp
 
+@HiltAndroidApp
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        NewsApi.getInstance()
     }
 }

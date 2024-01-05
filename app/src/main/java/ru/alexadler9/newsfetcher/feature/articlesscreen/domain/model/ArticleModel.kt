@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.domain.model
+package ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model
 
 import java.io.Serializable
 
