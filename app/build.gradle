@@ -36,6 +36,7 @@ android {
 
 dependencies {
 
+    def lifecycle_version = "2.6.2"
     def retrofit_version = "2.9.0"
     def gson_version = "2.10.1"
 
@@ -43,6 +44,10 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    // Android Lifecycle ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // Android Lifecycle LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     // A type-safe HTTP client for Android and Java
     implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
     // Library that can be used to convert Java Objects into their JSON representation
