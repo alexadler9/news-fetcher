@@ -12,7 +12,9 @@ class NewsRepository @Inject constructor(private val source: NewsRemoteSource) {
      * Get live top articles headlines.
      */
     suspend fun getArticles(): List<ArticleModel> {
-        return source.getArticles().articleList.map {
+        return source.getArticles().articleList.filter {
+            it.title != "[Removed]"
+        }.map {
             it.toDomain()
         }
     }

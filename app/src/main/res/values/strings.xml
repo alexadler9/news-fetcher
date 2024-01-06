@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">NewsFetcher</string>
+
+    <string name="author_label">Автор</string>
+    <string name="date_label">Дата</string>
+    <string name="title_label">Заголовок</string>
+    <string name="description_label">Описание</string>
 </resources>
