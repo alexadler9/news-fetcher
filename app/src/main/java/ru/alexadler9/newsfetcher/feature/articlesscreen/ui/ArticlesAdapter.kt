@@ -2,11 +2,8 @@ package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
-import ru.alexadler9.newsfetcher.R
+import ru.alexadler9.newsfetcher.databinding.ItemArticleBinding
 import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model.ArticleModel
 
 class ArticlesAdapter(
@@ -19,27 +16,25 @@ class ArticlesAdapter(
             notifyDataSetChanged()
         }
 
-    class ArticleViewHolder(val rootView: CardView) : RecyclerView.ViewHolder(rootView) {
-
-        val tvAuthor = rootView.findViewById<TextView>(R.id.tvAuthor)
-        val tvDate = rootView.findViewById<TextView>(R.id.tvDate)
-        val tvTitle = rootView.findViewById<TextView>(R.id.tvTitle)
-        val ivBookmark = rootView.findViewById<ImageView>(R.id.ivBookmark)
+    class ArticleViewHolder(private val binding: ItemArticleBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         fun bind(item: ArticleModel, position: Int, onIconBookmarkClicked: (Int) -> Unit) {
-            ivBookmark.setOnClickListener {
-                onIconBookmarkClicked(position)
+            with(binding) {
+                ivBookmark.setOnClickListener {
+                    onIconBookmarkClicked(position)
+                }
+                tvAuthor.text = item.author.ifBlank { "[Undefined]" }
+                tvDate.text = item.publishedAt
+                tvTitle.text = item.title
             }
-            tvAuthor.text = item.author.ifBlank { "[Undefined]" }
-            tvDate.text = item.publishedAt
-            tvTitle.text = item.title
         }
 
         companion object {
             fun inflateFrom(parent: ViewGroup): ArticleViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
-                val view = layoutInflater.inflate(R.layout.item_article, parent, false) as CardView
-                return ArticleViewHolder(view)
+                val binding = ItemArticleBinding.inflate(layoutInflater, parent, false)
+                return ArticleViewHolder(binding)
             }
         }
     }
