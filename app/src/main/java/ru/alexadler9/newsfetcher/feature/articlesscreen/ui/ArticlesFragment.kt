@@ -59,7 +59,7 @@ class ArticlesFragment : Fragment() {
 
                 is State.Content -> {
                     rvArticles.isVisible = true
-                    articlesAdapter.data = viewState.state.articles
+                    articlesAdapter.submitList(viewState.state.articles)
                 }
 
                 is State.Error -> {

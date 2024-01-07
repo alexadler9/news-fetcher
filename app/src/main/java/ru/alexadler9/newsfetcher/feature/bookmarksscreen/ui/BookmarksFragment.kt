@@ -59,7 +59,7 @@ class BookmarksFragment : Fragment() {
 
                 is State.Content -> {
                     rvBookmarks.isVisible = true
-                    bookmarksAdapter.data = viewState.state.bookmarkedArticles
+                    bookmarksAdapter.submitList(viewState.state.bookmarkedArticles)
                 }
 
                 is State.Error -> {

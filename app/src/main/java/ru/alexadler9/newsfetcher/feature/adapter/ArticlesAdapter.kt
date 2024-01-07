@@ -2,6 +2,7 @@ package ru.alexadler9.newsfetcher.feature.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.ItemArticleBinding
@@ -9,18 +10,12 @@ import ru.alexadler9.newsfetcher.feature.articlesscreen.ui.ArticleItem
 
 class ArticlesAdapter(
     val onIconBookmarkClicked: (Int) -> Unit
-) : RecyclerView.Adapter<ArticlesAdapter.ArticleViewHolder>() {
-
-    var data = listOf<ArticleItem>()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+) : ListAdapter<ArticleItem, ArticlesAdapter.ArticleViewHolder>(ArticlesDiffItemCallback()) {
 
     class ArticleViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ArticleItem, position: Int, onIconBookmarkClicked: (Int) -> Unit) {
+        fun bind(item: ArticleItem, onIconBookmarkClicked: (Int) -> Unit) {
             with(binding) {
                 ivBookmark.apply {
                     setImageResource(
@@ -30,7 +25,7 @@ class ArticlesAdapter(
                             R.drawable.ic_baseline_bookmark_border_24
                     )
                     setOnClickListener {
-                        onIconBookmarkClicked(position)
+                        onIconBookmarkClicked(adapterPosition)
                     }
                 }
                 tvAuthor.text = item.data.author.ifBlank { "[Undefined]" }
@@ -53,9 +48,7 @@ class ArticlesAdapter(
     }
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
-        val item = data[position]
-        holder.bind(item, position, onIconBookmarkClicked)
+        val item = getItem(position)
+        holder.bind(item, onIconBookmarkClicked)
     }
-
-    override fun getItemCount() = data.size
 }
