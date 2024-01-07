@@ -5,4 +5,7 @@
     <string name="date_label">Дата</string>
     <string name="title_label">Заголовок</string>
     <string name="description_label">Описание</string>
+
+    <string name="menu_main">ГЛАВНАЯ</string>
+    <string name="menu_favorite">ИЗБРАННОЕ</string>
 </resources>

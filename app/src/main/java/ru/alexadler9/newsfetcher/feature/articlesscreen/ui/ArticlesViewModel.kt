@@ -6,7 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.BaseViewModel
 import ru.alexadler9.newsfetcher.base.Event
-import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.ArticlesInteractor
+import ru.alexadler9.newsfetcher.feature.domain.ArticlesInteractor
 import javax.inject.Inject
 
 private const val LOG_TAG = "ARTICLES"
@@ -26,28 +26,10 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         return when (event) {
             is UiEvent.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
-                    Log.d(LOG_TAG, "Bookmark adding...")
-                    viewModelScope.launch {
-                        val item = previousState.state.articles[event.index]
-                        interactor.addArticleToBookmark(item).fold(
-                            onError = {
-                                Log.d(LOG_TAG, "Error adding a bookmark: ${it.message}")
-                            },
-                            onSuccess = {
-                                Log.d(LOG_TAG, "Bookmark successfully added")
-                                interactor.getArticleBookmarks().fold(
-                                    onError = {
-                                        Log.d(LOG_TAG, "Error get a bookmarks: ${it.message}")
-                                    },
-                                    onSuccess = {
-                                        Log.d(LOG_TAG, "Bookmarks: $it")
-                                    }
-                                )
-                            }
-                        )
-                    }
+                    val item = previousState.state.articles[event.index]
+                    articleBookmarkChange(item)
                 }
-                return null
+                null
             }
 
             is DataEvent.OnArticlesLoadSucceed -> {
@@ -58,6 +40,16 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
                 previousState.copy(state = State.Error(event.error))
             }
 
+            is DataEvent.OnArticleMarkChanged -> {
+                if (previousState.state is State.Content) {
+                    val articles = previousState.state.articles.map {
+                        it.copy(bookmarked = if (it.data == event.article) !it.bookmarked else it.bookmarked)
+                    }
+                    return previousState.copy(state = State.Content(articles))
+                }
+                null
+            }
+
             else -> null
         }
     }
@@ -66,12 +58,30 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         viewModelScope.launch {
             interactor.getArticles().fold(
                 onError = {
+                    Log.e(LOG_TAG, "Error load articles: ${it.message}")
                     processDataEvent(DataEvent.OnArticlesLoadFailed(error = it))
                 },
-                onSuccess = {
-                    processDataEvent(DataEvent.OnArticlesLoadSucceed(articles = it))
+                onSuccess = { articles ->
+                    val articlesMarked = articles.map { article ->
+                        ArticleItem(article, interactor.articleBookmarkExist(article.url).fold(
+                            onError = { false },
+                            onSuccess = { it }
+                        ))
+                    }
+                    processDataEvent(DataEvent.OnArticlesLoadSucceed(articles = articlesMarked))
                 }
             )
+        }
+    }
+
+    private fun articleBookmarkChange(item: ArticleItem) {
+        viewModelScope.launch {
+            if (item.bookmarked) {
+                interactor.deleteArticleFromBookmarks(item.data)
+            } else {
+                interactor.addArticleToBookmark(item.data)
+            }
+            processDataEvent(DataEvent.OnArticleMarkChanged(item.data))
         }
     }
 }

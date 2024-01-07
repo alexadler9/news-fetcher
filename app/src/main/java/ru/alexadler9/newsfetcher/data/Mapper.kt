@@ -2,7 +2,7 @@ package ru.alexadler9.newsfetcher.data
 
 import ru.alexadler9.newsfetcher.data.local.model.BookmarkEntity
 import ru.alexadler9.newsfetcher.data.remote.model.ArticleRemoteModel
-import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.feature.domain.model.ArticleModel
 import java.text.SimpleDateFormat
 import java.util.*
 
