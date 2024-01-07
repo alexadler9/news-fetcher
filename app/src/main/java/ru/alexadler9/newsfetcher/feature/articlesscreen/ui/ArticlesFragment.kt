@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -18,9 +17,13 @@ class ArticlesFragment : Fragment() {
     private var _binding: FragmentArticlesBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel by lazy {
+        ViewModelProvider(requireActivity()).get(ArticlesViewModel::class.java)
+    }
+
     private val articlesAdapter: ArticlesAdapter by lazy {
         ArticlesAdapter(onIconBookmarkClicked = {
-            Toast.makeText(requireActivity(), "click $it", Toast.LENGTH_SHORT).show()
+            viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))
         })
     }
 
@@ -37,7 +40,6 @@ class ArticlesFragment : Fragment() {
 
         binding.rvArticles.adapter = articlesAdapter
 
-        val viewModel = ViewModelProvider(requireActivity()).get(ArticlesViewModel::class.java)
         viewModel.viewState.observe(viewLifecycleOwner, ::render)
     }
 
