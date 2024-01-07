@@ -28,4 +28,17 @@ class ArticlesInteractor @Inject constructor(private val repository: NewsReposit
      * Get list of article bookmarks.
      */
     suspend fun getArticleBookmarks() = attempt { repository.getArticleBookmarks() }
+
+    /**
+     * Delete article from bookmarks.
+     * @param article The article.
+     */
+    suspend fun deleteArticleFromBookmarks(article: ArticleModel) =
+        attempt { repository.deleteArticleFromBookmarks(article) }
+
+    /**
+     * Check if a bookmark with the specified article URL exists.
+     * @param url The article URL.
+     */
+    suspend fun articleBookmarkExist(url: String) = attempt { repository.articleBookmarkExist(url) }
 }
