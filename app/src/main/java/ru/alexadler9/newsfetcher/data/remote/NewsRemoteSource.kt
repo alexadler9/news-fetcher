@@ -4,6 +4,9 @@ import ru.alexadler9.newsfetcher.data.remote.model.ArticlesRemoteModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
+/**
+ * Source for accessing the remote news API.
+ */
 @Singleton
 class NewsRemoteSource @Inject constructor(private val api: NewsApi) {
 
