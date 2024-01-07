@@ -1,10 +1,11 @@
-package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
+package ru.alexadler9.newsfetcher.feature.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.ItemArticleBinding
+import ru.alexadler9.newsfetcher.feature.articlesscreen.ui.ArticleItem
 
 class ArticlesAdapter(
     val onIconBookmarkClicked: (Int) -> Unit

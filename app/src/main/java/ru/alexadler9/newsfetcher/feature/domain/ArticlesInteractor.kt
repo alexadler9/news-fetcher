@@ -1,9 +1,9 @@
-package ru.alexadler9.newsfetcher.feature.articlesscreen.domain
+package ru.alexadler9.newsfetcher.feature.domain
 
 import dagger.hilt.android.scopes.ViewModelScoped
 import ru.alexadler9.newsfetcher.base.ext.attempt
 import ru.alexadler9.newsfetcher.data.NewsRepository
-import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.feature.domain.model.ArticleModel
 import javax.inject.Inject
 
 /**

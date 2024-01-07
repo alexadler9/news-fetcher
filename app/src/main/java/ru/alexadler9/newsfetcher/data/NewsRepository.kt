@@ -2,7 +2,7 @@ package ru.alexadler9.newsfetcher.data
 
 import ru.alexadler9.newsfetcher.data.local.NewsLocalSource
 import ru.alexadler9.newsfetcher.data.remote.NewsRemoteSource
-import ru.alexadler9.newsfetcher.feature.articlesscreen.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.feature.domain.model.ArticleModel
 import javax.inject.Inject
 import javax.inject.Singleton
 

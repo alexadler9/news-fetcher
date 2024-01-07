@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
+package ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui
 
 import android.os.Bundle
 import android.util.Log
@@ -9,21 +9,21 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
+import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
 
 /**
- * Fragment is responsible for loading, displaying and managing the list of article headlines.
+ * Fragment is responsible for loading, displaying and managing article bookmarks.
  */
 @AndroidEntryPoint
-class ArticlesFragment : Fragment() {
+class BookmarksFragment : Fragment() {
 
-    private var _binding: FragmentArticlesBinding? = null
+    private var _binding: FragmentBookmarksBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: ArticlesViewModel by viewModels()
+    private val viewModel: BookmarksViewModel by viewModels()
 
-    private val articlesAdapter: ArticlesAdapter by lazy {
+    private val bookmarksAdapter: ArticlesAdapter by lazy {
         ArticlesAdapter(onIconBookmarkClicked = {
             viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))
         })
@@ -33,14 +33,14 @@ class ArticlesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentArticlesBinding.inflate(inflater, container, false)
+        _binding = FragmentBookmarksBinding.inflate(inflater, container, false)
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvArticles.adapter = articlesAdapter
+        binding.rvBookmarks.adapter = bookmarksAdapter
 
         viewModel.viewState.observe(viewLifecycleOwner, ::render)
     }
@@ -54,17 +54,17 @@ class ArticlesFragment : Fragment() {
         with(binding) {
             when (viewState.state) {
                 is State.Load -> {
-                    rvArticles.isVisible = false
+                    rvBookmarks.isVisible = false
                 }
 
                 is State.Content -> {
-                    rvArticles.isVisible = true
-                    articlesAdapter.data = viewState.state.articles
+                    rvBookmarks.isVisible = true
+                    bookmarksAdapter.data = viewState.state.bookmarkedArticles
                 }
 
                 is State.Error -> {
-                    rvArticles.isVisible = false
-                    Log.d("ARTICLES", "Error: ${viewState.state.throwable.message}")
+                    rvBookmarks.isVisible = false
+                    Log.d("BOOKMARKS", "Error: ${viewState.state.throwable.message}")
                 }
             }
         }
