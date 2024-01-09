@@ -1,7 +1,6 @@
 package ru.alexadler9.newsfetcher.feature.adapter
 
 import androidx.recyclerview.widget.DiffUtil
-import ru.alexadler9.newsfetcher.feature.articlesscreen.ui.ArticleItem
 
 class ArticlesDiffItemCallback : DiffUtil.ItemCallback<ArticleItem>() {
 

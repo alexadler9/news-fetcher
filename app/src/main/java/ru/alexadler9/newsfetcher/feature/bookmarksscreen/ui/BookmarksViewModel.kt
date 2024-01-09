@@ -6,14 +6,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.BaseViewModel
 import ru.alexadler9.newsfetcher.base.Event
-import ru.alexadler9.newsfetcher.feature.articlesscreen.ui.ArticleItem
-import ru.alexadler9.newsfetcher.feature.domain.ArticlesInteractor
+import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
+import ru.alexadler9.newsfetcher.feature.bookmarksscreen.BookmarksInteractor
 import javax.inject.Inject
 
 private const val LOG_TAG = "BOOKMARKS"
 
 @HiltViewModel
-class BookmarksViewModel @Inject constructor(private val interactor: ArticlesInteractor) :
+class BookmarksViewModel @Inject constructor(private val interactor: BookmarksInteractor) :
     BaseViewModel<ViewState>() {
 
     private var bookmarkedArticles: List<ArticleItem> = emptyList()

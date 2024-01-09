@@ -48,6 +48,7 @@ dependencies {
     def lifecycle_version = "2.6.2"
     def retrofit_version = "2.9.0"
     def gson_version = "2.10.1"
+    def glide_version = "4.13.0"
     def room_version = "2.6.1"
 
     implementation 'androidx.core:core-ktx:1.7.0'
@@ -65,6 +66,9 @@ dependencies {
     implementation "com.google.code.gson:gson:$gson_version"
     // A Retrofit Converter which uses Gson for serialization
     implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    // An image loading
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
     // Dependency injection library based Dagger
     implementation "com.google.dagger:hilt-android:$hilt_version"
     kapt "com.google.dagger:hilt-compiler:$hilt_version"

@@ -6,17 +6,24 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.ItemArticleBinding
-import ru.alexadler9.newsfetcher.feature.articlesscreen.ui.ArticleItem
 
 class ArticlesAdapter(
+    val onItemClicked: (ArticleItem) -> Unit,
     val onIconBookmarkClicked: (Int) -> Unit
 ) : ListAdapter<ArticleItem, ArticlesAdapter.ArticleViewHolder>(ArticlesDiffItemCallback()) {
 
     class ArticleViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(item: ArticleItem, onIconBookmarkClicked: (Int) -> Unit) {
+        fun bind(
+            item: ArticleItem,
+            onItemClicked: (ArticleItem) -> Unit,
+            onIconBookmarkClicked: (Int) -> Unit
+        ) {
             with(binding) {
+                itemView.setOnClickListener {
+                    onItemClicked(item)
+                }
                 ivBookmark.apply {
                     setImageResource(
                         if (item.bookmarked)
@@ -49,6 +56,6 @@ class ArticlesAdapter(
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, onIconBookmarkClicked)
+        holder.bind(item, onItemClicked, onIconBookmarkClicked)
     }
 }

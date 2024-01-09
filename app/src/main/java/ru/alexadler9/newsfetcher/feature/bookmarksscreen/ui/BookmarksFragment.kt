@@ -7,13 +7,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
+import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
+import ru.alexadler9.newsfetcher.feature.detailsscreen.ui.DetailsFragment
 
 /**
  * Fragment is responsible for loading, displaying and managing article bookmarks.
+ * Use the [BookmarksFragment.newInstance] factory method to
+ * create an instance of this fragment.
  */
 @AndroidEntryPoint
 class BookmarksFragment : Fragment() {
@@ -24,9 +29,17 @@ class BookmarksFragment : Fragment() {
     private val viewModel: BookmarksViewModel by viewModels()
 
     private val bookmarksAdapter: ArticlesAdapter by lazy {
-        ArticlesAdapter(onIconBookmarkClicked = {
-            viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))
-        })
+        ArticlesAdapter(
+            onItemClicked = { article ->
+                parentFragmentManager.commit {
+                    // TODO: делегировать MainActivity?
+                    add(R.id.fragmentContainerView, DetailsFragment.newInstance(article.data))
+                    addToBackStack(null)
+                }
+            },
+            onIconBookmarkClicked = {
+                viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))
+            })
     }
 
     override fun onCreateView(
@@ -68,5 +81,14 @@ class BookmarksFragment : Fragment() {
                 }
             }
         }
+    }
+
+    companion object {
+        /**
+         * Create a new instance of this fragment.
+         *
+         * @return A new instance of fragment BookmarksFragment.
+         */
+        fun newInstance() = BookmarksFragment()
     }
 }

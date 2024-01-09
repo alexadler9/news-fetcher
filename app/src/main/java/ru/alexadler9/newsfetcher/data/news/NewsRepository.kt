@@ -1,8 +1,9 @@
-package ru.alexadler9.newsfetcher.data
+package ru.alexadler9.newsfetcher.data.news
 
+import android.graphics.Bitmap
 import ru.alexadler9.newsfetcher.data.local.NewsLocalSource
 import ru.alexadler9.newsfetcher.data.remote.NewsRemoteSource
-import ru.alexadler9.newsfetcher.feature.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,6 +22,14 @@ class NewsRepository @Inject constructor(
         }.map {
             it.toDomain()
         }
+    }
+
+    /**
+     * Get a wallpaper image for article.
+     * @param article The article.
+     */
+    suspend fun getArticleWallpaper(article: ArticleModel): Bitmap {
+        return remoteSource.getArticleWallpaper(article.urlToImage)
     }
 
     /**

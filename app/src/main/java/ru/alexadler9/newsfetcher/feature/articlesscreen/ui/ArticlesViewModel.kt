@@ -6,7 +6,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.BaseViewModel
 import ru.alexadler9.newsfetcher.base.Event
-import ru.alexadler9.newsfetcher.feature.domain.ArticlesInteractor
+import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
+import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
 import javax.inject.Inject
 
 private const val LOG_TAG = "ARTICLES"
@@ -27,7 +28,7 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
             is UiEvent.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
                     val item = previousState.state.articles[event.index]
-                    articleBookmarkChange(item)
+                    switchArticleBookmark(item)
                 }
                 null
             }
@@ -74,7 +75,7 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         }
     }
 
-    private fun articleBookmarkChange(item: ArticleItem) {
+    private fun switchArticleBookmark(item: ArticleItem) {
         viewModelScope.launch {
             if (item.bookmarked) {
                 interactor.deleteArticleFromBookmarks(item.data)

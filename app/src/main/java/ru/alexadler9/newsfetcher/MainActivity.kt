@@ -24,10 +24,10 @@ class MainActivity : AppCompatActivity() {
             bottomNav.setOnItemSelectedListener {
                 when (it.itemId) {
                     R.id.articlesFragment -> {
-                        selectTab(ArticlesFragment())
+                        selectTab(ArticlesFragment.newInstance())
                     }
                     R.id.bookmarksFragment -> {
-                        selectTab(BookmarksFragment())
+                        selectTab(BookmarksFragment.newInstance())
                     }
                     else -> {}
                 }
