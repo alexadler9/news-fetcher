@@ -1,9 +1,9 @@
-package ru.alexadler9.newsfetcher.feature.domain
+package ru.alexadler9.newsfetcher.feature.articlesscreen
 
 import dagger.hilt.android.scopes.ViewModelScoped
 import ru.alexadler9.newsfetcher.base.ext.attempt
-import ru.alexadler9.newsfetcher.data.NewsRepository
-import ru.alexadler9.newsfetcher.feature.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.data.news.NewsRepository
+import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import javax.inject.Inject
 
 /**
@@ -23,11 +23,6 @@ class ArticlesInteractor @Inject constructor(private val repository: NewsReposit
      */
     suspend fun addArticleToBookmark(article: ArticleModel) =
         attempt { repository.addArticleToBookmark(article) }
-
-    /**
-     * Get list of article bookmarks.
-     */
-    suspend fun getArticleBookmarks() = attempt { repository.getArticleBookmarks() }
 
     /**
      * Delete article from bookmarks.
