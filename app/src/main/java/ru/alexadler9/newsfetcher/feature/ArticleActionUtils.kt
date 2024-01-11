@@ -2,6 +2,7 @@ package ru.alexadler9.newsfetcher.feature
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.commit
 import ru.alexadler9.newsfetcher.R
@@ -16,12 +17,12 @@ fun articleDetailsShow(fragmentManager: FragmentManager, article: ArticleModel) 
     }
 }
 
-fun articleLinkSendViaMessenger(context: Context, article: ArticleModel) {
+fun articleLinkShare(context: Context, article: ArticleModel) {
     Intent(Intent.ACTION_SEND).apply {
         type = "text/plain"
         putExtra(
             Intent.EXTRA_TEXT,
-            context.getString(R.string.article_link_message, article.title, article.url)
+            context.getString(R.string.article_link_share_message, article.title, article.url)
         )
         putExtra(
             Intent.EXTRA_SUBJECT,
@@ -30,8 +31,14 @@ fun articleLinkSendViaMessenger(context: Context, article: ArticleModel) {
     }.also { intent ->
         val chooserIntent = Intent.createChooser(
             intent,
-            context.getString(R.string.article_link_messenger_title)
+            context.getString(R.string.article_link_share_title)
         )
         context.startActivity(chooserIntent)
+    }
+}
+
+fun articleLinkOpen(context: Context, article: ArticleModel) {
+    Intent(Intent.ACTION_VIEW, Uri.parse(article.url)).apply {
+        context.startActivity(this)
     }
 }

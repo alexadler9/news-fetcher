@@ -56,18 +56,29 @@
             android:layout_marginTop="8dp"
             android:padding="8dp"
             android:src="@drawable/ic_baseline_bookmark_border_24"
-            app:layout_constraintEnd_toStartOf="@id/ivSend"
+            app:layout_constraintEnd_toStartOf="@id/ivBrowser"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />
 
         <ImageView
-            android:id="@+id/ivSend"
+            android:id="@+id/ivBrowser"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_baseline_open_in_browser_24"
+            app:layout_constraintEnd_toStartOf="@id/ivShare"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <ImageView
+            android:id="@+id/ivShare"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
             android:layout_marginTop="8dp"
             android:padding="8dp"
-            android:src="@drawable/ic_baseline_send_24"
+            android:src="@drawable/ic_baseline_share_24"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:ignore="ContentDescription" />

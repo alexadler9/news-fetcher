@@ -7,10 +7,11 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.ItemArticleBinding
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.feature.articleLinkOpen
 
 class ArticlesAdapter(
     val onItemClicked: (ArticleModel) -> Unit = {},
-    val onIconSendClicked: (ArticleModel) -> Unit = {},
+    val onIconShareClicked: (ArticleModel) -> Unit = {},
     val onIconBookmarkClicked: (Int) -> Unit = {}
 ) : ListAdapter<ArticleItem, ArticlesAdapter.ArticleViewHolder>(ArticlesDiffItemCallback()) {
 
@@ -20,18 +21,18 @@ class ArticlesAdapter(
         fun bind(
             item: ArticleItem,
             onItemClicked: (ArticleModel) -> Unit = {},
-            onIconSendClicked: (ArticleModel) -> Unit = {},
+            onIconShareClicked: (ArticleModel) -> Unit = {},
             onIconBookmarkClicked: (Int) -> Unit = {}
         ) {
             with(binding) {
                 itemView.setOnClickListener {
                     onItemClicked(item.data)
                 }
-                ivSend.apply {
+                ivShare.apply {
                     setOnClickListener {
-                        onIconSendClicked(item.data)
+                        onIconShareClicked(item.data)
                     }
-                    isEnabled = (onIconSendClicked != {})
+                    isEnabled = (onIconShareClicked != {})
                 }
                 ivBookmark.apply {
                     setImageResource(
@@ -44,6 +45,11 @@ class ArticlesAdapter(
                         onIconBookmarkClicked(adapterPosition)
                     }
                     isEnabled = (onIconBookmarkClicked != {})
+                }
+                ivBrowser.apply {
+                    setOnClickListener {
+                        articleLinkOpen(context, item.data)
+                    }
                 }
                 tvAuthor.text = item.data.author.ifBlank { "[Undefined]" }
                 tvDate.text = item.data.publishedAt
@@ -66,6 +72,6 @@ class ArticlesAdapter(
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, onItemClicked, onIconSendClicked, onIconBookmarkClicked)
+        holder.bind(item, onItemClicked, onIconShareClicked, onIconBookmarkClicked)
     }
 }

@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
 import ru.alexadler9.newsfetcher.feature.articleDetailsShow
-import ru.alexadler9.newsfetcher.feature.articleLinkSendViaMessenger
+import ru.alexadler9.newsfetcher.feature.articleLinkShare
 
 /**
  * Fragment is responsible for loading, displaying and managing the list of article headlines.
@@ -32,8 +32,8 @@ class ArticlesFragment : Fragment() {
             onItemClicked = { article ->
                 articleDetailsShow(parentFragmentManager, article)
             },
-            onIconSendClicked = { article ->
-                articleLinkSendViaMessenger(this@ArticlesFragment.requireContext(), article)
+            onIconShareClicked = { article ->
+                articleLinkShare(this@ArticlesFragment.requireContext(), article)
             },
             onIconBookmarkClicked = {
                 viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))

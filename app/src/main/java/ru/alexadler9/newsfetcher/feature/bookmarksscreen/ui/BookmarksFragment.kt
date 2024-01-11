@@ -12,7 +12,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
 import ru.alexadler9.newsfetcher.feature.articleDetailsShow
-import ru.alexadler9.newsfetcher.feature.articleLinkSendViaMessenger
+import ru.alexadler9.newsfetcher.feature.articleLinkShare
 
 /**
  * Fragment is responsible for loading, displaying and managing article bookmarks.
@@ -32,8 +32,8 @@ class BookmarksFragment : Fragment() {
             onItemClicked = { article ->
                 articleDetailsShow(parentFragmentManager, article)
             },
-            onIconSendClicked = { article ->
-                articleLinkSendViaMessenger(this@BookmarksFragment.requireContext(), article)
+            onIconShareClicked = { article ->
+                articleLinkShare(this@BookmarksFragment.requireContext(), article)
             },
             onIconBookmarkClicked = {
                 viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))

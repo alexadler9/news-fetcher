@@ -9,6 +9,6 @@
     <string name="menu_main">ГЛАВНАЯ</string>
     <string name="menu_favorite">ИЗБРАННОЕ</string>
 
-    <string name="article_link_message">%1$s\n%2$s</string>
-    <string name="article_link_messenger_title">Поделиться ссылкой на статью</string>
+    <string name="article_link_share_message">%1$s\n%2$s</string>
+    <string name="article_link_share_title">Поделиться ссылкой на статью</string>
 </resources>
