@@ -2,12 +2,11 @@ package ru.alexadler9.newsfetcher
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
+import androidx.core.view.isVisible
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.ActivityMainBinding
-import ru.alexadler9.newsfetcher.feature.articlesscreen.ui.ArticlesFragment
-import ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui.BookmarksFragment
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -20,25 +19,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        with(binding) {
-            bottomNav.setOnItemSelectedListener {
-                when (it.itemId) {
-                    R.id.articlesFragment -> {
-                        selectTab(ArticlesFragment.newInstance())
-                    }
-                    R.id.bookmarksFragment -> {
-                        selectTab(BookmarksFragment.newInstance())
-                    }
-                    else -> {}
-                }
-                true
-            }
-        }
-    }
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
+        val navController = navHostFragment.navController
 
-    private fun selectTab(fragment: Fragment) {
-        supportFragmentManager.commit {
-            replace(R.id.fragmentContainerView, fragment)
+        with(binding) {
+            navController.addOnDestinationChangedListener { _, destination, _ ->
+                bottomNav.isVisible =
+                    (destination.id == R.id.articlesFragment || destination.id == R.id.bookmarksFragment)
+            }
+            bottomNav.setupWithNavController(navController)
         }
     }
 }

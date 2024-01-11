@@ -8,10 +8,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
-import ru.alexadler9.newsfetcher.feature.articleDetailsShow
 import ru.alexadler9.newsfetcher.feature.articleLinkShare
 
 /**
@@ -30,7 +30,10 @@ class BookmarksFragment : Fragment() {
     private val bookmarksAdapter: ArticlesAdapter by lazy {
         ArticlesAdapter(
             onItemClicked = { article ->
-                articleDetailsShow(parentFragmentManager, article)
+                BookmarksFragmentDirections.actionBookmarksFragmentToDetailsFragment(article)
+                    .apply {
+                        findNavController().navigate(this)
+                    }
             },
             onIconShareClicked = { article ->
                 articleLinkShare(this@BookmarksFragment.requireContext(), article)

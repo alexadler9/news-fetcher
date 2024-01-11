@@ -9,7 +9,9 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/fragmentContainerView"
-        android:name="ru.alexadler9.newsfetcher.feature.articlesscreen.ui.ArticlesFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" />
