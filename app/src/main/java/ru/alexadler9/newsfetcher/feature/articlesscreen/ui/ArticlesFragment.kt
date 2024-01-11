@@ -7,13 +7,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
-import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
-import ru.alexadler9.newsfetcher.feature.detailsscreen.ui.DetailsFragment
+import ru.alexadler9.newsfetcher.feature.articleDetailsShow
+import ru.alexadler9.newsfetcher.feature.articleLinkSendViaMessenger
 
 /**
  * Fragment is responsible for loading, displaying and managing the list of article headlines.
@@ -31,11 +30,10 @@ class ArticlesFragment : Fragment() {
     private val articlesAdapter: ArticlesAdapter by lazy {
         ArticlesAdapter(
             onItemClicked = { article ->
-                parentFragmentManager.commit {
-                    // TODO: делегировать MainActivity?
-                    add(R.id.fragmentContainerView, DetailsFragment.newInstance(article.data))
-                    addToBackStack(null)
-                }
+                articleDetailsShow(parentFragmentManager, article)
+            },
+            onIconSendClicked = { article ->
+                articleLinkSendViaMessenger(this@ArticlesFragment.requireContext(), article)
             },
             onIconBookmarkClicked = {
                 viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))

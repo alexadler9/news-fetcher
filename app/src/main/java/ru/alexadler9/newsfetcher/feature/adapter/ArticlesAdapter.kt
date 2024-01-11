@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.ItemArticleBinding
+import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 
 class ArticlesAdapter(
-    val onItemClicked: (ArticleItem) -> Unit,
-    val onIconBookmarkClicked: (Int) -> Unit
+    val onItemClicked: (ArticleModel) -> Unit = {},
+    val onIconSendClicked: (ArticleModel) -> Unit = {},
+    val onIconBookmarkClicked: (Int) -> Unit = {}
 ) : ListAdapter<ArticleItem, ArticlesAdapter.ArticleViewHolder>(ArticlesDiffItemCallback()) {
 
     class ArticleViewHolder(private val binding: ItemArticleBinding) :
@@ -17,12 +19,19 @@ class ArticlesAdapter(
 
         fun bind(
             item: ArticleItem,
-            onItemClicked: (ArticleItem) -> Unit,
-            onIconBookmarkClicked: (Int) -> Unit
+            onItemClicked: (ArticleModel) -> Unit = {},
+            onIconSendClicked: (ArticleModel) -> Unit = {},
+            onIconBookmarkClicked: (Int) -> Unit = {}
         ) {
             with(binding) {
                 itemView.setOnClickListener {
-                    onItemClicked(item)
+                    onItemClicked(item.data)
+                }
+                ivSend.apply {
+                    setOnClickListener {
+                        onIconSendClicked(item.data)
+                    }
+                    isEnabled = (onIconSendClicked != {})
                 }
                 ivBookmark.apply {
                     setImageResource(
@@ -34,6 +43,7 @@ class ArticlesAdapter(
                     setOnClickListener {
                         onIconBookmarkClicked(adapterPosition)
                     }
+                    isEnabled = (onIconBookmarkClicked != {})
                 }
                 tvAuthor.text = item.data.author.ifBlank { "[Undefined]" }
                 tvDate.text = item.data.publishedAt
@@ -56,6 +66,6 @@ class ArticlesAdapter(
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, onItemClicked, onIconBookmarkClicked)
+        holder.bind(item, onItemClicked, onIconSendClicked, onIconBookmarkClicked)
     }
 }
