@@ -2,6 +2,15 @@
 
 buildscript {
     ext.hilt_version = "2.44"
+    ext.safe_args_version = "2.4.2"
+
+    repositories {
+        google()
+    }
+
+    dependencies {
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$safe_args_version"
+    }
 }
 
 plugins {
