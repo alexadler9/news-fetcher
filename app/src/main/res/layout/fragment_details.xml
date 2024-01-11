@@ -22,7 +22,7 @@
             <ImageView
                 android:id="@+id/ivWallpaper"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/sizeWallpaperToolbarImage"
+                android:layout_height="?attr/heightWallpaperToolbarImage"
                 android:scaleType="centerCrop"
                 android:src="@drawable/img_wallpaper"
                 tools:ignore="ContentDescription" />
