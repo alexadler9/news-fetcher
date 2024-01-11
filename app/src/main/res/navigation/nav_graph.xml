@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/articlesFragment">
+
+    <fragment
+        android:id="@+id/articlesFragment"
+        android:name="ru.alexadler9.newsfetcher.feature.articlesscreen.ui.ArticlesFragment"
+        android:label="fragment_articles"
+        tools:layout="@layout/fragment_articles">
+        <action
+            android:id="@+id/action_articlesFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/bookmarksFragment"
+        android:name="ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui.BookmarksFragment"
+        android:label="BookmarksFragment">
+        <action
+            android:id="@+id/action_bookmarksFragment_to_detailsFragment"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="ru.alexadler9.newsfetcher.feature.detailsscreen.ui.DetailsFragment"
+        android:label="fragment_details"
+        tools:layout="@layout/fragment_details">
+        <argument
+            android:name="article"
+            app:argType="ru.alexadler9.newsfetcher.domain.model.ArticleModel" />
+    </fragment>
+</navigation>

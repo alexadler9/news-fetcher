@@ -3,19 +3,8 @@ package ru.alexadler9.newsfetcher.feature
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.commit
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
-import ru.alexadler9.newsfetcher.feature.detailsscreen.ui.DetailsFragment
-
-fun articleDetailsShow(fragmentManager: FragmentManager, article: ArticleModel) {
-    fragmentManager.commit {
-        // TODO: делегировать MainActivity?
-        add(R.id.fragmentContainerView, DetailsFragment.newInstance(article))
-        addToBackStack(null)
-    }
-}
 
 fun articleLinkShare(context: Context, article: ArticleModel) {
     Intent(Intent.ACTION_SEND).apply {

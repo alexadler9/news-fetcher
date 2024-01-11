@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.R
-import ru.alexadler9.newsfetcher.base.ext.serializable
 import ru.alexadler9.newsfetcher.databinding.FragmentDetailsBinding
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import javax.inject.Inject
@@ -29,7 +28,7 @@ class DetailsFragment : Fragment() {
     lateinit var detailsViewModelFactory: DetailsViewModel.DetailsViewModelFactory
 
     private val viewModel: DetailsViewModel by viewModels {
-        val article = this.arguments?.serializable<ArticleModel>(ARG_ARTICLE) ?: ArticleModel()
+        val article = DetailsFragmentArgs.fromBundle(requireArguments()).article
         DetailsViewModel.provideFactory(detailsViewModelFactory, article)
     }
 

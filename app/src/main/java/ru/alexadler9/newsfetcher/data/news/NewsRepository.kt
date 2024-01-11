@@ -18,7 +18,7 @@ class NewsRepository @Inject constructor(
      */
     suspend fun getArticles(): List<ArticleModel> {
         return remoteSource.getArticles().articleList.filter {
-            it.title != "[Removed]"
+            it.title != "[Removed]" && it.description != ""
         }.map {
             it.toDomain()
         }
