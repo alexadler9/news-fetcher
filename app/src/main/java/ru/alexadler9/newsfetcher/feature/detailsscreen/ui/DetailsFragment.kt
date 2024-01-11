@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.scale
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -71,12 +70,7 @@ class DetailsFragment : Fragment() {
                     pbDetails.isVisible = false
                     ablDetails.isVisible = true
                     nsvContent.isVisible = true
-                    ivWallpaper.setImageBitmap(
-                        viewState.state.wallpaper.scale(
-                            ivWallpaper.width,
-                            ivWallpaper.height
-                        )
-                    )
+                    ivWallpaper.setImageBitmap(viewState.state.wallpaper)
                 }
 
                 is State.Error -> {

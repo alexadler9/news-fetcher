@@ -12,6 +12,6 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
-        <item name="sizeWallpaperToolbarImage">300dp</item>
+        <item name="heightWallpaperToolbarImage">300dp</item>
     </style>
 </resources>
