@@ -56,6 +56,7 @@ class ArticlesFragment : Fragment() {
         binding.rvArticles.adapter = articlesAdapter
 
         viewModel.viewState.observe(viewLifecycleOwner, ::render)
+        viewModel.processUiEvent(UiEvent.OnViewCreated)
     }
 
     override fun onDestroyView() {

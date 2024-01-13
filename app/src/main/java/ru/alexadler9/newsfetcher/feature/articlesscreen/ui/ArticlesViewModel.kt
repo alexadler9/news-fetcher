@@ -1,6 +1,5 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -10,14 +9,13 @@ import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
 import javax.inject.Inject
 
-private const val LOG_TAG = "ARTICLES"
-
 @HiltViewModel
 class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInteractor) :
     BaseViewModel<ViewState>() {
 
+    private var init: Boolean = true
+
     override fun initialViewState(): ViewState {
-        articlesLoad()
         return ViewState(
             state = State.Load
         )
@@ -25,6 +23,15 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
 
     override fun reduce(event: Event, previousState: ViewState): ViewState? {
         return when (event) {
+            is UiEvent.OnViewCreated -> {
+                if (init) {
+                    init = false
+                    articlesLoad()
+                    return previousState.copy(state = State.Load)
+                }
+                null
+            }
+
             is UiEvent.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
                     val item = previousState.state.articles[event.index]
@@ -59,7 +66,6 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         viewModelScope.launch {
             interactor.getArticles().fold(
                 onError = {
-                    Log.e(LOG_TAG, "Error load articles: ${it.message}")
                     processDataEvent(DataEvent.OnArticlesLoadFailed(error = it))
                 },
                 onSuccess = { articles ->

@@ -15,6 +15,7 @@ data class ViewState(
 )
 
 sealed class UiEvent : Event {
+    object OnViewCreated : UiEvent()
     data class OnBookmarkButtonClicked(val index: Int) : UiEvent()
 }
 
