@@ -1,7 +1,7 @@
 package ru.alexadler9.newsfetcher.utility
 
+import ru.alexadler9.newsfetcher.data.local.model.BookmarkEntity
 import ru.alexadler9.newsfetcher.data.remote.model.ArticleRemoteModel
-import ru.alexadler9.newsfetcher.data.remote.model.ArticlesRemoteModel
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 
 val ARTICLE_REMOTE_MODEL_1 = ArticleRemoteModel(
@@ -22,11 +22,22 @@ val ARTICLE_REMOTE_MODEL_2 = ArticleRemoteModel(
     publishedAt = "2024-01-01T12:00:00Z"
 )
 
-val ARTICLES_REMOTE_MODEL = ArticlesRemoteModel(
-    articleList = listOf(
-        ARTICLE_REMOTE_MODEL_1,
-        ARTICLE_REMOTE_MODEL_2
-    )
+val ARTICLE_REMOTE_MODEL_EMPTY_FIELDS = ArticleRemoteModel(
+    author = null,
+    title = "title",
+    description = null,
+    url = "https:/article-url",
+    urlToImage = null,
+    publishedAt = "2024-01-01T12:00:00Z"
+)
+
+val ARTICLE_LOCAL_MODEL = BookmarkEntity(
+    url = "https:/article-url",
+    title = "title",
+    author = "author",
+    description = "description",
+    urlToImage = "https:/article-image-url",
+    publishedAt = "01.01.2024 12:00"
 )
 
 val ARTICLE_MODEL_1 = ArticleModel(
