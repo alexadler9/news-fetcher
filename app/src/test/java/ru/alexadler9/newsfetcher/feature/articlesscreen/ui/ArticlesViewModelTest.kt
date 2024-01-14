@@ -1,7 +1,9 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.hamcrest.MatcherAssert.assertThat
+import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.notNullValue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -11,8 +13,8 @@ import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
 import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_1
 import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_2
-import ru.alexadler9.newsfetcher.utility.ext.CoroutinesTestExtension
-import ru.alexadler9.newsfetcher.utility.ext.InstantExecutorExtension
+import ru.alexadler9.newsfetcher.utility.junit5.CoroutinesTestExtension
+import ru.alexadler9.newsfetcher.utility.junit5.InstantExecutorExtension
 
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
 class ArticlesViewModelTest {
@@ -38,12 +40,15 @@ class ArticlesViewModelTest {
 
         verify(newsRepository, times(1)).getArticles()
         verify(newsRepository, times(2)).articleBookmarkExist(anyString())
-        assertEquals(subject.viewState.value?.state is State.Content, true)
-        assertEquals(
-            subject.viewState.value?.state as State.Content, State.Content(
-                listOf(
-                    ArticleItem(ARTICLE_MODEL_1, true),
-                    ArticleItem(ARTICLE_MODEL_2, true)
+        assertThat(subject.viewState.value, notNullValue())
+        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(
+            subject.viewState.value?.state as State.Content, equalTo(
+                State.Content(
+                    listOf(
+                        ArticleItem(ARTICLE_MODEL_1, true),
+                        ArticleItem(ARTICLE_MODEL_2, true)
+                    )
                 )
             )
         )
@@ -56,22 +61,21 @@ class ArticlesViewModelTest {
 
         subject.processUiEvent(UiEvent.OnViewCreated)
 
-        assertEquals(
-            subject.viewState.value?.state as State.Content, State.Content(
-                listOf(
-                    ArticleItem(ARTICLE_MODEL_1, false)
-                )
+        assertThat(subject.viewState.value, notNullValue())
+        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(
+            subject.viewState.value?.state as State.Content, equalTo(
+                State.Content(listOf(ArticleItem(ARTICLE_MODEL_1, false)))
             )
         )
 
         subject.processUiEvent((UiEvent.OnBookmarkButtonClicked(0)))
 
         verify(newsRepository, times(1)).addArticleToBookmark(ARTICLE_MODEL_1)
-        assertEquals(
-            subject.viewState.value?.state as State.Content, State.Content(
-                listOf(
-                    ArticleItem(ARTICLE_MODEL_1, true)
-                )
+        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(
+            subject.viewState.value?.state as State.Content, equalTo(
+                State.Content(listOf(ArticleItem(ARTICLE_MODEL_1, true)))
             )
         )
     }
@@ -83,22 +87,21 @@ class ArticlesViewModelTest {
 
         subject.processUiEvent(UiEvent.OnViewCreated)
 
-        assertEquals(
-            subject.viewState.value?.state as State.Content, State.Content(
-                listOf(
-                    ArticleItem(ARTICLE_MODEL_1, true)
-                )
+        assertThat(subject.viewState.value, notNullValue())
+        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(
+            subject.viewState.value?.state as State.Content, equalTo(
+                State.Content(listOf(ArticleItem(ARTICLE_MODEL_1, true)))
             )
         )
 
         subject.processUiEvent((UiEvent.OnBookmarkButtonClicked(0)))
 
         verify(newsRepository, times(1)).deleteArticleFromBookmarks(ARTICLE_MODEL_1)
-        assertEquals(
-            subject.viewState.value?.state as State.Content, State.Content(
-                listOf(
-                    ArticleItem(ARTICLE_MODEL_1, false)
-                )
+        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(
+            subject.viewState.value?.state as State.Content, equalTo(
+                State.Content(listOf(ArticleItem(ARTICLE_MODEL_1, false)))
             )
         )
     }
@@ -113,7 +116,8 @@ class ArticlesViewModelTest {
 
         verify(newsRepository, times(1)).getArticles()
         verify(newsRepository, times(0)).articleBookmarkExist(anyString())
-        assertEquals(subject.viewState.value?.state is State.Error, true)
-        assertEquals(subject.viewState.value?.state as State.Error, State.Error(exception))
+        assertThat(subject.viewState.value, notNullValue())
+        assertThat(subject.viewState.value?.state is State.Error, equalTo(true))
+        assertThat(subject.viewState.value?.state as State.Error, equalTo(State.Error(exception)))
     }
 }

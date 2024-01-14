@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.utility.ext
+package ru.alexadler9.newsfetcher.utility.junit5
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
