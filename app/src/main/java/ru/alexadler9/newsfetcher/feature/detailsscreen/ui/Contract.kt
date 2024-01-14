@@ -15,6 +15,10 @@ data class ViewState(
     val state: State
 )
 
+sealed class UiEvent : Event {
+    object OnViewCreated : UiEvent()
+}
+
 sealed class DataEvent : Event {
     data class OnWallpaperLoadSucceed(val wallpaper: Bitmap) : DataEvent()
     data class OnWallpaperLoadFailed(val error: Throwable) : DataEvent()

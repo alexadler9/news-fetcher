@@ -44,6 +44,7 @@ class DetailsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel.viewState.observe(viewLifecycleOwner, ::render)
+        viewModel.processUiEvent(UiEvent.OnViewCreated)
     }
 
     override fun onDestroyView() {

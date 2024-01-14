@@ -57,6 +57,7 @@ class BookmarksFragment : Fragment() {
         binding.rvBookmarks.adapter = bookmarksAdapter
 
         viewModel.viewState.observe(viewLifecycleOwner, ::render)
+        viewModel.processUiEvent(UiEvent.OnViewCreated)
     }
 
     override fun onDestroyView() {

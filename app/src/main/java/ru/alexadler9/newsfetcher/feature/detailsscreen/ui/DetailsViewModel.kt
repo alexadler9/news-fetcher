@@ -1,6 +1,5 @@
 package ru.alexadler9.newsfetcher.feature.detailsscreen.ui
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -13,21 +12,19 @@ import ru.alexadler9.newsfetcher.base.Event
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import ru.alexadler9.newsfetcher.feature.detailsscreen.ArticleDetailsInteractor
 
-private const val LOG_TAG = "DETAILS"
-
 class DetailsViewModel @AssistedInject constructor(
     private val interactor: ArticleDetailsInteractor,
     @Assisted private val article: ArticleModel
-) :
-    BaseViewModel<ViewState>() {
+) : BaseViewModel<ViewState>() {
 
     @AssistedFactory
     interface DetailsViewModelFactory {
         fun create(article: ArticleModel): DetailsViewModel
     }
 
+    private var init: Boolean = true
+
     override fun initialViewState(): ViewState {
-        wallpaperLoad(article)
         return ViewState(
             article = article,
             state = State.Load
@@ -36,6 +33,15 @@ class DetailsViewModel @AssistedInject constructor(
 
     override fun reduce(event: Event, previousState: ViewState): ViewState? {
         return when (event) {
+            is UiEvent.OnViewCreated -> {
+                if (init) {
+                    init = false
+                    wallpaperLoad(previousState.article)
+                    return previousState.copy(state = State.Load)
+                }
+                null
+            }
+
             is DataEvent.OnWallpaperLoadSucceed -> {
                 return previousState.copy(state = State.Content(wallpaper = event.wallpaper))
             }
@@ -52,7 +58,6 @@ class DetailsViewModel @AssistedInject constructor(
         viewModelScope.launch {
             interactor.getArticleWallpaper(article).fold(
                 onError = {
-                    Log.e(LOG_TAG, "Error load wallpaper: ${it.message}")
                     processDataEvent(DataEvent.OnWallpaperLoadFailed(error = it))
                 },
                 onSuccess = {

@@ -1,6 +1,5 @@
 package ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -10,16 +9,14 @@ import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.bookmarksscreen.BookmarksInteractor
 import javax.inject.Inject
 
-private const val LOG_TAG = "BOOKMARKS"
-
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(private val interactor: BookmarksInteractor) :
     BaseViewModel<ViewState>() {
 
+    private var init: Boolean = true
     private var bookmarkedArticles: List<ArticleItem> = emptyList()
 
     override fun initialViewState(): ViewState {
-        bookmarksLoad()
         return ViewState(
             state = State.Load
         )
@@ -27,6 +24,15 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
 
     override fun reduce(event: Event, previousState: ViewState): ViewState? {
         return when (event) {
+            is UiEvent.OnViewCreated -> {
+                if (init) {
+                    init = false
+                    bookmarksLoad()
+                    return previousState.copy(state = State.Load)
+                }
+                null
+            }
+
             is UiEvent.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
                     val item = previousState.state.bookmarkedArticles[event.index]
@@ -63,7 +69,6 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
         viewModelScope.launch {
             interactor.getArticleBookmarks().fold(
                 onError = {
-                    Log.e(LOG_TAG, "Error load bookmarks: ${it.message}")
                     processDataEvent(DataEvent.OnBookmarksLoadFailed(error = it))
                 },
                 onSuccess = { articles ->
