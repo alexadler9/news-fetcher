@@ -1,7 +1,7 @@
 package ru.alexadler9.newsfetcher.utility
 
-import ru.alexadler9.newsfetcher.data.local.model.BookmarkEntity
-import ru.alexadler9.newsfetcher.data.remote.model.ArticleRemoteModel
+import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
+import ru.alexadler9.newsfetcher.data.news.remote.model.ArticleRemoteModel
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 
 val ARTICLE_REMOTE_MODEL_1 = ArticleRemoteModel(

@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.data.remote.model
+package ru.alexadler9.newsfetcher.data.news.remote.model
 
 import com.google.gson.annotations.SerializedName
 

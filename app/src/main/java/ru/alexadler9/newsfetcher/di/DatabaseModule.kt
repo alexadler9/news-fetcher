@@ -7,9 +7,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ru.alexadler9.newsfetcher.data.local.BookmarkDao
-import ru.alexadler9.newsfetcher.data.local.DATABASE_NAME
-import ru.alexadler9.newsfetcher.data.local.NewsDatabase
+import ru.alexadler9.newsfetcher.data.news.local.BookmarkDao
+import ru.alexadler9.newsfetcher.data.news.local.DATABASE_NAME
+import ru.alexadler9.newsfetcher.data.news.local.NewsDatabase
 import javax.inject.Singleton
 
 @Module

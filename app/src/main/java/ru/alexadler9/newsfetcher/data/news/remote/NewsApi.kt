@@ -1,9 +1,9 @@
-package ru.alexadler9.newsfetcher.data.remote
+package ru.alexadler9.newsfetcher.data.news.remote
 
 import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.alexadler9.newsfetcher.BuildConfig
-import ru.alexadler9.newsfetcher.data.remote.model.ArticlesRemoteModel
+import ru.alexadler9.newsfetcher.data.news.remote.model.ArticlesRemoteModel
 
 interface NewsApi {
 

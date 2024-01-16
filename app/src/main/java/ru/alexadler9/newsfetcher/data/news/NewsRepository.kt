@@ -1,8 +1,8 @@
 package ru.alexadler9.newsfetcher.data.news
 
 import android.graphics.Bitmap
-import ru.alexadler9.newsfetcher.data.local.NewsLocalSource
-import ru.alexadler9.newsfetcher.data.remote.NewsRemoteSource
+import ru.alexadler9.newsfetcher.data.news.local.NewsLocalSource
+import ru.alexadler9.newsfetcher.data.news.remote.NewsRemoteSource
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import javax.inject.Inject
 import javax.inject.Singleton

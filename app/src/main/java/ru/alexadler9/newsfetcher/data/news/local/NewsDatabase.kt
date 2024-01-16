@@ -1,8 +1,8 @@
-package ru.alexadler9.newsfetcher.data.local
+package ru.alexadler9.newsfetcher.data.news.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import ru.alexadler9.newsfetcher.data.local.model.BookmarkEntity
+import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
 
 const val DATABASE_NAME = "news-database"
 

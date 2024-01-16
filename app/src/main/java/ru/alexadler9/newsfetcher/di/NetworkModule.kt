@@ -8,7 +8,7 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.alexadler9.newsfetcher.BuildConfig
-import ru.alexadler9.newsfetcher.data.remote.NewsApi
+import ru.alexadler9.newsfetcher.data.news.remote.NewsApi
 import javax.inject.Singleton
 
 @Module

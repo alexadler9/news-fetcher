@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.data.remote
+package ru.alexadler9.newsfetcher.data.news.remote
 
 import android.content.Context
 import android.graphics.Bitmap
@@ -7,7 +7,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import ru.alexadler9.newsfetcher.data.remote.model.ArticlesRemoteModel
+import ru.alexadler9.newsfetcher.data.news.remote.model.ArticlesRemoteModel
 import javax.inject.Inject
 import javax.inject.Singleton
 

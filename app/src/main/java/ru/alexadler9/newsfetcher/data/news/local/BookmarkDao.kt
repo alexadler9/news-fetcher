@@ -1,8 +1,8 @@
-package ru.alexadler9.newsfetcher.data.local
+package ru.alexadler9.newsfetcher.data.news.local
 
 import androidx.room.*
-import ru.alexadler9.newsfetcher.data.local.model.BOOKMARKS_TABLE
-import ru.alexadler9.newsfetcher.data.local.model.BookmarkEntity
+import ru.alexadler9.newsfetcher.data.news.local.model.BOOKMARKS_TABLE
+import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
 
 @Dao
 interface BookmarkDao {
