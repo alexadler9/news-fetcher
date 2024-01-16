@@ -37,7 +37,7 @@ val ARTICLE_LOCAL_MODEL = BookmarkEntity(
     author = "author",
     description = "description",
     urlToImage = "https:/article-image-url",
-    publishedAt = "01.01.2024 12:00"
+    publishedAt = "2024-01-01T12:00:00Z"
 )
 
 val ARTICLE_MODEL_1 = ArticleModel(
@@ -46,7 +46,7 @@ val ARTICLE_MODEL_1 = ArticleModel(
     title = "title 1",
     description = "description 1",
     urlToImage = "https:/article-image-url-1",
-    publishedAt = "01.01.2024 12:00"
+    publishedAt = "2024-01-01T12:00:00Z"
 )
 
 val ARTICLE_MODEL_2 = ArticleModel(
@@ -55,5 +55,5 @@ val ARTICLE_MODEL_2 = ArticleModel(
     title = "title 2",
     description = "description 2",
     urlToImage = "https:/article-image-url-2",
-    publishedAt = "01.01.2024 12:00"
+    publishedAt = "2024-01-01T12:00:00Z"
 )

@@ -7,14 +7,11 @@ import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
 @Dao
 interface BookmarkDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addBookmark(entity: BookmarkEntity)
 
     @Query("SELECT * FROM $BOOKMARKS_TABLE")
     suspend fun getBookmarks(): List<BookmarkEntity>
-
-    @Update
-    suspend fun updateBookmark(entity: BookmarkEntity)
 
     @Delete
     suspend fun deleteBookmark(entity: BookmarkEntity)

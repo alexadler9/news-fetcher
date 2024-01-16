@@ -33,7 +33,7 @@ class NewsRepository @Inject constructor(
     }
 
     /**
-     * Add article to bookmarks. If a bookmark with the given article URL already exists, it will be replaced.
+     * Add article to bookmarks. If a bookmark with the given article URL already exists, it will be ignored.
      * @param article The article.
      */
     suspend fun addArticleToBookmark(article: ArticleModel) {
@@ -41,20 +41,12 @@ class NewsRepository @Inject constructor(
     }
 
     /**
-     * Get list of article bookmarks.
+     * Get list of article bookmarks. It is sorted from newest to oldest.
      */
     suspend fun getArticleBookmarks(): List<ArticleModel> {
         return localSource.getBookmarks().map {
             it.toDomain()
         }
-    }
-
-    /**
-     * Update article bookmark.
-     * @param article The article.
-     */
-    suspend fun updateArticleBookmark(article: ArticleModel) {
-        localSource.updateBookmark(article.toEntity())
     }
 
     /**

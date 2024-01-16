@@ -11,7 +11,7 @@ import javax.inject.Singleton
 class NewsLocalSource @Inject constructor(private val bookmarkDao: BookmarkDao) {
 
     /**
-     * Add bookmark. If a bookmark with the given article URL already exists, it will be replaced.
+     * Add bookmark. If a bookmark with the given article URL already exists, it will be ignored.
      * @param entity The bookmark.
      */
     suspend fun addBookmark(entity: BookmarkEntity) {
@@ -23,14 +23,6 @@ class NewsLocalSource @Inject constructor(private val bookmarkDao: BookmarkDao) 
      */
     suspend fun getBookmarks(): List<BookmarkEntity> {
         return bookmarkDao.getBookmarks()
-    }
-
-    /**
-     * Update bookmark.
-     * @param entity The bookmark.
-     */
-    suspend fun updateBookmark(entity: BookmarkEntity) {
-        bookmarkDao.updateBookmark(entity)
     }
 
     /**

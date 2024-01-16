@@ -18,7 +18,7 @@ class ArticlesInteractor @Inject constructor(private val repository: NewsReposit
     suspend fun getArticles() = attempt { repository.getArticles() }
 
     /**
-     * Add article to bookmarks. If a bookmark with the given article URL already exists, it will be replaced.
+     * Add article to bookmarks. If a bookmark with the given article URL already exists, it will be ignored.
      * @param article The article.
      */
     suspend fun addArticleToBookmark(article: ArticleModel) =
