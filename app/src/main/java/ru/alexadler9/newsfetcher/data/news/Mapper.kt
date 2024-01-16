@@ -10,15 +10,18 @@ import java.util.*
  * Mappers between remote/local news models and domain models.
  */
 
-private const val DATE_TIME_PATTERN_DEFAULT = "dd.MM.yyyy HH:mm"
-private const val DATE_TIME_PATTERN_ISO = "yyyy-MM-dd'T'HH:mm:ss'Z'"
+private const val DT_PATTERN_SERVER = "yyyy-MM-dd'T'HH:mm:ss'Z'"    // ISO
+private const val TIME_ZONE_SERVER = "UTC"
 
-private fun convertDateISOToOtherFormat(
-    date: String,
-    pattern: String = DATE_TIME_PATTERN_DEFAULT
-): String =
-    SimpleDateFormat(pattern, Locale.getDefault())
-        .format(SimpleDateFormat(DATE_TIME_PATTERN_ISO, Locale.getDefault()).parse(date)!!)
+fun convertDateToLocal(date: String, pattern: String): String {
+    val dfFrom = SimpleDateFormat(DT_PATTERN_SERVER, Locale.getDefault()).apply {
+        timeZone = TimeZone.getTimeZone(TIME_ZONE_SERVER)
+    }
+    val dfTo = SimpleDateFormat(pattern, Locale.getDefault()).apply {
+        timeZone = TimeZone.getDefault()
+    }
+    return dfTo.format(dfFrom.parse(date)!!)
+}
 
 fun ArticleRemoteModel.toDomain() = ArticleModel(
     url = url,
@@ -26,7 +29,7 @@ fun ArticleRemoteModel.toDomain() = ArticleModel(
     author = author ?: "",
     description = description ?: "",
     urlToImage = urlToImage ?: "",
-    publishedAt = convertDateISOToOtherFormat(publishedAt)
+    publishedAt = publishedAt
 )
 
 fun BookmarkEntity.toDomain() = ArticleModel(

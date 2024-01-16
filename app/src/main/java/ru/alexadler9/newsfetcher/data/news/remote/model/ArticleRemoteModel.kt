@@ -23,7 +23,7 @@ data class ArticleRemoteModel(
     @SerializedName("urlToImage")
     val urlToImage: String?,
 
-    /** The date and time that the article was published, in UTC (+000). */
+    /** The date and time that the article was published (yyyy-MM-ddTHH:mm:ssZ), in UTC (+000). */
     @SerializedName("publishedAt")
     val publishedAt: String
 )

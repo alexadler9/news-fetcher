@@ -56,7 +56,7 @@ class DetailsFragment : Fragment() {
         with(binding) {
             val article = viewState.article
             tvDetailsAuthor.text = article.author.ifBlank { "[Undefined]" }
-            tvDetailsDate.text = article.publishedAt
+            tvDetailsDate.text = article.publishedAtLocal
             tvDescription.text = article.description
             ctlDetails.title = article.title
             when (viewState.state) {

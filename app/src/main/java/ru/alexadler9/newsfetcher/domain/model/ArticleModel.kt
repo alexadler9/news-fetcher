@@ -1,5 +1,6 @@
 package ru.alexadler9.newsfetcher.domain.model
 
+import ru.alexadler9.newsfetcher.data.news.convertDateToLocal
 import java.io.Serializable
 
 data class ArticleModel(
@@ -19,6 +20,11 @@ data class ArticleModel(
     /** The URL to a relevant image for the article. */
     val urlToImage: String = "",
 
-    /** The date and time that the article was published (dd.MM.yyyy HH:mm). */
+    /** The date and time that the article was published (yyyy-MM-ddTHH:mm:ssZ), in UTC (+000). */
     val publishedAt: String = ""
-) : Serializable
+) : Serializable {
+
+    /** The date and time that the article was published (dd.MM.yyyy HH:mm), in local timezone */
+    val publishedAtLocal: String
+        get() = convertDateToLocal(publishedAt, "dd.MM.yyyy HH:mm")
+}

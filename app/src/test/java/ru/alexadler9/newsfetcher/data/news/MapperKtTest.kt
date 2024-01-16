@@ -18,7 +18,7 @@ class MapperKtTest {
         assertThat(articleModel.author, equalTo(ARTICLE_REMOTE_MODEL_1.author))
         assertThat(articleModel.description, equalTo(ARTICLE_REMOTE_MODEL_1.description))
         assertThat(articleModel.title, equalTo(ARTICLE_REMOTE_MODEL_1.title))
-        assertThat(articleModel.publishedAt, equalTo("01.01.2024 12:00"))
+        assertThat(articleModel.publishedAt, equalTo(ARTICLE_REMOTE_MODEL_1.publishedAt))
         assertThat(articleModel.urlToImage, equalTo(ARTICLE_REMOTE_MODEL_1.urlToImage))
     }
 
@@ -30,7 +30,7 @@ class MapperKtTest {
         assertThat(articleModel.author, equalTo(""))
         assertThat(articleModel.description, equalTo(""))
         assertThat(articleModel.title, equalTo(ARTICLE_REMOTE_MODEL_EMPTY_FIELDS.title))
-        assertThat(articleModel.publishedAt, equalTo("01.01.2024 12:00"))
+        assertThat(articleModel.publishedAt, equalTo(ARTICLE_REMOTE_MODEL_EMPTY_FIELDS.publishedAt))
         assertThat(articleModel.urlToImage, equalTo(""))
     }
 

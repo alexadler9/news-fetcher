@@ -52,7 +52,7 @@ class ArticlesAdapter(
                     }
                 }
                 tvAuthor.text = item.data.author.ifBlank { "[Undefined]" }
-                tvDate.text = item.data.publishedAt
+                tvDate.text = item.data.publishedAtLocal
                 tvTitle.text = item.data.title
             }
         }

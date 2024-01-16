@@ -29,7 +29,7 @@ data class BookmarkEntity(
     @ColumnInfo(name = "urlToImage")
     val urlToImage: String,
 
-    /** The date and time that the article was published (dd.MM.yyyy HH:mm). */
+    /** The date and time that the article was published (yyyy-MM-ddTHH:mm:ssZ), in UTC (+000). */
     @ColumnInfo(name = "publishedAt")
     val publishedAt: String
 )
