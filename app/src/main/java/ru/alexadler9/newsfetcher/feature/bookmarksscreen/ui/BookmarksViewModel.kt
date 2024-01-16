@@ -73,7 +73,7 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
                 },
                 onSuccess = { articles ->
                     processDataEvent(DataEvent.OnBookmarksLoadSucceed(
-                        bookmarkedArticles = articles.map { article ->
+                        bookmarkedArticles = articles.reversed().map { article ->
                             ArticleItem(data = article, bookmarked = true)
                         }
                     ))
