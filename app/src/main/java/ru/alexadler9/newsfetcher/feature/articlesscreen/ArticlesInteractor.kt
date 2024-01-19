@@ -18,22 +18,20 @@ class ArticlesInteractor @Inject constructor(private val repository: NewsReposit
     suspend fun getArticles() = attempt { repository.getArticles() }
 
     /**
-     * Add article to bookmarks. If a bookmark with the given article URL already exists, it will be ignored.
-     * @param article The article.
+     * Get list of article bookmarks.
      */
-    suspend fun addArticleToBookmark(article: ArticleModel) =
-        attempt { repository.addArticleToBookmark(article) }
+    fun getArticleBookmarks() = repository.getArticleBookmarks()
 
     /**
-     * Delete article from bookmarks.
+     * Add article to bookmarks if it is not there, otherwise delete it.
      * @param article The article.
      */
-    suspend fun deleteArticleFromBookmarks(article: ArticleModel) =
-        attempt { repository.deleteArticleFromBookmarks(article) }
-
-    /**
-     * Check if a bookmark with the specified article URL exists.
-     * @param url The article URL.
-     */
-    suspend fun articleBookmarkExist(url: String) = attempt { repository.articleBookmarkExist(url) }
+    suspend fun changeArticleBookmark(article: ArticleModel) =
+        attempt {
+            if (repository.articleBookmarkExist(article.url)) {
+                repository.deleteArticleFromBookmarks(article)
+            } else {
+                repository.addArticleToBookmark(article)
+            }
+        }
 }

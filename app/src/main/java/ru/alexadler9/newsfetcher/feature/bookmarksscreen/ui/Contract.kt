@@ -5,8 +5,7 @@ import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 
 sealed class State {
     object Load : State()
-    data class Content(val bookmarkedArticles: List<ArticleItem>) : State()
-    data class Error(val throwable: Throwable) : State()
+    data class Content(val bookmarks: List<ArticleItem>) : State()
 }
 
 data class ViewState(
@@ -14,12 +13,9 @@ data class ViewState(
 )
 
 sealed class UiEvent : Event {
-    object OnViewCreated : UiEvent()
     data class OnBookmarkButtonClicked(val index: Int) : UiEvent()
 }
 
 sealed class DataEvent : Event {
-    data class OnBookmarksLoadSucceed(val bookmarkedArticles: List<ArticleItem>) : DataEvent()
-    data class OnBookmarksLoadFailed(val error: Throwable) : DataEvent()
-    data class OnBookmarkDeleteSucceed(val index: Int) : DataEvent()
+    data class OnBookmarksLoaded(val bookmarks: List<ArticleItem>) : DataEvent()
 }

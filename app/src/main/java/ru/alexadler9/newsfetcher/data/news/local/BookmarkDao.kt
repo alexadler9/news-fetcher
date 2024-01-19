@@ -1,6 +1,7 @@
 package ru.alexadler9.newsfetcher.data.news.local
 
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
 import ru.alexadler9.newsfetcher.data.news.local.model.BOOKMARKS_TABLE
 import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
 
@@ -11,7 +12,7 @@ interface BookmarkDao {
     suspend fun addBookmark(entity: BookmarkEntity)
 
     @Query("SELECT * FROM $BOOKMARKS_TABLE")
-    suspend fun getBookmarks(): List<BookmarkEntity>
+    fun getBookmarks(): Flow<List<BookmarkEntity>>
 
     @Delete
     suspend fun deleteBookmark(entity: BookmarkEntity)

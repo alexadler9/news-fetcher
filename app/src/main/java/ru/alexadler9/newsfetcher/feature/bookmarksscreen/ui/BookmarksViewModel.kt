@@ -2,6 +2,7 @@ package ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.BaseViewModel
 import ru.alexadler9.newsfetcher.base.Event
@@ -13,10 +14,18 @@ import javax.inject.Inject
 class BookmarksViewModel @Inject constructor(private val interactor: BookmarksInteractor) :
     BaseViewModel<ViewState>() {
 
-    private var init: Boolean = true
-    private var bookmarkedArticles: List<ArticleItem> = emptyList()
-
     override fun initialViewState(): ViewState {
+        viewModelScope.launch {
+            delay(100)
+            interactor.getArticleBookmarks()
+                .collect {
+                    processDataEvent(DataEvent.OnBookmarksLoaded(
+                        bookmarks = it.reversed().map { article ->
+                            ArticleItem(data = article, bookmarked = true)
+                        }
+                    ))
+                }
+        }
         return ViewState(
             state = State.Load
         )
@@ -24,40 +33,17 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
 
     override fun reduce(event: Event, previousState: ViewState): ViewState? {
         return when (event) {
-            is UiEvent.OnViewCreated -> {
-                if (init) {
-                    init = false
-                    bookmarksLoad()
-                    return previousState.copy(state = State.Load)
+            is UiEvent.OnBookmarkButtonClicked -> {
+                if (previousState.state is State.Content) {
+                    val item = previousState.state.bookmarks[event.index]
+                    bookmarkDelete(item)
                 }
                 null
             }
 
-            is UiEvent.OnBookmarkButtonClicked -> {
-                if (previousState.state is State.Content) {
-                    val item = previousState.state.bookmarkedArticles[event.index]
-                    bookmarkDelete(item, event.index)
-                }
-                previousState.copy(state = State.Load)
-            }
-
-            is DataEvent.OnBookmarksLoadSucceed -> {
-                bookmarkedArticles = event.bookmarkedArticles
+            is DataEvent.OnBookmarksLoaded -> {
                 previousState.copy(
-                    state = State.Content(bookmarkedArticles = bookmarkedArticles)
-                )
-            }
-
-            is DataEvent.OnBookmarksLoadFailed -> {
-                previousState.copy(state = State.Error(throwable = event.error))
-            }
-
-            is DataEvent.OnBookmarkDeleteSucceed -> {
-                bookmarkedArticles = bookmarkedArticles.filterIndexed { index, _ ->
-                    index != event.index
-                }
-                previousState.copy(
-                    state = State.Content(bookmarkedArticles = bookmarkedArticles)
+                    state = State.Content(bookmarks = event.bookmarks)
                 )
             }
 
@@ -65,27 +51,9 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
         }
     }
 
-    private fun bookmarksLoad() {
-        viewModelScope.launch {
-            interactor.getArticleBookmarks().fold(
-                onError = {
-                    processDataEvent(DataEvent.OnBookmarksLoadFailed(error = it))
-                },
-                onSuccess = { articles ->
-                    processDataEvent(DataEvent.OnBookmarksLoadSucceed(
-                        bookmarkedArticles = articles.reversed().map { article ->
-                            ArticleItem(data = article, bookmarked = true)
-                        }
-                    ))
-                }
-            )
-        }
-    }
-
-    private fun bookmarkDelete(item: ArticleItem, index: Int) {
+    private fun bookmarkDelete(item: ArticleItem) {
         viewModelScope.launch {
             interactor.deleteArticleFromBookmarks(item.data)
-            processDataEvent(DataEvent.OnBookmarkDeleteSucceed(index))
         }
     }
 }

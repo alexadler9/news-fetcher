@@ -15,7 +15,7 @@ class BookmarksInteractor @Inject constructor(private val repository: NewsReposi
     /**
      * Get list of article bookmarks.
      */
-    suspend fun getArticleBookmarks() = attempt { repository.getArticleBookmarks() }
+    fun getArticleBookmarks() = repository.getArticleBookmarks()
 
     /**
      * Delete article from bookmarks.

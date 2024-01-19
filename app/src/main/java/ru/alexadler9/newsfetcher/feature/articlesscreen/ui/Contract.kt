@@ -15,12 +15,11 @@ data class ViewState(
 )
 
 sealed class UiEvent : Event {
-    object OnViewCreated : UiEvent()
     data class OnBookmarkButtonClicked(val index: Int) : UiEvent()
 }
 
 sealed class DataEvent : Event {
     data class OnArticlesLoadSucceed(val articles: List<ArticleItem>) : DataEvent()
     data class OnArticlesLoadFailed(val error: Throwable) : DataEvent()
-    data class OnArticleMarkChanged(val article: ArticleModel) : DataEvent()
+    data class OnBookmarksUpdated(val bookmarks: List<ArticleModel>) : DataEvent()
 }

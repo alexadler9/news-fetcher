@@ -1,6 +1,8 @@
 package ru.alexadler9.newsfetcher.data.news
 
 import android.graphics.Bitmap
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import ru.alexadler9.newsfetcher.data.news.local.NewsLocalSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsRemoteSource
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
@@ -43,9 +45,11 @@ class NewsRepository @Inject constructor(
     /**
      * Get list of article bookmarks. It is sorted from newest to oldest.
      */
-    suspend fun getArticleBookmarks(): List<ArticleModel> {
+    fun getArticleBookmarks(): Flow<List<ArticleModel>> {
         return localSource.getBookmarks().map {
-            it.toDomain()
+            it.map { bookmarkEntity ->
+                bookmarkEntity.toDomain()
+            }.toList()
         }
     }
 

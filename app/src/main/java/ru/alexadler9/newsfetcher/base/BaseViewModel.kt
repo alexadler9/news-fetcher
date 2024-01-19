@@ -2,8 +2,6 @@ package ru.alexadler9.newsfetcher.base
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.launch
 
 abstract class BaseViewModel<VIEW_STATE> : ViewModel() {
 
@@ -21,7 +19,7 @@ abstract class BaseViewModel<VIEW_STATE> : ViewModel() {
         updateState(event)
     }
 
-    private fun updateState(event: Event) = viewModelScope.launch {
+    private fun updateState(event: Event) {
         val newViewState = reduce(event, viewState.value ?: initialViewState())
         if (newViewState != null && newViewState != viewState.value) {
             viewState.value = newViewState

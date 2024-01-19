@@ -1,5 +1,8 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
@@ -17,6 +20,7 @@ import ru.alexadler9.newsfetcher.utility.junit5.CoroutinesTestExtension
 import ru.alexadler9.newsfetcher.utility.junit5.InstantExecutorExtension
 
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 class ArticlesViewModelTest {
 
     private lateinit var newsRepository: NewsRepository
@@ -33,13 +37,21 @@ class ArticlesViewModelTest {
     /* runTest is a coroutine builder designed for testing. Use this to wrap any tests that include coroutines */
     @Test
     fun `successful loading of articles data`() = runTest {
+        `when`(newsRepository.getArticleBookmarks()).thenReturn(
+            flow {
+                emit(listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2))
+            }
+        )
         `when`(newsRepository.getArticles()).thenReturn(listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2))
-        `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(true)
 
-        subject.processUiEvent(UiEvent.OnViewCreated)
+        // Start lazy initialization
+        subject.viewState
+
+        // Fast forward virtual time
+        testScheduler.advanceTimeBy(200)
 
         verify(newsRepository, times(1)).getArticles()
-        verify(newsRepository, times(2)).articleBookmarkExist(anyString())
+        verify(newsRepository, times(1)).getArticleBookmarks()
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
         assertThat(
@@ -56,10 +68,20 @@ class ArticlesViewModelTest {
 
     @Test
     fun `successfully added an article to bookmarks`() = runTest {
+        `when`(newsRepository.getArticleBookmarks()).thenReturn(
+            flow {
+                emit(emptyList())
+                // Wait for the add request and return bookmarks
+                delay(100)
+                emit(listOf(ARTICLE_MODEL_1))
+            }
+        )
         `when`(newsRepository.getArticles()).thenReturn(listOf(ARTICLE_MODEL_1))
         `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(false)
 
-        subject.processUiEvent(UiEvent.OnViewCreated)
+        subject.viewState
+
+        testScheduler.advanceTimeBy(200)
 
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
@@ -70,6 +92,8 @@ class ArticlesViewModelTest {
         )
 
         subject.processUiEvent((UiEvent.OnBookmarkButtonClicked(0)))
+
+        testScheduler.advanceTimeBy(200)
 
         verify(newsRepository, times(1)).addArticleToBookmark(ARTICLE_MODEL_1)
         assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
@@ -82,10 +106,20 @@ class ArticlesViewModelTest {
 
     @Test
     fun `successfully deleted an article from bookmarks`() = runTest {
+        `when`(newsRepository.getArticleBookmarks()).thenReturn(
+            flow {
+                emit(listOf(ARTICLE_MODEL_1))
+                // Wait for the delete request and return an empty list
+                delay(100)
+                emit(emptyList())
+            }
+        )
         `when`(newsRepository.getArticles()).thenReturn(listOf(ARTICLE_MODEL_1))
         `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(true)
 
-        subject.processUiEvent(UiEvent.OnViewCreated)
+        subject.viewState
+
+        testScheduler.advanceTimeBy(200)
 
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
@@ -96,6 +130,8 @@ class ArticlesViewModelTest {
         )
 
         subject.processUiEvent((UiEvent.OnBookmarkButtonClicked(0)))
+
+        testScheduler.advanceTimeBy(200)
 
         verify(newsRepository, times(1)).deleteArticleFromBookmarks(ARTICLE_MODEL_1)
         assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
@@ -110,12 +146,14 @@ class ArticlesViewModelTest {
     fun `articles data load failed`() = runTest {
         val exception = RuntimeException("Failed to load")
 
+        `when`(newsRepository.getArticleBookmarks()).thenReturn(flow {})
         `when`(newsRepository.getArticles()).thenThrow(exception)
 
-        subject.processUiEvent(UiEvent.OnViewCreated)
+        subject.viewState
+
+        testScheduler.advanceTimeBy(200)
 
         verify(newsRepository, times(1)).getArticles()
-        verify(newsRepository, times(0)).articleBookmarkExist(anyString())
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value?.state is State.Error, equalTo(true))
         assertThat(subject.viewState.value?.state as State.Error, equalTo(State.Error(exception)))

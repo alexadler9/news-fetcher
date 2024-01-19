@@ -1,10 +1,12 @@
 package ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui
 
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.test.runTest
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.hamcrest.Matchers.notNullValue
-
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -20,6 +22,7 @@ import ru.alexadler9.newsfetcher.utility.junit5.CoroutinesTestExtension
 import ru.alexadler9.newsfetcher.utility.junit5.InstantExecutorExtension
 
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
+@OptIn(ExperimentalCoroutinesApi::class)
 internal class BookmarksViewModelTest {
 
     private lateinit var newsRepository: NewsRepository
@@ -36,10 +39,17 @@ internal class BookmarksViewModelTest {
     /* runTest is a coroutine builder designed for testing. Use this to wrap any tests that include coroutines */
     @Test
     fun `successful loading of bookmarks data`() = runTest {
-        Mockito.`when`(newsRepository.getArticleBookmarks())
-            .thenReturn(listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2))
+        Mockito.`when`(newsRepository.getArticleBookmarks()).thenReturn(
+            flow {
+                emit(listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2))
+            }
+        )
 
-        subject.processUiEvent(UiEvent.OnViewCreated)
+        // Start lazy initialization
+        subject.viewState
+
+        // Fast forward virtual time
+        testScheduler.advanceTimeBy(200)
 
         Mockito.verify(newsRepository, Mockito.times(1)).getArticleBookmarks()
         assertThat(subject.viewState.value, notNullValue())
@@ -50,7 +60,7 @@ internal class BookmarksViewModelTest {
                     listOf(
                         ArticleItem(ARTICLE_MODEL_1, true),
                         ArticleItem(ARTICLE_MODEL_2, true)
-                    )
+                    ).reversed()
                 )
             )
         )
@@ -58,10 +68,24 @@ internal class BookmarksViewModelTest {
 
     @Test
     fun `successfully deleted an article from bookmarks`() = runTest {
-        Mockito.`when`(newsRepository.getArticleBookmarks()).thenReturn(listOf(ARTICLE_MODEL_1))
+        Mockito.`when`(newsRepository.getArticleBookmarks()).thenReturn(
+            flow {
+                emit(listOf(ARTICLE_MODEL_1))
+                // Wait for the delete request and return an empty list
+                delay(100)
+                emit(emptyList())
+            }
+        )
 
-        subject.processUiEvent(UiEvent.OnViewCreated)
-        subject.processUiEvent((UiEvent.OnBookmarkButtonClicked(0)))
+        // Start lazy initialization
+        subject.viewState
+
+        // Fast forward virtual time
+        testScheduler.advanceTimeBy(200)
+
+        subject.processUiEvent(UiEvent.OnBookmarkButtonClicked(0))
+
+        testScheduler.advanceTimeBy(200)
 
         Mockito.verify(newsRepository, Mockito.times(1))
             .deleteArticleFromBookmarks(anyExt(ArticleModel::class.java))
@@ -71,19 +95,5 @@ internal class BookmarksViewModelTest {
             subject.viewState.value?.state as State.Content,
             equalTo(State.Content(emptyList()))
         )
-    }
-
-    @Test
-    fun `bookmarks data load failed`() = runTest {
-        val exception = RuntimeException("Failed to load")
-
-        Mockito.`when`(newsRepository.getArticleBookmarks()).thenThrow(exception)
-
-        subject.processUiEvent(UiEvent.OnViewCreated)
-
-        Mockito.verify(newsRepository, Mockito.times(1)).getArticleBookmarks()
-        assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.state is State.Error, equalTo(true))
-        assertThat(subject.viewState.value?.state as State.Error, equalTo(State.Error(exception)))
     }
 }

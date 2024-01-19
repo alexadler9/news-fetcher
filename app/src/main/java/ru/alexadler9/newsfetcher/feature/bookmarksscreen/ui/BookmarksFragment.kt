@@ -1,7 +1,6 @@
 package ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.SimpleItemAnimator
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
@@ -55,9 +55,9 @@ class BookmarksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvBookmarks.adapter = bookmarksAdapter
+        (binding.rvBookmarks.itemAnimator as SimpleItemAnimator).changeDuration = 0
 
         viewModel.viewState.observe(viewLifecycleOwner, ::render)
-        viewModel.processUiEvent(UiEvent.OnViewCreated)
     }
 
     override fun onDestroyView() {
@@ -74,12 +74,7 @@ class BookmarksFragment : Fragment() {
 
                 is State.Content -> {
                     rvBookmarks.isVisible = true
-                    bookmarksAdapter.submitList(viewState.state.bookmarkedArticles)
-                }
-
-                is State.Error -> {
-                    rvBookmarks.isVisible = false
-                    Log.d("BOOKMARKS", "Error: ${viewState.state.throwable.message}")
+                    bookmarksAdapter.submitList(viewState.state.bookmarks)
                 }
             }
         }

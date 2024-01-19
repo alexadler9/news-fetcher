@@ -1,5 +1,6 @@
 package ru.alexadler9.newsfetcher.data.news.local
 
+import kotlinx.coroutines.flow.Flow
 import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +22,7 @@ class NewsLocalSource @Inject constructor(private val bookmarkDao: BookmarkDao) 
     /**
      * Get list of bookmarks.
      */
-    suspend fun getBookmarks(): List<BookmarkEntity> {
+    fun getBookmarks(): Flow<List<BookmarkEntity>> {
         return bookmarkDao.getBookmarks()
     }
 
