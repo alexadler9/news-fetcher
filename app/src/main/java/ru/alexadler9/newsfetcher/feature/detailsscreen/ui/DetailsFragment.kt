@@ -7,7 +7,10 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.FragmentDetailsBinding
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
@@ -43,8 +46,9 @@ class DetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.viewState.observe(viewLifecycleOwner, ::render)
-        viewModel.processUiEvent(UiEvent.OnViewCreated)
+        viewModel.viewState
+            .onEach(::render)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {

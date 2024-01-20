@@ -2,48 +2,47 @@ package ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.alexadler9.newsfetcher.base.Action
 import ru.alexadler9.newsfetcher.base.BaseViewModel
-import ru.alexadler9.newsfetcher.base.Event
 import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.bookmarksscreen.BookmarksInteractor
 import javax.inject.Inject
 
 @HiltViewModel
 class BookmarksViewModel @Inject constructor(private val interactor: BookmarksInteractor) :
-    BaseViewModel<ViewState>() {
+    BaseViewModel<ViewState, ViewEvent>() {
 
-    override fun initialViewState(): ViewState {
+    override val initialViewState = ViewState(
+        state = State.Load
+    )
+
+    init {
         viewModelScope.launch {
-            delay(100)
             interactor.getArticleBookmarks()
                 .collect {
-                    processDataEvent(DataEvent.OnBookmarksLoaded(
+                    processDataAction(DataAction.OnBookmarksLoaded(
                         bookmarks = it.reversed().map { article ->
                             ArticleItem(data = article, bookmarked = true)
                         }
                     ))
                 }
         }
-        return ViewState(
-            state = State.Load
-        )
     }
 
-    override fun reduce(event: Event, previousState: ViewState): ViewState? {
-        return when (event) {
-            is UiEvent.OnBookmarkButtonClicked -> {
+    override fun reduce(action: Action, previousState: ViewState): ViewState? {
+        return when (action) {
+            is UiAction.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
-                    val item = previousState.state.bookmarks[event.index]
+                    val item = previousState.state.bookmarks[action.index]
                     bookmarkDelete(item)
                 }
                 null
             }
 
-            is DataEvent.OnBookmarksLoaded -> {
+            is DataAction.OnBookmarksLoaded -> {
                 previousState.copy(
-                    state = State.Content(bookmarks = event.bookmarks)
+                    state = State.Content(bookmarks = action.bookmarks)
                 )
             }
 

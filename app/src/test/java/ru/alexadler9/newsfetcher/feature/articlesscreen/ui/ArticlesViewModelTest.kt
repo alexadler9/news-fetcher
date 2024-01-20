@@ -31,7 +31,7 @@ class ArticlesViewModelTest {
     fun setUp() {
         newsRepository = mock(NewsRepository::class.java)
         articlesInteractor = ArticlesInteractor(newsRepository)
-        subject = ArticlesViewModel(articlesInteractor)
+//        subject = ArticlesViewModel(articlesInteractor)
     }
 
     /* runTest is a coroutine builder designed for testing. Use this to wrap any tests that include coroutines */
@@ -44,18 +44,14 @@ class ArticlesViewModelTest {
         )
         `when`(newsRepository.getArticles()).thenReturn(listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2))
 
-        // Start lazy initialization
-        subject.viewState
-
-        // Fast forward virtual time
-        testScheduler.advanceTimeBy(200)
+        subject = ArticlesViewModel(articlesInteractor)
 
         verify(newsRepository, times(1)).getArticles()
         verify(newsRepository, times(1)).getArticleBookmarks()
         assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(subject.viewState.value.state is State.Content, equalTo(true))
         assertThat(
-            subject.viewState.value?.state as State.Content, equalTo(
+            subject.viewState.value.state as State.Content, equalTo(
                 State.Content(
                     listOf(
                         ArticleItem(ARTICLE_MODEL_1, true),
@@ -79,26 +75,25 @@ class ArticlesViewModelTest {
         `when`(newsRepository.getArticles()).thenReturn(listOf(ARTICLE_MODEL_1))
         `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(false)
 
-        subject.viewState
-
-        testScheduler.advanceTimeBy(200)
+        subject = ArticlesViewModel(articlesInteractor)
 
         assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(subject.viewState.value.state is State.Content, equalTo(true))
         assertThat(
-            subject.viewState.value?.state as State.Content, equalTo(
+            subject.viewState.value.state as State.Content, equalTo(
                 State.Content(listOf(ArticleItem(ARTICLE_MODEL_1, false)))
             )
         )
 
-        subject.processUiEvent((UiEvent.OnBookmarkButtonClicked(0)))
+        subject.processUiAction((UiAction.OnBookmarkButtonClicked(0)))
 
+        // Fast forward virtual time
         testScheduler.advanceTimeBy(200)
 
         verify(newsRepository, times(1)).addArticleToBookmark(ARTICLE_MODEL_1)
-        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(subject.viewState.value.state is State.Content, equalTo(true))
         assertThat(
-            subject.viewState.value?.state as State.Content, equalTo(
+            subject.viewState.value.state as State.Content, equalTo(
                 State.Content(listOf(ArticleItem(ARTICLE_MODEL_1, true)))
             )
         )
@@ -117,26 +112,25 @@ class ArticlesViewModelTest {
         `when`(newsRepository.getArticles()).thenReturn(listOf(ARTICLE_MODEL_1))
         `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(true)
 
-        subject.viewState
-
-        testScheduler.advanceTimeBy(200)
+        subject = ArticlesViewModel(articlesInteractor)
 
         assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(subject.viewState.value.state is State.Content, equalTo(true))
         assertThat(
-            subject.viewState.value?.state as State.Content, equalTo(
+            subject.viewState.value.state as State.Content, equalTo(
                 State.Content(listOf(ArticleItem(ARTICLE_MODEL_1, true)))
             )
         )
 
-        subject.processUiEvent((UiEvent.OnBookmarkButtonClicked(0)))
+        subject.processUiAction((UiAction.OnBookmarkButtonClicked(0)))
 
+        // Fast forward virtual time
         testScheduler.advanceTimeBy(200)
 
         verify(newsRepository, times(1)).deleteArticleFromBookmarks(ARTICLE_MODEL_1)
-        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(subject.viewState.value.state is State.Content, equalTo(true))
         assertThat(
-            subject.viewState.value?.state as State.Content, equalTo(
+            subject.viewState.value.state as State.Content, equalTo(
                 State.Content(listOf(ArticleItem(ARTICLE_MODEL_1, false)))
             )
         )
@@ -149,13 +143,11 @@ class ArticlesViewModelTest {
         `when`(newsRepository.getArticleBookmarks()).thenReturn(flow {})
         `when`(newsRepository.getArticles()).thenThrow(exception)
 
-        subject.viewState
-
-        testScheduler.advanceTimeBy(200)
+        subject = ArticlesViewModel(articlesInteractor)
 
         verify(newsRepository, times(1)).getArticles()
         assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.state is State.Error, equalTo(true))
-        assertThat(subject.viewState.value?.state as State.Error, equalTo(State.Error(exception)))
+        assertThat(subject.viewState.value.state is State.Error, equalTo(true))
+        assertThat(subject.viewState.value.state as State.Error, equalTo(State.Error(exception)))
     }
 }

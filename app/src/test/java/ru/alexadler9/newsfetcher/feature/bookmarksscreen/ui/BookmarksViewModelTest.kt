@@ -33,7 +33,7 @@ internal class BookmarksViewModelTest {
     fun setUp() {
         newsRepository = Mockito.mock(NewsRepository::class.java)
         bookmarksInteractor = BookmarksInteractor(newsRepository)
-        subject = BookmarksViewModel(bookmarksInteractor)
+//        subject = BookmarksViewModel(bookmarksInteractor)
     }
 
     /* runTest is a coroutine builder designed for testing. Use this to wrap any tests that include coroutines */
@@ -45,17 +45,13 @@ internal class BookmarksViewModelTest {
             }
         )
 
-        // Start lazy initialization
-        subject.viewState
-
-        // Fast forward virtual time
-        testScheduler.advanceTimeBy(200)
+        subject = BookmarksViewModel(bookmarksInteractor)
 
         Mockito.verify(newsRepository, Mockito.times(1)).getArticleBookmarks()
         assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(subject.viewState.value.state is State.Content, equalTo(true))
         assertThat(
-            subject.viewState.value?.state as State.Content, equalTo(
+            subject.viewState.value.state as State.Content, equalTo(
                 State.Content(
                     listOf(
                         ArticleItem(ARTICLE_MODEL_1, true),
@@ -77,22 +73,18 @@ internal class BookmarksViewModelTest {
             }
         )
 
-        // Start lazy initialization
-        subject.viewState
+        subject = BookmarksViewModel(bookmarksInteractor)
+        subject.processUiAction(UiAction.OnBookmarkButtonClicked(0))
 
         // Fast forward virtual time
-        testScheduler.advanceTimeBy(200)
-
-        subject.processUiEvent(UiEvent.OnBookmarkButtonClicked(0))
-
         testScheduler.advanceTimeBy(200)
 
         Mockito.verify(newsRepository, Mockito.times(1))
             .deleteArticleFromBookmarks(anyExt(ArticleModel::class.java))
         assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
+        assertThat(subject.viewState.value.state is State.Content, equalTo(true))
         assertThat(
-            subject.viewState.value?.state as State.Content,
+            subject.viewState.value.state as State.Content,
             equalTo(State.Content(emptyList()))
         )
     }

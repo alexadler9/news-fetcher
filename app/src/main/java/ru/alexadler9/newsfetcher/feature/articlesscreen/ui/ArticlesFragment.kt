@@ -8,8 +8,11 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
 import ru.alexadler9.newsfetcher.feature.articleLinkShare
@@ -38,7 +41,7 @@ class ArticlesFragment : Fragment() {
                 articleLinkShare(this@ArticlesFragment.requireContext(), article)
             },
             onIconBookmarkClicked = {
-                viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))
+                viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(it))
             })
     }
 
@@ -55,7 +58,9 @@ class ArticlesFragment : Fragment() {
 
         binding.rvArticles.adapter = articlesAdapter
 
-        viewModel.viewState.observe(viewLifecycleOwner, ::render)
+        viewModel.viewState
+            .onEach(::render)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {

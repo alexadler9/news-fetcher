@@ -7,47 +7,38 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.launch
+import ru.alexadler9.newsfetcher.base.Action
 import ru.alexadler9.newsfetcher.base.BaseViewModel
-import ru.alexadler9.newsfetcher.base.Event
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import ru.alexadler9.newsfetcher.feature.detailsscreen.ArticleDetailsInteractor
 
 class DetailsViewModel @AssistedInject constructor(
     private val interactor: ArticleDetailsInteractor,
     @Assisted private val article: ArticleModel
-) : BaseViewModel<ViewState>() {
+) : BaseViewModel<ViewState, ViewEvent>() {
 
     @AssistedFactory
     interface DetailsViewModelFactory {
         fun create(article: ArticleModel): DetailsViewModel
     }
 
-    private var init: Boolean = true
+    override val initialViewState = ViewState(
+        article = article,
+        state = State.Load
+    )
 
-    override fun initialViewState(): ViewState {
-        return ViewState(
-            article = article,
-            state = State.Load
-        )
+    init {
+        wallpaperLoad(article)
     }
 
-    override fun reduce(event: Event, previousState: ViewState): ViewState? {
-        return when (event) {
-            is UiEvent.OnViewCreated -> {
-                if (init) {
-                    init = false
-                    wallpaperLoad(previousState.article)
-                    return previousState.copy(state = State.Load)
-                }
-                null
+    override fun reduce(action: Action, previousState: ViewState): ViewState? {
+        return when (action) {
+            is DataAction.OnWallpaperLoadSucceed -> {
+                return previousState.copy(state = State.Content(wallpaper = action.wallpaper))
             }
 
-            is DataEvent.OnWallpaperLoadSucceed -> {
-                return previousState.copy(state = State.Content(wallpaper = event.wallpaper))
-            }
-
-            is DataEvent.OnWallpaperLoadFailed -> {
-                return previousState.copy(state = State.Error(throwable = event.error))
+            is DataAction.OnWallpaperLoadFailed -> {
+                return previousState.copy(state = State.Error(throwable = action.error))
             }
 
             else -> null
@@ -58,10 +49,10 @@ class DetailsViewModel @AssistedInject constructor(
         viewModelScope.launch {
             interactor.getArticleWallpaper(article).fold(
                 onError = {
-                    processDataEvent(DataEvent.OnWallpaperLoadFailed(error = it))
+                    processDataAction(DataAction.OnWallpaperLoadFailed(error = it))
                 },
                 onSuccess = {
-                    processDataEvent(DataEvent.OnWallpaperLoadSucceed(wallpaper = it))
+                    processDataAction(DataAction.OnWallpaperLoadSucceed(wallpaper = it))
                 }
             )
         }

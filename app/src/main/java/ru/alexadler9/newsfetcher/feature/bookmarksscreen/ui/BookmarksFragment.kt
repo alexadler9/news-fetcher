@@ -7,9 +7,11 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.SimpleItemAnimator
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
 import ru.alexadler9.newsfetcher.feature.articleLinkShare
@@ -39,7 +41,7 @@ class BookmarksFragment : Fragment() {
                 articleLinkShare(this@BookmarksFragment.requireContext(), article)
             },
             onIconBookmarkClicked = {
-                viewModel.processUiEvent(UiEvent.OnBookmarkButtonClicked(it))
+                viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(it))
             })
     }
 
@@ -55,9 +57,10 @@ class BookmarksFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.rvBookmarks.adapter = bookmarksAdapter
-        (binding.rvBookmarks.itemAnimator as SimpleItemAnimator).changeDuration = 0
 
-        viewModel.viewState.observe(viewLifecycleOwner, ::render)
+        viewModel.viewState
+            .onEach(::render)
+            .launchIn(viewLifecycleOwner.lifecycleScope)
     }
 
     override fun onDestroyView() {

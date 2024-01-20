@@ -33,7 +33,7 @@ class DetailsViewModelTest {
     fun setUp() {
         newsRepository = Mockito.mock(NewsRepository::class.java)
         articleDetailsInteractor = ArticleDetailsInteractor(newsRepository)
-        subject = DetailsViewModel(articleDetailsInteractor, ARTICLE_MODEL_1)
+//        subject = DetailsViewModel(articleDetailsInteractor, ARTICLE_MODEL_1)
     }
 
     @Test
@@ -46,15 +46,15 @@ class DetailsViewModelTest {
         Mockito.`when`(newsRepository.getArticleWallpaper(anyExt(ArticleModel::class.java)))
             .thenReturn(bitmap)
 
-        subject.processUiEvent(UiEvent.OnViewCreated)
+        subject = DetailsViewModel(articleDetailsInteractor, ARTICLE_MODEL_1)
 
         Mockito.verify(newsRepository, Mockito.times(1))
             .getArticleWallpaper(anyExt(ArticleModel::class.java))
 
         assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.article, equalTo(ARTICLE_MODEL_1))
-        assertThat(subject.viewState.value?.state is State.Content, equalTo(true))
-        assertThat(subject.viewState.value?.state as State.Content, equalTo(State.Content(bitmap)))
+        assertThat(subject.viewState.value.article, equalTo(ARTICLE_MODEL_1))
+        assertThat(subject.viewState.value.state is State.Content, equalTo(true))
+        assertThat(subject.viewState.value.state as State.Content, equalTo(State.Content(bitmap)))
     }
 
     @Test
@@ -64,14 +64,14 @@ class DetailsViewModelTest {
         Mockito.`when`(newsRepository.getArticleWallpaper(anyExt(ArticleModel::class.java)))
             .thenThrow(exception)
 
-        subject.processUiEvent(UiEvent.OnViewCreated)
+        subject = DetailsViewModel(articleDetailsInteractor, ARTICLE_MODEL_1)
 
         Mockito.verify(newsRepository, Mockito.times(1))
             .getArticleWallpaper(anyExt(ArticleModel::class.java))
 
         assertThat(subject.viewState.value, notNullValue())
-        assertThat(subject.viewState.value?.article, equalTo(ARTICLE_MODEL_1))
-        assertThat(subject.viewState.value?.state is State.Error, equalTo(true))
-        assertThat(subject.viewState.value?.state as State.Error, equalTo(State.Error(exception)))
+        assertThat(subject.viewState.value.article, equalTo(ARTICLE_MODEL_1))
+        assertThat(subject.viewState.value.state is State.Error, equalTo(true))
+        assertThat(subject.viewState.value.state as State.Error, equalTo(State.Error(exception)))
     }
 }

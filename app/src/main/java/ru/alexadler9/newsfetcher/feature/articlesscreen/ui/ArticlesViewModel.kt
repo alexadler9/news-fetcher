@@ -2,10 +2,9 @@ package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import ru.alexadler9.newsfetcher.base.Action
 import ru.alexadler9.newsfetcher.base.BaseViewModel
-import ru.alexadler9.newsfetcher.base.Event
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
@@ -13,45 +12,45 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInteractor) :
-    BaseViewModel<ViewState>() {
+    BaseViewModel<ViewState, ViewEvent>() {
+
+    override val initialViewState = ViewState(
+        state = State.Load
+    )
 
     var bookmarks: List<ArticleModel> = emptyList()
 
-    override fun initialViewState(): ViewState {
+    init {
         viewModelScope.launch {
-            delay(100)
             articlesLoad()
             interactor.getArticleBookmarks()
                 .collect {
-                    processDataEvent(DataEvent.OnBookmarksUpdated(bookmarks = it))
+                    processDataAction(DataAction.OnBookmarksUpdated(bookmarks = it))
                 }
         }
-        return ViewState(
-            state = State.Load
-        )
     }
 
-    override fun reduce(event: Event, previousState: ViewState): ViewState? {
-        return when (event) {
-            is UiEvent.OnBookmarkButtonClicked -> {
+    override fun reduce(action: Action, previousState: ViewState): ViewState? {
+        return when (action) {
+            is UiAction.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
-                    val item = previousState.state.articles[event.index]
+                    val item = previousState.state.articles[action.index]
                     changeArticleBookmark(item)
                 }
                 null
             }
 
-            is DataEvent.OnArticlesLoadSucceed -> {
-                bookmarkArticles(event.articles, bookmarks)
-                previousState.copy(state = State.Content(articles = event.articles))
+            is DataAction.OnArticlesLoadSucceed -> {
+                bookmarkArticles(action.articles, bookmarks)
+                previousState.copy(state = State.Content(articles = action.articles))
             }
 
-            is DataEvent.OnArticlesLoadFailed -> {
-                previousState.copy(state = State.Error(event.error))
+            is DataAction.OnArticlesLoadFailed -> {
+                previousState.copy(state = State.Error(action.error))
             }
 
-            is DataEvent.OnBookmarksUpdated -> {
-                bookmarks = event.bookmarks
+            is DataAction.OnBookmarksUpdated -> {
+                bookmarks = action.bookmarks
                 if (previousState.state is State.Content) {
                     val articles = previousState.state.articles.map { it.copy() }
                     bookmarkArticles(articles, bookmarks)
@@ -68,11 +67,11 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         viewModelScope.launch {
             interactor.getArticles().fold(
                 onError = {
-                    processDataEvent(DataEvent.OnArticlesLoadFailed(error = it))
+                    processDataAction(DataAction.OnArticlesLoadFailed(error = it))
                 },
                 onSuccess = {
-                    processDataEvent(
-                        DataEvent.OnArticlesLoadSucceed(
+                    processDataAction(
+                        DataAction.OnArticlesLoadSucceed(
                             articles = it.map { article ->
                                 ArticleItem(article, false)
                             }
