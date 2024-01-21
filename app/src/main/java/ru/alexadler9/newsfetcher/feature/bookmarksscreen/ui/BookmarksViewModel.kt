@@ -2,6 +2,7 @@ package ru.alexadler9.newsfetcher.feature.bookmarksscreen.ui
 
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.Action
 import ru.alexadler9.newsfetcher.base.BaseViewModel
@@ -17,16 +18,20 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
         state = State.Load
     )
 
+    private val bookmarksFlow: StateFlow<List<ArticleItem>> =
+        interactor.getArticleBookmarks()
+            .map {
+                it.reversed().map { article ->
+                    ArticleItem(data = article, bookmarked = true)
+                }
+            }
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptyList())
+
     init {
         viewModelScope.launch {
-            interactor.getArticleBookmarks()
-                .collect {
-                    processDataAction(DataAction.OnBookmarksLoaded(
-                        bookmarks = it.reversed().map { article ->
-                            ArticleItem(data = article, bookmarked = true)
-                        }
-                    ))
-                }
+            bookmarksFlow.collectLatest {
+                processDataAction(DataAction.OnBookmarksLoaded(bookmarks = it))
+            }
         }
     }
 
@@ -34,8 +39,7 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
         return when (action) {
             is UiAction.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
-                    val item = previousState.state.bookmarks[action.index]
-                    bookmarkDelete(item)
+                    bookmarkDelete(action.article)
                 }
                 null
             }
@@ -50,9 +54,7 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
         }
     }
 
-    private fun bookmarkDelete(item: ArticleItem) {
-        viewModelScope.launch {
-            interactor.deleteArticleFromBookmarks(item.data)
-        }
+    private fun bookmarkDelete(article: ArticleItem) = viewModelScope.launch {
+        interactor.deleteArticleFromBookmarks(article.data)
     }
 }

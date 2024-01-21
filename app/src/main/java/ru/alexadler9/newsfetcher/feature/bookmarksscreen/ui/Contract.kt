@@ -16,7 +16,7 @@ sealed class ViewEvent {
 }
 
 sealed class UiAction : Action {
-    data class OnBookmarkButtonClicked(val index: Int) : UiAction()
+    data class OnBookmarkButtonClicked(val article: ArticleItem) : UiAction()
 }
 
 sealed class DataAction : Action {

@@ -18,12 +18,11 @@ sealed class ViewEvent {
 }
 
 sealed class UiAction : Action {
+    data class OnPagerLoadFailed(val error: Throwable, val itemCount: Int) : UiAction()
     data class OnBookmarkButtonClicked(val article: ArticleItem) : UiAction()
 }
 
 sealed class DataAction : Action {
     data class OnArticlesLoadSucceed(val articlesPagingData: PagingData<ArticleItem>) : DataAction()
-
-    //data class OnArticlesLoadFailed(val error: Throwable) : DataAction()
-    data class OnBookmarksUpdated(val bookmarksUrl: Set<String>) : DataAction()
+    data class OnBookmarksUpdated(val bookmarksUrls: Set<String>) : DataAction()
 }

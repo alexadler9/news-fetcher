@@ -20,7 +20,14 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         state = State.Load
     )
 
-    private var bookmarksUrl: Set<String> = emptySet()
+    private val bookmarksUrlsFlow: StateFlow<Set<String>> =
+        interactor.getArticleBookmarks()
+            .map { bookmarks ->
+                bookmarks.map { bookmark ->
+                    bookmark.url
+                }.toHashSet()
+            }
+            .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
 
     private val articlesPagingDataFlow: StateFlow<PagingData<ArticleItem>> =
         newArticlesPager()
@@ -36,15 +43,9 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
     init {
         viewModelScope.launch {
             launch {
-                interactor.getArticleBookmarks()
-                    .map { bookmarks ->
-                        bookmarks.map { bookmark ->
-                            bookmark.url
-                        }.toHashSet()
-                    }
-                    .collectLatest {
-                        processDataAction(DataAction.OnBookmarksUpdated(bookmarksUrl = it))
-                    }
+                bookmarksUrlsFlow.collectLatest {
+                    processDataAction(DataAction.OnBookmarksUpdated(bookmarksUrls = it))
+                }
             }
             launch {
                 articlesPagingDataFlow.collectLatest {
@@ -56,29 +57,33 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
 
     override fun reduce(action: Action, previousState: ViewState): ViewState? {
         return when (action) {
+            is UiAction.OnPagerLoadFailed -> {
+                if (action.itemCount == 0) {
+                    // Show error state.
+                    // If items > 0, the pager itself will display an error.
+                    return previousState.copy(state = State.Error(action.error))
+                }
+                null
+            }
+
             is UiAction.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
-                    changeArticleBookmark(action.article.data)
+                    changeArticleBookmark(action.article)
                 }
                 null
             }
 
             is DataAction.OnArticlesLoadSucceed -> {
                 val articlesPagingData = action.articlesPagingData.map {
-                    bookmarkArticle(it, bookmarksUrl)
+                    bookmarkArticle(it, bookmarksUrlsFlow.value)
                 }
                 previousState.copy(state = State.Content(articlesPagingData = articlesPagingData))
             }
 
-//            is DataAction.OnArticlesLoadFailed -> {
-//                previousState.copy(state = State.Error(action.error))
-//            }
-
             is DataAction.OnBookmarksUpdated -> {
-                bookmarksUrl = action.bookmarksUrl
                 if (previousState.state is State.Content) {
                     val articlesPagingData = previousState.state.articlesPagingData.map {
-                        bookmarkArticle(it, bookmarksUrl)
+                        bookmarkArticle(it, action.bookmarksUrls)
                     }
                     return previousState.copy(state = State.Content(articlesPagingData = articlesPagingData))
                 }
@@ -97,7 +102,7 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
     private fun bookmarkArticle(article: ArticleItem, bookmarksUrl: Set<String>) =
         article.copy(bookmarked = bookmarksUrl.contains(article.data.url))
 
-    private fun changeArticleBookmark(item: ArticleModel) = viewModelScope.launch {
-        interactor.changeArticleBookmark(item)
+    private fun changeArticleBookmark(article: ArticleItem) = viewModelScope.launch {
+        interactor.changeArticleBookmark(article.data)
     }
 }

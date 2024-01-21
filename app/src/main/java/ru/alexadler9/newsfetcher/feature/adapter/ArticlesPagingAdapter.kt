@@ -6,12 +6,13 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.ItemArticleBinding
+import ru.alexadler9.newsfetcher.feature.articleLinkOpen
 
-class ArticlesAdapter2(
+class ArticlesPagingAdapter(
     val onItemClicked: (ArticleItem) -> Unit = {},
     val onIconShareClicked: (ArticleItem) -> Unit = {},
     val onIconBookmarkClicked: (ArticleItem) -> Unit = {}
-) : PagingDataAdapter<ArticleItem, ArticlesAdapter2.ArticleViewHolder>(ArticlesDiffItemCallback()) {
+) : PagingDataAdapter<ArticleItem, ArticlesPagingAdapter.ArticleViewHolder>(ArticlesDiffItemCallback()) {
 
     class ArticleViewHolder(private val binding: ItemArticleBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -23,18 +24,19 @@ class ArticlesAdapter2(
             onIconBookmarkClicked: (ArticleItem) -> Unit = {}
         ) {
             with(binding) {
-//                itemView.setOnClickListener {
-//                    onItemClicked(item)
-//                }
-//                ivShare.apply {
-//                    setOnClickListener {
-//                        onIconShareClicked(item)
-//                    }
-//                    isEnabled = (onIconShareClicked != {})
-//                }
+                itemView.setOnClickListener {
+                    item?.let {
+                        onItemClicked(item)
+                    }
+                }
+                ivShare.apply {
+                    setOnClickListener {
+                        onIconShareClicked(item!!)
+                    }
+                    isEnabled = (item != null)
+                }
                 ivBookmark.apply {
                     setImageResource(
-
                         if (item != null && item.bookmarked)
                             R.drawable.ic_baseline_bookmark_24
                         else
@@ -43,20 +45,22 @@ class ArticlesAdapter2(
                     setOnClickListener {
                         onIconBookmarkClicked(item!!)
                     }
-                    isEnabled = (onIconBookmarkClicked != {})
+                    isEnabled = (item != null)
                 }
-//                ivBrowser.apply {
-//                    setOnClickListener {
-//                        articleLinkOpen(context, item)
-//                    }
-//                }
-                tvAuthor.text = item?.data?.author?.ifBlank { "[Undefined]" } ?: "ololo"
-                tvDate.text = item?.data?.publishedAtLocal ?: "ololo"
-                tvTitle.text = item?.data?.title ?: "ololo"
+                ivBrowser.apply {
+                    setOnClickListener {
+                        articleLinkOpen(context, item!!.data)
+                    }
+                    isEnabled = (item != null)
+                }
+                tvAuthor.text = item?.data?.author?.ifBlank { "[Undefined]" } ?: ""
+                tvDate.text = item?.data?.publishedAtLocal ?: ""
+                tvTitle.text = item?.data?.title ?: ""
             }
         }
 
         companion object {
+
             fun inflateFrom(parent: ViewGroup): ArticleViewHolder {
                 val layoutInflater = LayoutInflater.from(parent.context)
                 val binding = ItemArticleBinding.inflate(layoutInflater, parent, false)
