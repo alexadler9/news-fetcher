@@ -13,7 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
-import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
+import ru.alexadler9.newsfetcher.feature.adapter.ArticlesListAdapter
 import ru.alexadler9.newsfetcher.feature.articleLinkShare
 
 /**
@@ -29,19 +29,19 @@ class BookmarksFragment : Fragment() {
 
     private val viewModel: BookmarksViewModel by viewModels()
 
-    private val bookmarksAdapter: ArticlesAdapter by lazy {
-        ArticlesAdapter(
+    private val bookmarksAdapter: ArticlesListAdapter by lazy {
+        ArticlesListAdapter(
             onItemClicked = { article ->
-                BookmarksFragmentDirections.actionBookmarksFragmentToDetailsFragment(article)
+                BookmarksFragmentDirections.actionBookmarksFragmentToDetailsFragment(article.data)
                     .apply {
                         findNavController().navigate(this)
                     }
             },
             onIconShareClicked = { article ->
-                articleLinkShare(this@BookmarksFragment.requireContext(), article)
+                articleLinkShare(this@BookmarksFragment.requireContext(), article.data)
             },
-            onIconBookmarkClicked = {
-                viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(it))
+            onIconBookmarkClicked = { article ->
+                viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(article))
             })
     }
 

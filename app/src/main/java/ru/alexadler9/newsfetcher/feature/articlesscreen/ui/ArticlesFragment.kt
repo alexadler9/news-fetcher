@@ -10,11 +10,15 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
-import ru.alexadler9.newsfetcher.feature.adapter.ArticlesAdapter
+import ru.alexadler9.newsfetcher.feature.adapter.ArticlesLoaderStateAdapter
+import ru.alexadler9.newsfetcher.feature.adapter.ArticlesPagingAdapter
 import ru.alexadler9.newsfetcher.feature.articleLinkShare
 
 /**
@@ -30,15 +34,16 @@ class ArticlesFragment : Fragment() {
 
     private val viewModel: ArticlesViewModel by viewModels()
 
-    private val articlesAdapter: ArticlesAdapter by lazy {
-        ArticlesAdapter(
+    private val articlesAdapter: ArticlesPagingAdapter by lazy {
+        ArticlesPagingAdapter(
             onItemClicked = { article ->
-                ArticlesFragmentDirections.actionArticlesFragmentToDetailsFragment(article).apply {
-                    findNavController().navigate(this)
-                }
+                ArticlesFragmentDirections.actionArticlesFragmentToDetailsFragment(article.data)
+                    .apply {
+                        findNavController().navigate(this)
+                    }
             },
             onIconShareClicked = { article ->
-                articleLinkShare(this@ArticlesFragment.requireContext(), article)
+                articleLinkShare(this@ArticlesFragment.requireContext(), article.data)
             },
             onIconBookmarkClicked = {
                 viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(it))
@@ -56,7 +61,12 @@ class ArticlesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvArticles.adapter = articlesAdapter
+        binding.rvArticles.adapter = articlesAdapter.withLoadStateHeaderAndFooter(
+            header = ArticlesLoaderStateAdapter(),
+            footer = ArticlesLoaderStateAdapter()
+        )
+
+        articlesAdapter.addLoadStateListener(::pagerLoadStateProcess)
 
         viewModel.viewState
             .onEach(::render)
@@ -68,6 +78,25 @@ class ArticlesFragment : Fragment() {
         _binding = null
     }
 
+    private fun pagerLoadStateProcess(state: CombinedLoadStates) {
+        val refreshState = state.refresh
+        val appendState = state.append
+
+        var error: Throwable? = null
+        if (refreshState is LoadState.Error) error = refreshState.error
+        if (appendState is LoadState.Error) error = appendState.error
+
+        error?.let {
+            // Notify the ViewModel about the error. It will decide what to do next.
+            viewModel.processUiAction(
+                UiAction.OnPagerLoadFailed(
+                    error = error,
+                    itemCount = articlesAdapter.itemCount
+                )
+            )
+        }
+    }
+
     private fun render(viewState: ViewState) {
         with(binding) {
             when (viewState.state) {
@@ -77,7 +106,9 @@ class ArticlesFragment : Fragment() {
 
                 is State.Content -> {
                     rvArticles.isVisible = true
-                    articlesAdapter.submitList(viewState.state.articles)
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        articlesAdapter.submitData(viewState.state.articlesPagingData)
+                    }
                 }
 
                 is State.Error -> {

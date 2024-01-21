@@ -13,9 +13,9 @@ import javax.inject.Inject
 class ArticlesInteractor @Inject constructor(private val repository: NewsRepository) {
 
     /**
-     * Get live top articles headlines.
+     * Get live top articles headlines via paging source.
      */
-    suspend fun getArticles() = attempt { repository.getArticles() }
+    fun getTopHeadlinesArticlesPagingSource() = repository.getTopHeadlinesArticlesPagingSource()
 
     /**
      * Get list of article bookmarks.

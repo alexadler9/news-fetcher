@@ -1,9 +1,11 @@
 package ru.alexadler9.newsfetcher.data.news
 
 import android.graphics.Bitmap
+import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import ru.alexadler9.newsfetcher.data.news.local.NewsLocalSource
+import ru.alexadler9.newsfetcher.data.news.remote.NewsPagingRemoteSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsRemoteSource
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import javax.inject.Inject
@@ -12,18 +14,26 @@ import javax.inject.Singleton
 @Singleton
 class NewsRepository @Inject constructor(
     private val remoteSource: NewsRemoteSource,
+    private val pagingRemoteSource: NewsPagingRemoteSource,
     private val localSource: NewsLocalSource
 ) {
 
     /**
      * Get live top articles headlines.
      */
-    suspend fun getArticles(): List<ArticleModel> {
-        return remoteSource.getArticles().articleList.filter {
+    suspend fun getTopHeadlinesArticles(): List<ArticleModel> {
+        return remoteSource.getTopHeadlinesArticles().articleList.filter {
             it.title != "[Removed]" && it.description != ""
         }.map {
             it.toDomain()
         }
+    }
+
+    /**
+     * Get live top articles headlines via paging source.
+     */
+    fun getTopHeadlinesArticlesPagingSource(): PagingSource<Int, ArticleModel> {
+        return pagingRemoteSource
     }
 
     /**

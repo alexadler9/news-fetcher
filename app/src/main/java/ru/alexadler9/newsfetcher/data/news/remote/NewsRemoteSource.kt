@@ -23,8 +23,8 @@ class NewsRemoteSource @Inject constructor(
     /**
      * Get live top articles headlines.
      */
-    suspend fun getArticles(): ArticlesRemoteModel {
-        return api.getArticles()
+    suspend fun getTopHeadlinesArticles(): ArticlesRemoteModel {
+        return api.getTopHeadlinesArticles()
     }
 
     /**

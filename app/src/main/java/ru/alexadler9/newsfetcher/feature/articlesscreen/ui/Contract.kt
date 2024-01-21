@@ -1,12 +1,12 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
+import androidx.paging.PagingData
 import ru.alexadler9.newsfetcher.base.Action
-import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 
 sealed class State {
     object Load : State()
-    data class Content(val articles: List<ArticleItem>) : State()
+    data class Content(val articlesPagingData: PagingData<ArticleItem>) : State()
     data class Error(val throwable: Throwable) : State()
 }
 
@@ -18,11 +18,11 @@ sealed class ViewEvent {
 }
 
 sealed class UiAction : Action {
-    data class OnBookmarkButtonClicked(val index: Int) : UiAction()
+    data class OnPagerLoadFailed(val error: Throwable, val itemCount: Int) : UiAction()
+    data class OnBookmarkButtonClicked(val article: ArticleItem) : UiAction()
 }
 
 sealed class DataAction : Action {
-    data class OnArticlesLoadSucceed(val articles: List<ArticleItem>) : DataAction()
-    data class OnArticlesLoadFailed(val error: Throwable) : DataAction()
-    data class OnBookmarksUpdated(val bookmarks: List<ArticleModel>) : DataAction()
+    data class OnArticlesLoadSucceed(val articlesPagingData: PagingData<ArticleItem>) : DataAction()
+    data class OnBookmarksUpdated(val bookmarksUrls: Set<String>) : DataAction()
 }
