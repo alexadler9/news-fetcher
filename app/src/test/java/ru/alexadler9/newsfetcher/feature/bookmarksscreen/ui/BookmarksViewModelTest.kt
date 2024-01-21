@@ -74,7 +74,14 @@ internal class BookmarksViewModelTest {
         )
 
         subject = BookmarksViewModel(bookmarksInteractor)
-        subject.processUiAction(UiAction.OnBookmarkButtonClicked(0))
+        subject.processUiAction(
+            UiAction.OnBookmarkButtonClicked(
+                ArticleItem(
+                    ARTICLE_MODEL_1,
+                    true
+                )
+            )
+        )
 
         // Fast forward virtual time
         testScheduler.advanceTimeBy(200)

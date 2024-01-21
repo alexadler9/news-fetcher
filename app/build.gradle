@@ -91,6 +91,7 @@ dependencies {
     implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
     // The Paging Library makes it easier to load data within RecyclerView
     implementation "androidx.paging:paging-runtime:$paging_version"
+    testImplementation "androidx.paging:paging-testing:$paging_version"
 
     testImplementation "org.junit.jupiter:junit-jupiter:$junit5_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
