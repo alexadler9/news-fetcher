@@ -17,6 +17,7 @@ import ru.alexadler9.newsfetcher.data.news.NewsRepository
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import ru.alexadler9.newsfetcher.feature.detailsscreen.ArticleDetailsInteractor
 import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_1
+import ru.alexadler9.newsfetcher.utility.EXCEPTION_LOAD
 import ru.alexadler9.newsfetcher.utility.ext.anyExt
 
 /**
@@ -59,10 +60,8 @@ class DetailsViewModelTest {
 
     @Test
     fun loadingWallpaper_unsuccessful() = runTest {
-        val exception = RuntimeException("Failed to load")
-
         Mockito.`when`(newsRepository.getArticleWallpaper(anyExt(ArticleModel::class.java)))
-            .thenThrow(exception)
+            .thenThrow(EXCEPTION_LOAD)
 
         subject = DetailsViewModel(articleDetailsInteractor, ARTICLE_MODEL_1)
 
@@ -72,6 +71,9 @@ class DetailsViewModelTest {
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.article, equalTo(ARTICLE_MODEL_1))
         assertThat(subject.viewState.value.state is State.Error, equalTo(true))
-        assertThat(subject.viewState.value.state as State.Error, equalTo(State.Error(exception)))
+        assertThat(
+            subject.viewState.value.state as State.Error,
+            equalTo(State.Error(EXCEPTION_LOAD))
+        )
     }
 }

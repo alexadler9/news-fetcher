@@ -18,8 +18,7 @@ import ru.alexadler9.newsfetcher.data.news.NewsRepository
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
-import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_1
-import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_2
+import ru.alexadler9.newsfetcher.utility.*
 import ru.alexadler9.newsfetcher.utility.junit5.CoroutinesTestExtension
 import ru.alexadler9.newsfetcher.utility.junit5.InstantExecutorExtension
 
@@ -53,14 +52,13 @@ class ArticlesViewModelTest {
         )
 
         subject = ArticlesViewModel(articlesInteractor)
+        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED))
 
         verify(newsRepository, times(1)).getTopHeadlinesArticlesPagingSource()
         verify(newsRepository, times(1)).getArticleBookmarks()
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
-
-        val articlesPagingData = (subject.viewState.value.state as State.Content).articlesPagingData
-        val articles = flowOf(articlesPagingData).asSnapshot()
+        val articles = flowOf(subject.viewState.value.articlesPagingData).asSnapshot()
         assertThat(
             articles, equalTo(
                 listOf(
@@ -89,12 +87,11 @@ class ArticlesViewModelTest {
         `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(false)
 
         subject = ArticlesViewModel(articlesInteractor)
+        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED))
 
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
-
-        val articlesPagingData = (subject.viewState.value.state as State.Content).articlesPagingData
-        var articles = flowOf(articlesPagingData).asSnapshot()
+        var articles = flowOf(subject.viewState.value.articlesPagingData).asSnapshot()
         assertThat(
             articles, equalTo(
                 listOf(ArticleItem(ARTICLE_MODEL_1, false))
@@ -102,12 +99,9 @@ class ArticlesViewModelTest {
         )
 
         subject.processUiAction(
-            (UiAction.OnBookmarkButtonClicked(
-                ArticleItem(
-                    ARTICLE_MODEL_1,
-                    false
-                )
-            ))
+            UiAction.OnBookmarkButtonClicked(
+                ArticleItem(ARTICLE_MODEL_1, false)
+            )
         )
 
         // Fast forward virtual time
@@ -115,8 +109,7 @@ class ArticlesViewModelTest {
 
         verify(newsRepository, times(1)).addArticleToBookmark(ARTICLE_MODEL_1)
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
-
-        articles = flowOf(articlesPagingData).asSnapshot()
+        articles = flowOf(subject.viewState.value.articlesPagingData).asSnapshot()
         assertThat(
             articles, equalTo(
                 listOf(ArticleItem(ARTICLE_MODEL_1, true))
@@ -142,12 +135,11 @@ class ArticlesViewModelTest {
         `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(true)
 
         subject = ArticlesViewModel(articlesInteractor)
+        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED))
 
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
-
-        val articlesPagingData = (subject.viewState.value.state as State.Content).articlesPagingData
-        var articles = flowOf(articlesPagingData).asSnapshot()
+        var articles = flowOf(subject.viewState.value.articlesPagingData).asSnapshot()
         assertThat(
             articles, equalTo(
                 listOf(ArticleItem(ARTICLE_MODEL_1, true))
@@ -155,12 +147,9 @@ class ArticlesViewModelTest {
         )
 
         subject.processUiAction(
-            (UiAction.OnBookmarkButtonClicked(
-                ArticleItem(
-                    ARTICLE_MODEL_1,
-                    true
-                )
-            ))
+            UiAction.OnBookmarkButtonClicked(
+                ArticleItem(ARTICLE_MODEL_1, true)
+            )
         )
 
         // Fast forward virtual time
@@ -168,8 +157,7 @@ class ArticlesViewModelTest {
 
         verify(newsRepository, times(1)).deleteArticleFromBookmarks(ARTICLE_MODEL_1)
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
-
-        articles = flowOf(articlesPagingData).asSnapshot()
+        articles = flowOf(subject.viewState.value.articlesPagingData).asSnapshot()
         assertThat(
             articles, equalTo(
                 listOf(ArticleItem(ARTICLE_MODEL_1, false))
@@ -179,8 +167,6 @@ class ArticlesViewModelTest {
 
     @Test
     fun `articles data load failed`() = runTest {
-        val exception = RuntimeException("Failed to load")
-
         `when`(newsRepository.getArticleBookmarks()).thenReturn(flow {})
         `when`(newsRepository.getTopHeadlinesArticlesPagingSource()).thenReturn(
             emptyList<ArticleModel>()
@@ -189,11 +175,14 @@ class ArticlesViewModelTest {
         )
 
         subject = ArticlesViewModel(articlesInteractor)
-        subject.processUiAction((UiAction.OnPagerLoadFailed(exception, 0)))
+        subject.processUiAction((UiAction.OnPagerStateChanged(PAGER_STATES_ERROR)))
 
         verify(newsRepository, times(1)).getTopHeadlinesArticlesPagingSource()
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Error, equalTo(true))
-        assertThat(subject.viewState.value.state as State.Error, equalTo(State.Error(exception)))
+        assertThat(
+            subject.viewState.value.state as State.Error,
+            equalTo(State.Error(EXCEPTION_LOAD))
+        )
     }
 }

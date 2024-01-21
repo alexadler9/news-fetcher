@@ -17,6 +17,7 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
     BaseViewModel<ViewState, ViewEvent>() {
 
     override val initialViewState = ViewState(
+        articlesPagingData = PagingData.empty(),
         state = State.Load
     )
 
@@ -57,11 +58,23 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
 
     override fun reduce(action: Action, previousState: ViewState): ViewState? {
         return when (action) {
-            is UiAction.OnPagerLoadFailed -> {
-                if (action.itemCount == 0) {
-                    // Show error state.
-                    // If items > 0, the pager itself will display an error.
-                    return previousState.copy(state = State.Error(action.error))
+            is UiAction.OnPagerStateChanged -> {
+                if (previousState.state is State.Load) {
+                    val refreshState = action.state.refresh
+                    if (refreshState is LoadState.Error) {
+                        return previousState.copy(state = State.Error(refreshState.error))
+                    }
+                    if (refreshState is LoadState.NotLoading) {
+                        return previousState.copy(state = State.Content)
+                    }
+                    return null
+                }
+                if (previousState.state is State.Content) {
+                    val appendState = action.state.append
+                    if ((appendState is LoadState.Error) || (appendState is LoadState.NotLoading)) {
+                        // Pager itself will display display an error or loading.
+                        return null
+                    }
                 }
                 null
             }
@@ -77,17 +90,14 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
                 val articlesPagingData = action.articlesPagingData.map {
                     bookmarkArticle(it, bookmarksUrlsFlow.value)
                 }
-                previousState.copy(state = State.Content(articlesPagingData = articlesPagingData))
+                previousState.copy(articlesPagingData = articlesPagingData)
             }
 
             is DataAction.OnBookmarksUpdated -> {
-                if (previousState.state is State.Content) {
-                    val articlesPagingData = previousState.state.articlesPagingData.map {
-                        bookmarkArticle(it, action.bookmarksUrls)
-                    }
-                    return previousState.copy(state = State.Content(articlesPagingData = articlesPagingData))
+                val articlesPagingData = previousState.articlesPagingData.map {
+                    bookmarkArticle(it, action.bookmarksUrls)
                 }
-                null
+                return previousState.copy(articlesPagingData = articlesPagingData)
             }
 
             else -> null

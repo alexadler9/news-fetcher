@@ -79,25 +79,16 @@ class ArticlesFragment : Fragment() {
     }
 
     private fun pagerLoadStateProcess(state: CombinedLoadStates) {
-        val refreshState = state.refresh
-        val appendState = state.append
-
-        var error: Throwable? = null
-        if (refreshState is LoadState.Error) error = refreshState.error
-        if (appendState is LoadState.Error) error = appendState.error
-
-        error?.let {
-            // Notify the ViewModel about the error. It will decide what to do next.
-            viewModel.processUiAction(
-                UiAction.OnPagerLoadFailed(
-                    error = error,
-                    itemCount = articlesAdapter.itemCount
-                )
-            )
-        }
+        // Notify the ViewModel about current state. It will decide what to do next.
+        viewModel.processUiAction(
+            UiAction.OnPagerStateChanged(state = state.source)
+        )
     }
 
     private fun render(viewState: ViewState) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            articlesAdapter.submitData(viewState.articlesPagingData)
+        }
         with(binding) {
             when (viewState.state) {
                 is State.Load -> {

@@ -1,5 +1,7 @@
 package ru.alexadler9.newsfetcher.utility
 
+import androidx.paging.LoadState
+import androidx.paging.LoadStates
 import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
 import ru.alexadler9.newsfetcher.data.news.remote.model.ArticleRemoteModel
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
@@ -56,4 +58,18 @@ val ARTICLE_MODEL_2 = ArticleModel(
     description = "description 2",
     urlToImage = "https:/article-image-url-2",
     publishedAt = "2024-01-01T12:00:00Z"
+)
+
+val EXCEPTION_LOAD = RuntimeException("Failed to load")
+
+val PAGER_STATES_LOADED = LoadStates(
+    refresh = LoadState.NotLoading(true),
+    prepend = LoadState.NotLoading(true),
+    append = LoadState.NotLoading(true)
+)
+
+val PAGER_STATES_ERROR = LoadStates(
+    refresh = LoadState.Error(EXCEPTION_LOAD),
+    prepend = LoadState.NotLoading(true),
+    append = LoadState.NotLoading(true)
 )
