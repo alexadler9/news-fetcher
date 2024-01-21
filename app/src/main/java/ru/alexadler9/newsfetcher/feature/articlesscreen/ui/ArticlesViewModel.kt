@@ -1,7 +1,9 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
 import androidx.lifecycle.viewModelScope
+import androidx.paging.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.Action
 import ru.alexadler9.newsfetcher.base.BaseViewModel
@@ -18,15 +20,37 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         state = State.Load
     )
 
-    var bookmarks: List<ArticleModel> = emptyList()
+    private var bookmarksUrl: Set<String> = emptySet()
+
+    private val articlesPagingDataFlow: StateFlow<PagingData<ArticleItem>> =
+        newArticlesPager()
+            .flow
+            .map { pagingData ->
+                pagingData.map { articleModel ->
+                    ArticleItem(articleModel, false)
+                }
+            }
+            .cachedIn(viewModelScope)
+            .stateIn(viewModelScope, SharingStarted.Lazily, PagingData.empty())
 
     init {
         viewModelScope.launch {
-            articlesLoad()
-            interactor.getArticleBookmarks()
-                .collect {
-                    processDataAction(DataAction.OnBookmarksUpdated(bookmarks = it))
+            launch {
+                interactor.getArticleBookmarks()
+                    .map { bookmarks ->
+                        bookmarks.map { bookmark ->
+                            bookmark.url
+                        }.toHashSet()
+                    }
+                    .collectLatest {
+                        processDataAction(DataAction.OnBookmarksUpdated(bookmarksUrl = it))
+                    }
+            }
+            launch {
+                articlesPagingDataFlow.collectLatest {
+                    processDataAction(DataAction.OnArticlesLoadSucceed(articlesPagingData = it))
                 }
+            }
         }
     }
 
@@ -34,27 +58,29 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         return when (action) {
             is UiAction.OnBookmarkButtonClicked -> {
                 if (previousState.state is State.Content) {
-                    val item = previousState.state.articles[action.index]
-                    changeArticleBookmark(item)
+                    changeArticleBookmark(action.article.data)
                 }
                 null
             }
 
             is DataAction.OnArticlesLoadSucceed -> {
-                bookmarkArticles(action.articles, bookmarks)
-                previousState.copy(state = State.Content(articles = action.articles))
+                val articlesPagingData = action.articlesPagingData.map {
+                    bookmarkArticle(it, bookmarksUrl)
+                }
+                previousState.copy(state = State.Content(articlesPagingData = articlesPagingData))
             }
 
-            is DataAction.OnArticlesLoadFailed -> {
-                previousState.copy(state = State.Error(action.error))
-            }
+//            is DataAction.OnArticlesLoadFailed -> {
+//                previousState.copy(state = State.Error(action.error))
+//            }
 
             is DataAction.OnBookmarksUpdated -> {
-                bookmarks = action.bookmarks
+                bookmarksUrl = action.bookmarksUrl
                 if (previousState.state is State.Content) {
-                    val articles = previousState.state.articles.map { it.copy() }
-                    bookmarkArticles(articles, bookmarks)
-                    return previousState.copy(state = State.Content(articles = articles))
+                    val articlesPagingData = previousState.state.articlesPagingData.map {
+                        bookmarkArticle(it, bookmarksUrl)
+                    }
+                    return previousState.copy(state = State.Content(articlesPagingData = articlesPagingData))
                 }
                 null
             }
@@ -63,35 +89,15 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         }
     }
 
-    private fun articlesLoad() {
-        viewModelScope.launch {
-            interactor.getArticles().fold(
-                onError = {
-                    processDataAction(DataAction.OnArticlesLoadFailed(error = it))
-                },
-                onSuccess = {
-                    processDataAction(
-                        DataAction.OnArticlesLoadSucceed(
-                            articles = it.map { article ->
-                                ArticleItem(article, false)
-                            }
-                        )
-                    )
-                }
-            )
+    private fun newArticlesPager(): Pager<Int, ArticleModel> =
+        Pager(PagingConfig(5, enablePlaceholders = false)) {
+            interactor.getTopHeadlinesArticlesPagingSource()
         }
-    }
 
-    private fun bookmarkArticles(articles: List<ArticleItem>, bookmarks: List<ArticleModel>) {
-        val bookmarksSet = bookmarks.map { it.url }.toHashSet()
-        articles.forEach {
-            it.bookmarked = bookmarksSet.contains(it.data.url)
-        }
-    }
+    private fun bookmarkArticle(article: ArticleItem, bookmarksUrl: Set<String>) =
+        article.copy(bookmarked = bookmarksUrl.contains(article.data.url))
 
-    private fun changeArticleBookmark(item: ArticleItem) {
-        viewModelScope.launch {
-            interactor.changeArticleBookmark(item.data)
-        }
+    private fun changeArticleBookmark(item: ArticleModel) = viewModelScope.launch {
+        interactor.changeArticleBookmark(item)
     }
 }
