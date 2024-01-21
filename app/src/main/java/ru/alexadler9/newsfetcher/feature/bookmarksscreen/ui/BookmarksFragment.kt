@@ -72,10 +72,12 @@ class BookmarksFragment : Fragment() {
         with(binding) {
             when (viewState.state) {
                 is State.Load -> {
+                    pbBookmarks.isVisible = true
                     rvBookmarks.isVisible = false
                 }
 
                 is State.Content -> {
+                    pbBookmarks.isVisible = false
                     rvBookmarks.isVisible = true
                     bookmarksAdapter.submitList(viewState.state.bookmarks)
                 }

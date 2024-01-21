@@ -11,4 +11,6 @@
 
     <string name="article_link_share_message">%1$s\n%2$s</string>
     <string name="article_link_share_title">Поделиться ссылкой на статью</string>
+
+    <string name="load_error">ОШИБКА ЗАГРУЗКИ ДАННЫХ</string>
 </resources>

@@ -1,7 +1,6 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +10,6 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.paging.CombinedLoadStates
-import androidx.paging.LoadState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -92,19 +90,22 @@ class ArticlesFragment : Fragment() {
         with(binding) {
             when (viewState.state) {
                 is State.Load -> {
+                    pbArticles.isVisible = true
+                    layoutError.isVisible = false
                     rvArticles.isVisible = false
                 }
 
                 is State.Content -> {
+                    pbArticles.isVisible = false
+                    layoutError.isVisible = false
                     rvArticles.isVisible = true
-                    viewLifecycleOwner.lifecycleScope.launch {
-                        articlesAdapter.submitData(viewState.state.articlesPagingData)
-                    }
                 }
 
                 is State.Error -> {
+                    pbArticles.isVisible = false
+                    layoutError.isVisible = true
                     rvArticles.isVisible = false
-                    Log.d("ARTICLES", "Error: ${viewState.state.throwable.message}")
+                    tvError.text = viewState.state.throwable.localizedMessage
                 }
             }
         }
