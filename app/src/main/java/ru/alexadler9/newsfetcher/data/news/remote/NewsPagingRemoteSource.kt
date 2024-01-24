@@ -21,7 +21,7 @@ class NewsPagingRemoteSource @Inject constructor(
             }.map {
                 it.toDomain()
             }
-            val nextPageNumber = if (articles.isEmpty()) null else pageNumber + 1
+            val nextPageNumber = if (response.articleList.isEmpty()) null else pageNumber + 1
             val prevPageNumber = if (pageNumber > 1) pageNumber - 1 else null
             return LoadResult.Page(articles, prevPageNumber, nextPageNumber)
         } catch (e: HttpException) {
