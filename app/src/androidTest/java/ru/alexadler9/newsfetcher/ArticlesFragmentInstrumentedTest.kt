@@ -2,6 +2,7 @@ package ru.alexadler9.newsfetcher
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -16,12 +17,14 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import ru.alexadler9.newsfetcher.mock.RESPONSE_DELAY
-import ru.alexadler9.newsfetcher.utility.RecyclerViewChildActions.Companion.childAtPositionWithMatcher
+import ru.alexadler9.newsfetcher.utility.RecyclerViewChild.Companion.actionOnChildAtPosition
+import ru.alexadler9.newsfetcher.utility.RecyclerViewChild.Companion.childAtPositionWithMatcher
 import ru.alexadler9.newsfetcher.utility.waitFor
+import ru.alexadler9.newsfetcher.utility.withDrawableId
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class InstrumentedTest {
+class ArticlesFragmentInstrumentedTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -85,5 +88,60 @@ class InstrumentedTest {
                 isDescendantOfA(withId(R.id.rvArticles))
             )
         ).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testAddArticleToBookmark() {
+        onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
+
+        onView(withId(R.id.rvArticles))
+            .check(matches(isDisplayed()))
+            .check(
+                matches(
+                    childAtPositionWithMatcher(
+                        0,
+                        R.id.ivBookmark,
+                        withDrawableId(R.drawable.ic_baseline_bookmark_border_24)
+                    )
+                )
+            )
+
+        onView(withId(R.id.rvArticles))
+            .perform(actionOnChildAtPosition<RecyclerView.ViewHolder>(0, R.id.ivBookmark, click()))
+
+        onView(withId(R.id.rvArticles))
+            .check(matches(isDisplayed()))
+            .check(
+                matches(
+                    childAtPositionWithMatcher(
+                        0,
+                        R.id.ivBookmark,
+                        withDrawableId(R.drawable.ic_baseline_bookmark_24)
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun testDeleteArticleFromBookmarks() {
+        onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
+
+        onView(withId(R.id.rvArticles))
+            .perform(actionOnChildAtPosition<RecyclerView.ViewHolder>(0, R.id.ivBookmark, click()))
+
+        onView(withId(R.id.rvArticles))
+            .perform(actionOnChildAtPosition<RecyclerView.ViewHolder>(0, R.id.ivBookmark, click()))
+
+        onView(withId(R.id.rvArticles))
+            .check(matches(isDisplayed()))
+            .check(
+                matches(
+                    childAtPositionWithMatcher(
+                        0,
+                        R.id.ivBookmark,
+                        withDrawableId(R.drawable.ic_baseline_bookmark_border_24)
+                    )
+                )
+            )
     }
 }
