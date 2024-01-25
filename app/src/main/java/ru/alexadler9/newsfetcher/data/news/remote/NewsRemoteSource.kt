@@ -8,6 +8,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.alexadler9.newsfetcher.data.news.remote.model.ArticlesRemoteModel
+import ru.alexadler9.newsfetcher.data.news.remote.type.ArticlesCountryRemote
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -22,9 +23,11 @@ class NewsRemoteSource @Inject constructor(
 
     /**
      * Get live top articles headlines.
+     * @param country The country for which the articles will be searched.
      */
-    suspend fun getTopHeadlinesArticles(): ArticlesRemoteModel {
-        return api.getTopHeadlinesArticles()
+    suspend fun getTopHeadlinesArticles(country: ArticlesCountryRemote)
+            : ArticlesRemoteModel {
+        return api.getTopHeadlinesArticles(country = country)
     }
 
     /**

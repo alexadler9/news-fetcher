@@ -16,11 +16,13 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.*
 import ru.alexadler9.newsfetcher.data.news.NewsRepository
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
 import ru.alexadler9.newsfetcher.utility.*
 import ru.alexadler9.newsfetcher.utility.junit5.CoroutinesTestExtension
 import ru.alexadler9.newsfetcher.utility.junit5.InstantExecutorExtension
+import ru.alexadler9.newsfetcher.utility.mockito.anyExt
 
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -45,7 +47,10 @@ class ArticlesViewModelTest {
                 emit(listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2))
             }
         )
-        `when`(newsRepository.getTopHeadlinesArticlesPagingSource()).thenReturn(
+        `when`(newsRepository.getArticlesCountry()).thenReturn(
+            ArticlesCountry.RUSSIA
+        )
+        `when`(newsRepository.getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))).thenReturn(
             listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2)
                 .asPagingSourceFactory()
                 .invoke()
@@ -54,7 +59,8 @@ class ArticlesViewModelTest {
         subject = ArticlesViewModel(articlesInteractor)
         subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED))
 
-        verify(newsRepository, times(1)).getTopHeadlinesArticlesPagingSource()
+        verify(newsRepository, times(1))
+            .getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))
         verify(newsRepository, times(1)).getArticleBookmarks()
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
@@ -79,7 +85,10 @@ class ArticlesViewModelTest {
                 emit(listOf(ARTICLE_MODEL_1))
             }
         )
-        `when`(newsRepository.getTopHeadlinesArticlesPagingSource()).thenReturn(
+        `when`(newsRepository.getArticlesCountry()).thenReturn(
+            ArticlesCountry.RUSSIA
+        )
+        `when`(newsRepository.getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))).thenReturn(
             listOf(ARTICLE_MODEL_1)
                 .asPagingSourceFactory()
                 .invoke()
@@ -127,7 +136,10 @@ class ArticlesViewModelTest {
                 emit(emptyList())
             }
         )
-        `when`(newsRepository.getTopHeadlinesArticlesPagingSource()).thenReturn(
+        `when`(newsRepository.getArticlesCountry()).thenReturn(
+            ArticlesCountry.RUSSIA
+        )
+        `when`(newsRepository.getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))).thenReturn(
             listOf(ARTICLE_MODEL_1)
                 .asPagingSourceFactory()
                 .invoke()
@@ -168,7 +180,10 @@ class ArticlesViewModelTest {
     @Test
     fun `articles data load failed`() = runTest {
         `when`(newsRepository.getArticleBookmarks()).thenReturn(flow {})
-        `when`(newsRepository.getTopHeadlinesArticlesPagingSource()).thenReturn(
+        `when`(newsRepository.getArticlesCountry()).thenReturn(
+            ArticlesCountry.RUSSIA
+        )
+        `when`(newsRepository.getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))).thenReturn(
             emptyList<ArticleModel>()
                 .asPagingSourceFactory()
                 .invoke()
@@ -177,7 +192,8 @@ class ArticlesViewModelTest {
         subject = ArticlesViewModel(articlesInteractor)
         subject.processUiAction((UiAction.OnPagerStateChanged(PAGER_STATES_ERROR)))
 
-        verify(newsRepository, times(1)).getTopHeadlinesArticlesPagingSource()
+        verify(newsRepository, times(1))
+            .getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Error, equalTo(true))
         assertThat(

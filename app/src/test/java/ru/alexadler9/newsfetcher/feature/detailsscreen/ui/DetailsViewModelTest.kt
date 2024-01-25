@@ -18,7 +18,7 @@ import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import ru.alexadler9.newsfetcher.feature.detailsscreen.ArticleDetailsInteractor
 import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_1
 import ru.alexadler9.newsfetcher.utility.EXCEPTION_LOAD
-import ru.alexadler9.newsfetcher.utility.ext.anyExt
+import ru.alexadler9.newsfetcher.utility.mockito.anyExt
 
 /**
  * JUnit4 (junit-vintage-engine) + Robolectric

@@ -69,6 +69,8 @@ class ArticlesFragment : Fragment() {
         viewModel.viewState
             .onEach(::render)
             .launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewModel.processUiAction(UiAction.OnApplySettings)
     }
 
     override fun onDestroyView() {

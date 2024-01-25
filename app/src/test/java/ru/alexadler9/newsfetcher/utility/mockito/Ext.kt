@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.utility.ext
+package ru.alexadler9.newsfetcher.utility.mockito
 
 import org.mockito.Mockito
 

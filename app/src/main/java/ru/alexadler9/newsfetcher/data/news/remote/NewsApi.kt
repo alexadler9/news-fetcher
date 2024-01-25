@@ -5,6 +5,7 @@ import retrofit2.http.GET
 import retrofit2.http.Query
 import ru.alexadler9.newsfetcher.BuildConfig
 import ru.alexadler9.newsfetcher.data.news.remote.model.ArticlesRemoteModel
+import ru.alexadler9.newsfetcher.data.news.remote.type.ArticlesCountryRemote
 
 interface NewsApi {
 
@@ -18,7 +19,7 @@ interface NewsApi {
     @GET("v2/top-headlines")
     suspend fun getTopHeadlinesArticles(
         @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY,
-        @Query("country") country: String = "us",
+        @Query("country") country: ArticlesCountryRemote = ArticlesCountryRemote.us,
         @Query("pageSize") @IntRange(
             from = 1,
             to = PAGE_SIZE_MAX.toLong()

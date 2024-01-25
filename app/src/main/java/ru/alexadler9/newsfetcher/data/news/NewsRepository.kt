@@ -4,25 +4,48 @@ import android.graphics.Bitmap
 import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import ru.alexadler9.newsfetcher.base.ext.enumContains
 import ru.alexadler9.newsfetcher.data.news.local.db.NewsLocalSource
+import ru.alexadler9.newsfetcher.data.news.local.prefs.NewsPreferencesSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsPagingRemoteSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsRemoteSource
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NewsRepository @Inject constructor(
     private val newsRemoteSource: NewsRemoteSource,
-    private val newsPagingRemoteSource: NewsPagingRemoteSource,
-    private val newsLocalSource: NewsLocalSource
+    private val newsPagingRemoteSourceFactory: NewsPagingRemoteSource.Factory,
+    private val newsLocalSource: NewsLocalSource,
+    private val newsPreferencesSource: NewsPreferencesSource
 ) {
 
     /**
-     * Get live top articles headlines.
+     * Get the country for which the articles will be searched.
      */
-    suspend fun getTopHeadlinesArticles(): List<ArticleModel> {
-        return newsRemoteSource.getTopHeadlinesArticles().articleList.filter {
+    fun getArticlesCountry(): ArticlesCountry {
+        val country = newsPreferencesSource.getCountry()
+        return if (enumContains<ArticlesCountry>(country))
+            ArticlesCountry.valueOf(country) else
+            ArticlesCountry.values().first()
+    }
+
+    /**
+     * Save the country for which the articles will be searched.
+     * @param country The country.
+     */
+    fun saveArticlesCountry(country: ArticlesCountry) {
+        newsPreferencesSource.setCountry(country.name)
+    }
+
+    /**
+     * Get live top articles headlines.
+     * @param country The country for which the articles will be searched.
+     */
+    suspend fun getTopHeadlinesArticles(country: ArticlesCountry): List<ArticleModel> {
+        return newsRemoteSource.getTopHeadlinesArticles(country.toRemote()).articleList.filter {
             it.title != "[Removed]" && it.description != ""
         }.map {
             it.toDomain()
@@ -31,9 +54,10 @@ class NewsRepository @Inject constructor(
 
     /**
      * Get live top articles headlines via paging source.
+     * @param country The country for which the articles will be searched.
      */
-    fun getTopHeadlinesArticlesPagingSource(): PagingSource<Int, ArticleModel> {
-        return newsPagingRemoteSource
+    fun getTopHeadlinesArticlesPagingSource(country: ArticlesCountry): PagingSource<Int, ArticleModel> {
+        return newsPagingRemoteSourceFactory.create(country.toRemote())
     }
 
     /**

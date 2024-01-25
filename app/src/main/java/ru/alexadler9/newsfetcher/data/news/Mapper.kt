@@ -2,7 +2,9 @@ package ru.alexadler9.newsfetcher.data.news
 
 import ru.alexadler9.newsfetcher.data.news.local.db.model.BookmarkEntity
 import ru.alexadler9.newsfetcher.data.news.remote.model.ArticleRemoteModel
+import ru.alexadler9.newsfetcher.data.news.remote.type.ArticlesCountryRemote
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -49,3 +51,9 @@ fun ArticleModel.toEntity() = BookmarkEntity(
     urlToImage = urlToImage,
     publishedAt = publishedAt
 )
+
+fun ArticlesCountry.toRemote(): ArticlesCountryRemote =
+    when (this) {
+        ArticlesCountry.USA -> ArticlesCountryRemote.us
+        ArticlesCountry.RUSSIA -> ArticlesCountryRemote.ru
+    }

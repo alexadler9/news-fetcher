@@ -17,9 +17,9 @@ import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.bookmarksscreen.BookmarksInteractor
 import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_1
 import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_2
-import ru.alexadler9.newsfetcher.utility.ext.anyExt
 import ru.alexadler9.newsfetcher.utility.junit5.CoroutinesTestExtension
 import ru.alexadler9.newsfetcher.utility.junit5.InstantExecutorExtension
+import ru.alexadler9.newsfetcher.utility.mockito.anyExt
 
 @ExtendWith(InstantExecutorExtension::class, CoroutinesTestExtension::class)
 @OptIn(ExperimentalCoroutinesApi::class)

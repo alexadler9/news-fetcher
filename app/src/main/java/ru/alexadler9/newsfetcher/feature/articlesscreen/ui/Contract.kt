@@ -20,6 +20,7 @@ sealed class ViewEvent {
 }
 
 sealed class UiAction : Action {
+    object OnApplySettings : UiAction()
     data class OnPagerStateChanged(val state: LoadStates) : UiAction()
     data class OnBookmarkButtonClicked(val article: ArticleItem) : UiAction()
 }
