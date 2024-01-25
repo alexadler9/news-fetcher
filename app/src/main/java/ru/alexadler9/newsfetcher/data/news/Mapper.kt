@@ -1,6 +1,6 @@
 package ru.alexadler9.newsfetcher.data.news
 
-import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
+import ru.alexadler9.newsfetcher.data.news.local.db.model.BookmarkEntity
 import ru.alexadler9.newsfetcher.data.news.remote.model.ArticleRemoteModel
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import java.text.SimpleDateFormat

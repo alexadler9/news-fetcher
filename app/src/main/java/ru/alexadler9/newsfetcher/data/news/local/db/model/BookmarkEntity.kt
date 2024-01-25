@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.data.news.local.model
+package ru.alexadler9.newsfetcher.data.news.local.db.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
