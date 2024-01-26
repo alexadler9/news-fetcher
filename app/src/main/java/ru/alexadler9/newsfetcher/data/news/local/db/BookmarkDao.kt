@@ -1,9 +1,9 @@
-package ru.alexadler9.newsfetcher.data.news.local
+package ru.alexadler9.newsfetcher.data.news.local.db
 
 import androidx.room.*
 import kotlinx.coroutines.flow.Flow
-import ru.alexadler9.newsfetcher.data.news.local.model.BOOKMARKS_TABLE
-import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
+import ru.alexadler9.newsfetcher.data.news.local.db.model.BOOKMARKS_TABLE
+import ru.alexadler9.newsfetcher.data.news.local.db.model.BookmarkEntity
 
 @Dao
 interface BookmarkDao {

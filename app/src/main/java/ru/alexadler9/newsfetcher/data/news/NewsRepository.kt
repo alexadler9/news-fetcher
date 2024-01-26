@@ -4,25 +4,77 @@ import android.graphics.Bitmap
 import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
-import ru.alexadler9.newsfetcher.data.news.local.NewsLocalSource
+import ru.alexadler9.newsfetcher.base.ext.enumContains
+import ru.alexadler9.newsfetcher.data.news.local.db.NewsLocalSource
+import ru.alexadler9.newsfetcher.data.news.local.prefs.NewsPreferencesSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsPagingRemoteSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsRemoteSource
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class NewsRepository @Inject constructor(
-    private val remoteSource: NewsRemoteSource,
-    private val pagingRemoteSource: NewsPagingRemoteSource,
-    private val localSource: NewsLocalSource
+    private val newsRemoteSource: NewsRemoteSource,
+    private val newsPagingRemoteSourceFactory: NewsPagingRemoteSource.Factory,
+    private val newsLocalSource: NewsLocalSource,
+    private val newsPreferencesSource: NewsPreferencesSource
 ) {
 
     /**
-     * Get live top articles headlines.
+     * Get the country for which the articles will be searched.
      */
-    suspend fun getTopHeadlinesArticles(): List<ArticleModel> {
-        return remoteSource.getTopHeadlinesArticles().articleList.filter {
+    fun getArticlesCountry(): ArticlesCountry {
+        val country = newsPreferencesSource.getCountry()
+        return if (enumContains<ArticlesCountry>(country))
+            ArticlesCountry.valueOf(country) else
+            ArticlesCountry.values().first()
+    }
+
+    /**
+     * Save the country for which the articles will be searched.
+     * @param country The country.
+     */
+    fun saveArticlesCountry(country: ArticlesCountry) {
+        newsPreferencesSource.setCountry(country.name)
+    }
+
+    /**
+     * Get the category in which the articles will be searched.
+     */
+    fun getArticlesCategory(): ArticlesCategory {
+        val category = newsPreferencesSource.getCategory()
+        return if (enumContains<ArticlesCategory>(category))
+            ArticlesCategory.valueOf(category) else
+            ArticlesCategory.GENERAL
+    }
+
+    /**
+     * Save the category in which the articles will be searched.
+     * @param category The category.
+     */
+    fun saveArticlesCategory(category: ArticlesCategory) {
+        newsPreferencesSource.setCategory(category.name)
+    }
+
+    /**
+     * Get live top articles headlines.
+     * @param country The country for which the articles will be searched.
+     * @param category The category in which the articles will be searched.
+     * @param query Keywords or a phrase by which the articles will be searched.
+     */
+    suspend fun getTopHeadlinesArticles(
+        country: ArticlesCountry,
+        category: ArticlesCategory,
+        query: String
+    ): List<ArticleModel> {
+        return newsRemoteSource.getTopHeadlinesArticles(
+            country.toRemote(),
+            category.toRemote(),
+            query
+        ).articleList.filter {
             it.title != "[Removed]" && it.description != ""
         }.map {
             it.toDomain()
@@ -31,9 +83,20 @@ class NewsRepository @Inject constructor(
 
     /**
      * Get live top articles headlines via paging source.
+     * @param country The country for which the articles will be searched.
+     * @param category The category in which the articles will be searched.
+     * @param query Keywords or a phrase by which the articles will be searched.
      */
-    fun getTopHeadlinesArticlesPagingSource(): PagingSource<Int, ArticleModel> {
-        return pagingRemoteSource
+    fun getTopHeadlinesArticlesPagingSource(
+        country: ArticlesCountry,
+        category: ArticlesCategory,
+        query: String
+    ): PagingSource<Int, ArticleModel> {
+        return newsPagingRemoteSourceFactory.create(
+            country.toRemote(),
+            category.toRemote(),
+            query
+        )
     }
 
     /**
@@ -41,7 +104,7 @@ class NewsRepository @Inject constructor(
      * @param article The article.
      */
     suspend fun getArticleWallpaper(article: ArticleModel): Bitmap {
-        return remoteSource.getArticleWallpaper(article.urlToImage)
+        return newsRemoteSource.getArticleWallpaper(article.urlToImage)
     }
 
     /**
@@ -49,14 +112,14 @@ class NewsRepository @Inject constructor(
      * @param article The article.
      */
     suspend fun addArticleToBookmark(article: ArticleModel) {
-        localSource.addBookmark(article.toEntity())
+        newsLocalSource.addBookmark(article.toEntity())
     }
 
     /**
      * Get list of article bookmarks. It is sorted from newest to oldest.
      */
     fun getArticleBookmarks(): Flow<List<ArticleModel>> {
-        return localSource.getBookmarks().map {
+        return newsLocalSource.getBookmarks().map {
             it.map { bookmarkEntity ->
                 bookmarkEntity.toDomain()
             }.toList()
@@ -68,7 +131,7 @@ class NewsRepository @Inject constructor(
      * @param article The article.
      */
     suspend fun deleteArticleFromBookmarks(article: ArticleModel) {
-        localSource.deleteBookmark(article.toEntity())
+        newsLocalSource.deleteBookmark(article.toEntity())
     }
 
     /**
@@ -76,6 +139,6 @@ class NewsRepository @Inject constructor(
      * @param url The article URL.
      */
     suspend fun articleBookmarkExist(url: String): Boolean {
-        return localSource.bookmarkExist(url)
+        return newsLocalSource.bookmarkExist(url)
     }
 }

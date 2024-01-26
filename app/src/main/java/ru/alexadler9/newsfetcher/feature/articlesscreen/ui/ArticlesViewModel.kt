@@ -3,11 +3,14 @@ package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 import androidx.lifecycle.viewModelScope
 import androidx.paging.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.Action
 import ru.alexadler9.newsfetcher.base.BaseViewModel
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
 import javax.inject.Inject
@@ -16,9 +19,23 @@ import javax.inject.Inject
 class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInteractor) :
     BaseViewModel<ViewState, ViewEvent>() {
 
+    private data class QueryParams(
+        val country: ArticlesCountry,
+        val category: ArticlesCategory,
+        val query: String
+    )
+
     override val initialViewState = ViewState(
         articlesPagingData = PagingData.empty(),
         state = State.Load
+    )
+
+    private val queryParamsFlow = MutableStateFlow(
+        QueryParams(
+            interactor.getArticlesCountry(),
+            interactor.getArticlesCategory(),
+            ""
+        )
     )
 
     private val bookmarksUrlsFlow: StateFlow<Set<String>> =
@@ -30,9 +47,13 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
             }
             .stateIn(viewModelScope, SharingStarted.Lazily, emptySet())
 
+    @OptIn(ExperimentalCoroutinesApi::class)
     private val articlesPagingDataFlow: StateFlow<PagingData<ArticleItem>> =
-        newArticlesPager()
-            .flow
+        queryParamsFlow
+            .map(::newArticlesPager)
+            .flatMapLatest { pager ->
+                pager.flow
+            }
             .map { pagingData ->
                 pagingData.map { articleModel ->
                     ArticleItem(articleModel, false)
@@ -58,6 +79,18 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
 
     override fun reduce(action: Action, previousState: ViewState): ViewState? {
         return when (action) {
+            is UiAction.OnApplySettings -> {
+                queryParamsFlow.compareAndSet(
+                    queryParamsFlow.value,
+                    QueryParams(
+                        interactor.getArticlesCountry(),
+                        interactor.getArticlesCategory(),
+                        queryParamsFlow.value.query
+                    )
+                )
+                null
+            }
+
             is UiAction.OnPagerStateChanged -> {
                 if (previousState.state is State.Load) {
                     val refreshState = action.state.refresh
@@ -104,9 +137,13 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         }
     }
 
-    private fun newArticlesPager(): Pager<Int, ArticleModel> =
+    private fun newArticlesPager(params: QueryParams): Pager<Int, ArticleModel> =
         Pager(PagingConfig(5, enablePlaceholders = false)) {
-            interactor.getTopHeadlinesArticlesPagingSource()
+            interactor.getTopHeadlinesArticlesPagingSource(
+                params.country,
+                params.category,
+                params.query
+            )
         }
 
     private fun bookmarkArticle(article: ArticleItem, bookmarksUrl: Set<String>) =

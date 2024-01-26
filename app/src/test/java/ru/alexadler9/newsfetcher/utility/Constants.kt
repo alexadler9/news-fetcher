@@ -2,7 +2,7 @@ package ru.alexadler9.newsfetcher.utility
 
 import androidx.paging.LoadState
 import androidx.paging.LoadStates
-import ru.alexadler9.newsfetcher.data.news.local.model.BookmarkEntity
+import ru.alexadler9.newsfetcher.data.news.local.db.model.BookmarkEntity
 import ru.alexadler9.newsfetcher.data.news.remote.model.ArticleRemoteModel
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 

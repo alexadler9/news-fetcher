@@ -3,6 +3,13 @@ package ru.alexadler9.newsfetcher.data.news
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.equalTo
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.Arguments
+import org.junit.jupiter.params.provider.MethodSource
+import ru.alexadler9.newsfetcher.data.news.remote.type.ArticlesCategoryRemote
+import ru.alexadler9.newsfetcher.data.news.remote.type.ArticlesCountryRemote
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import ru.alexadler9.newsfetcher.utility.ARTICLE_LOCAL_MODEL
 import ru.alexadler9.newsfetcher.utility.ARTICLE_MODEL_1
 import ru.alexadler9.newsfetcher.utility.ARTICLE_REMOTE_MODEL_1
@@ -56,5 +63,43 @@ class MapperKtTest {
         assertThat(articleEntity.title, equalTo(ARTICLE_MODEL_1.title))
         assertThat(articleEntity.publishedAt, equalTo(ARTICLE_MODEL_1.publishedAt))
         assertThat(articleEntity.urlToImage, equalTo(ARTICLE_MODEL_1.urlToImage))
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideCountries")
+    fun `converts local countries into a remote`(
+        input: ArticlesCountry,
+        expected: ArticlesCountryRemote
+    ) {
+        assertThat(input.toRemote(), equalTo(expected))
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideCategories")
+    fun `converts local categories into a remote`(
+        input: ArticlesCategory,
+        expected: ArticlesCategoryRemote
+    ) {
+        assertThat(input.toRemote(), equalTo(expected))
+    }
+
+    companion object {
+
+        @JvmStatic
+        private fun provideCountries() = listOf(
+            Arguments.of(ArticlesCountry.RUSSIA, ArticlesCountryRemote.ru),
+            Arguments.of(ArticlesCountry.USA, ArticlesCountryRemote.us)
+        )
+
+        @JvmStatic
+        private fun provideCategories() = listOf(
+            Arguments.of(ArticlesCategory.GENERAL, ArticlesCategoryRemote.general),
+            Arguments.of(ArticlesCategory.TECHNOLOGY, ArticlesCategoryRemote.technology),
+            Arguments.of(ArticlesCategory.SPORTS, ArticlesCategoryRemote.sports),
+            Arguments.of(ArticlesCategory.HEALTH, ArticlesCategoryRemote.health),
+            Arguments.of(ArticlesCategory.SCIENCE, ArticlesCategoryRemote.science),
+            Arguments.of(ArticlesCategory.ENTERTAINMENT, ArticlesCategoryRemote.entertainment),
+            Arguments.of(ArticlesCategory.BUSINESS, ArticlesCategoryRemote.business),
+        )
     }
 }
