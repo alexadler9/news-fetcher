@@ -19,4 +19,17 @@ class NewsPreferencesSource(private val appContext: Context) {
     fun setCountry(country: String) {
         appContext.requireNewsPreferences().setCountry(country)
     }
+
+    /**
+     * Get category in which the articles will be searched.
+     */
+    fun getCategory() = appContext.requireNewsPreferences().getCategory()
+
+    /**
+     * Save the category in which the articles will be searched.
+     * @param category The category.
+     */
+    fun setCategory(category: String) {
+        appContext.requireNewsPreferences().setCategory(category)
+    }
 }

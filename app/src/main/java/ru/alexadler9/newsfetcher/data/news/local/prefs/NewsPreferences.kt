@@ -7,5 +7,9 @@ import co.windly.ktxprefs.annotation.Prefs
 class NewsPreferences(
     /** The country for which the articles will be searched. */
     @DefaultString(value = "")
-    internal val country: String
+    internal val country: String,
+
+    /** The category in which the articles will be searched. */
+    @DefaultString(value = "")
+    internal val category: String
 )

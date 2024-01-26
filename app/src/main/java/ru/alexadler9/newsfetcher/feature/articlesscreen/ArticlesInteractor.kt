@@ -4,6 +4,7 @@ import dagger.hilt.android.scopes.ViewModelScoped
 import ru.alexadler9.newsfetcher.base.ext.attempt
 import ru.alexadler9.newsfetcher.data.news.NewsRepository
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
 import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import javax.inject.Inject
 
@@ -19,11 +20,19 @@ class ArticlesInteractor @Inject constructor(private val repository: NewsReposit
     fun getArticlesCountry() = repository.getArticlesCountry()
 
     /**
+     * Get the category in which the articles will be searched.
+     */
+    fun getArticlesCategory() = repository.getArticlesCategory()
+
+    /**
      * Get live top articles headlines via paging source.
      * @param country The country for which the articles will be searched.
+     * @param category The category in which the articles will be searched.
      */
-    fun getTopHeadlinesArticlesPagingSource(country: ArticlesCountry) =
-        repository.getTopHeadlinesArticlesPagingSource(country)
+    fun getTopHeadlinesArticlesPagingSource(
+        country: ArticlesCountry,
+        category: ArticlesCategory
+    ) = repository.getTopHeadlinesArticlesPagingSource(country, category)
 
     /**
      * Get list of article bookmarks.

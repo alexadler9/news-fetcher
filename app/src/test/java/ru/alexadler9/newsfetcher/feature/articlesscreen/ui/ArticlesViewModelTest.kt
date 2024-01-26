@@ -16,6 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mockito.*
 import ru.alexadler9.newsfetcher.data.news.NewsRepository
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
 import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
@@ -37,6 +38,13 @@ class ArticlesViewModelTest {
         newsRepository = mock(NewsRepository::class.java)
         articlesInteractor = ArticlesInteractor(newsRepository)
 //        subject = ArticlesViewModel(articlesInteractor)
+
+        `when`(newsRepository.getArticlesCountry()).thenReturn(
+            ArticlesCountry.RUSSIA
+        )
+        `when`(newsRepository.getArticlesCategory()).thenReturn(
+            ArticlesCategory.GENERAL
+        )
     }
 
     /* runTest is a coroutine builder designed for testing. Use this to wrap any tests that include coroutines */
@@ -47,10 +55,12 @@ class ArticlesViewModelTest {
                 emit(listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2))
             }
         )
-        `when`(newsRepository.getArticlesCountry()).thenReturn(
-            ArticlesCountry.RUSSIA
-        )
-        `when`(newsRepository.getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))).thenReturn(
+        `when`(
+            newsRepository.getTopHeadlinesArticlesPagingSource(
+                anyExt(ArticlesCountry::class.java),
+                anyExt(ArticlesCategory::class.java)
+            )
+        ).thenReturn(
             listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2)
                 .asPagingSourceFactory()
                 .invoke()
@@ -60,7 +70,10 @@ class ArticlesViewModelTest {
         subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED))
 
         verify(newsRepository, times(1))
-            .getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))
+            .getTopHeadlinesArticlesPagingSource(
+                anyExt(ArticlesCountry::class.java),
+                anyExt(ArticlesCategory::class.java)
+            )
         verify(newsRepository, times(1)).getArticleBookmarks()
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
@@ -85,10 +98,12 @@ class ArticlesViewModelTest {
                 emit(listOf(ARTICLE_MODEL_1))
             }
         )
-        `when`(newsRepository.getArticlesCountry()).thenReturn(
-            ArticlesCountry.RUSSIA
-        )
-        `when`(newsRepository.getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))).thenReturn(
+        `when`(
+            newsRepository.getTopHeadlinesArticlesPagingSource(
+                anyExt(ArticlesCountry::class.java),
+                anyExt(ArticlesCategory::class.java)
+            )
+        ).thenReturn(
             listOf(ARTICLE_MODEL_1)
                 .asPagingSourceFactory()
                 .invoke()
@@ -136,10 +151,12 @@ class ArticlesViewModelTest {
                 emit(emptyList())
             }
         )
-        `when`(newsRepository.getArticlesCountry()).thenReturn(
-            ArticlesCountry.RUSSIA
-        )
-        `when`(newsRepository.getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))).thenReturn(
+        `when`(
+            newsRepository.getTopHeadlinesArticlesPagingSource(
+                anyExt(ArticlesCountry::class.java),
+                anyExt(ArticlesCategory::class.java)
+            )
+        ).thenReturn(
             listOf(ARTICLE_MODEL_1)
                 .asPagingSourceFactory()
                 .invoke()
@@ -180,10 +197,12 @@ class ArticlesViewModelTest {
     @Test
     fun `articles data load failed`() = runTest {
         `when`(newsRepository.getArticleBookmarks()).thenReturn(flow {})
-        `when`(newsRepository.getArticlesCountry()).thenReturn(
-            ArticlesCountry.RUSSIA
-        )
-        `when`(newsRepository.getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))).thenReturn(
+        `when`(
+            newsRepository.getTopHeadlinesArticlesPagingSource(
+                anyExt(ArticlesCountry::class.java),
+                anyExt(ArticlesCategory::class.java)
+            )
+        ).thenReturn(
             emptyList<ArticleModel>()
                 .asPagingSourceFactory()
                 .invoke()
@@ -193,7 +212,10 @@ class ArticlesViewModelTest {
         subject.processUiAction((UiAction.OnPagerStateChanged(PAGER_STATES_ERROR)))
 
         verify(newsRepository, times(1))
-            .getTopHeadlinesArticlesPagingSource(anyExt(ArticlesCountry::class.java))
+            .getTopHeadlinesArticlesPagingSource(
+                anyExt(ArticlesCountry::class.java),
+                anyExt(ArticlesCategory::class.java)
+            )
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Error, equalTo(true))
         assertThat(

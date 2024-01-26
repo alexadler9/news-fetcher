@@ -10,6 +10,7 @@ import ru.alexadler9.newsfetcher.data.news.local.prefs.NewsPreferencesSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsPagingRemoteSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsRemoteSource
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
 import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -41,11 +42,36 @@ class NewsRepository @Inject constructor(
     }
 
     /**
+     * Get the category in which the articles will be searched.
+     */
+    fun getArticlesCategory(): ArticlesCategory {
+        val category = newsPreferencesSource.getCategory()
+        return if (enumContains<ArticlesCategory>(category))
+            ArticlesCategory.valueOf(category) else
+            ArticlesCategory.GENERAL
+    }
+
+    /**
+     * Save the category in which the articles will be searched.
+     * @param category The category.
+     */
+    fun saveArticlesCategory(category: ArticlesCategory) {
+        newsPreferencesSource.setCategory(category.name)
+    }
+
+    /**
      * Get live top articles headlines.
      * @param country The country for which the articles will be searched.
+     * @param category The category in which the articles will be searched.
      */
-    suspend fun getTopHeadlinesArticles(country: ArticlesCountry): List<ArticleModel> {
-        return newsRemoteSource.getTopHeadlinesArticles(country.toRemote()).articleList.filter {
+    suspend fun getTopHeadlinesArticles(
+        country: ArticlesCountry,
+        category: ArticlesCategory
+    ): List<ArticleModel> {
+        return newsRemoteSource.getTopHeadlinesArticles(
+            country.toRemote(),
+            category.toRemote()
+        ).articleList.filter {
             it.title != "[Removed]" && it.description != ""
         }.map {
             it.toDomain()
@@ -55,9 +81,16 @@ class NewsRepository @Inject constructor(
     /**
      * Get live top articles headlines via paging source.
      * @param country The country for which the articles will be searched.
+     * @param category The category in which the articles will be searched.
      */
-    fun getTopHeadlinesArticlesPagingSource(country: ArticlesCountry): PagingSource<Int, ArticleModel> {
-        return newsPagingRemoteSourceFactory.create(country.toRemote())
+    fun getTopHeadlinesArticlesPagingSource(
+        country: ArticlesCountry,
+        category: ArticlesCategory
+    ): PagingSource<Int, ArticleModel> {
+        return newsPagingRemoteSourceFactory.create(
+            country.toRemote(),
+            category.toRemote()
+        )
     }
 
     /**

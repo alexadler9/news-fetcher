@@ -6,13 +6,15 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import retrofit2.HttpException
+import ru.alexadler9.newsfetcher.data.news.remote.type.ArticlesCategoryRemote
 import ru.alexadler9.newsfetcher.data.news.remote.type.ArticlesCountryRemote
 import ru.alexadler9.newsfetcher.data.news.toDomain
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 
 class NewsPagingRemoteSource @AssistedInject constructor(
     private val newsApi: NewsApi,
-    @Assisted("country") private val country: ArticlesCountryRemote
+    @Assisted("country") private val country: ArticlesCountryRemote,
+    @Assisted("category") private val category: ArticlesCategoryRemote
 ) : PagingSource<Int, ArticleModel>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleModel> {
@@ -21,6 +23,7 @@ class NewsPagingRemoteSource @AssistedInject constructor(
             val pageSize = params.loadSize.coerceAtMost(NewsApi.PAGE_SIZE_MAX)
             val response = newsApi.getTopHeadlinesArticles(
                 country = country,
+                category = category,
                 pageSize = pageSize,
                 page = pageNumber
             )
@@ -48,6 +51,9 @@ class NewsPagingRemoteSource @AssistedInject constructor(
     @AssistedFactory
     interface Factory {
 
-        fun create(@Assisted("country") country: ArticlesCountryRemote): NewsPagingRemoteSource
+        fun create(
+            @Assisted("country") country: ArticlesCountryRemote,
+            @Assisted("category") category: ArticlesCategoryRemote
+        ): NewsPagingRemoteSource
     }
 }

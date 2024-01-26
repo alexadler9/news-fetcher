@@ -9,6 +9,7 @@ import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.base.Action
 import ru.alexadler9.newsfetcher.base.BaseViewModel
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
 import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
 import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 import ru.alexadler9.newsfetcher.feature.articlesscreen.ArticlesInteractor
@@ -18,12 +19,22 @@ import javax.inject.Inject
 class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInteractor) :
     BaseViewModel<ViewState, ViewEvent>() {
 
+    private data class QueryParams(
+        val country: ArticlesCountry,
+        val category: ArticlesCategory
+    )
+
     override val initialViewState = ViewState(
         articlesPagingData = PagingData.empty(),
         state = State.Load
     )
 
-    private val countryFlow = MutableStateFlow(interactor.getArticlesCountry())
+    private val queryParamsFlow = MutableStateFlow(
+        QueryParams(
+            interactor.getArticlesCountry(),
+            interactor.getArticlesCategory()
+        )
+    )
 
     private val bookmarksUrlsFlow: StateFlow<Set<String>> =
         interactor.getArticleBookmarks()
@@ -36,7 +47,8 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val articlesPagingDataFlow: StateFlow<PagingData<ArticleItem>> =
-        countryFlow.map(::newArticlesPager)
+        queryParamsFlow
+            .map(::newArticlesPager)
             .flatMapLatest { pager ->
                 pager.flow
             }
@@ -66,7 +78,13 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
     override fun reduce(action: Action, previousState: ViewState): ViewState? {
         return when (action) {
             is UiAction.OnApplySettings -> {
-                countryFlow.compareAndSet(countryFlow.value, interactor.getArticlesCountry())
+                queryParamsFlow.compareAndSet(
+                    queryParamsFlow.value,
+                    QueryParams(
+                        interactor.getArticlesCountry(),
+                        interactor.getArticlesCategory()
+                    )
+                )
                 null
             }
 
@@ -116,9 +134,12 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         }
     }
 
-    private fun newArticlesPager(country: ArticlesCountry): Pager<Int, ArticleModel> =
+    private fun newArticlesPager(params: QueryParams): Pager<Int, ArticleModel> =
         Pager(PagingConfig(5, enablePlaceholders = false)) {
-            interactor.getTopHeadlinesArticlesPagingSource(country)
+            interactor.getTopHeadlinesArticlesPagingSource(
+                params.country,
+                params.category
+            )
         }
 
     private fun bookmarkArticle(article: ArticleItem, bookmarksUrl: Set<String>) =
