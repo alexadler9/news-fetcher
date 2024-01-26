@@ -26,14 +26,17 @@ class NewsRemoteSource @Inject constructor(
      * Get live top articles headlines.
      * @param country The country for which the articles will be searched.
      * @param category The category in which the articles will be searched.
+     * @param query Keywords or a phrase that will be used to search for articles.
      */
     suspend fun getTopHeadlinesArticles(
         country: ArticlesCountryRemote,
-        category: ArticlesCategoryRemote
+        category: ArticlesCategoryRemote,
+        query: String
     ): ArticlesRemoteModel {
         return api.getTopHeadlinesArticles(
             country = country,
-            category = category
+            category = category,
+            query = query
         )
     }
 

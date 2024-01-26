@@ -15,6 +15,7 @@ interface NewsApi {
      * @param apiKey Unique API key.
      * @param country The 2-letter ISO 3166-1 code of the country you want to get headlines for.
      * @param category The category you want to get headlines for.
+     * @param query Keywords or a phrase to search for.
      * @param pageSize The number of results to return per page (request).
      * @param page Use this to page through the results.
      */
@@ -23,6 +24,7 @@ interface NewsApi {
         @Query("apiKey") apiKey: String = BuildConfig.NEWS_API_KEY,
         @Query("country") country: ArticlesCountryRemote = ArticlesCountryRemote.us,
         @Query("category") category: ArticlesCategoryRemote = ArticlesCategoryRemote.general,
+        @Query("q") query: String = "",
         @Query("pageSize") @IntRange(
             from = 1,
             to = PAGE_SIZE_MAX.toLong()

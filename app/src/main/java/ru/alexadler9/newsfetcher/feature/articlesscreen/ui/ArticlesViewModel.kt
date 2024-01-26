@@ -21,7 +21,8 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
 
     private data class QueryParams(
         val country: ArticlesCountry,
-        val category: ArticlesCategory
+        val category: ArticlesCategory,
+        val query: String
     )
 
     override val initialViewState = ViewState(
@@ -32,7 +33,8 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
     private val queryParamsFlow = MutableStateFlow(
         QueryParams(
             interactor.getArticlesCountry(),
-            interactor.getArticlesCategory()
+            interactor.getArticlesCategory(),
+            ""
         )
     )
 
@@ -82,7 +84,8 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
                     queryParamsFlow.value,
                     QueryParams(
                         interactor.getArticlesCountry(),
-                        interactor.getArticlesCategory()
+                        interactor.getArticlesCategory(),
+                        queryParamsFlow.value.query
                     )
                 )
                 null
@@ -138,7 +141,8 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
         Pager(PagingConfig(5, enablePlaceholders = false)) {
             interactor.getTopHeadlinesArticlesPagingSource(
                 params.country,
-                params.category
+                params.category,
+                params.query
             )
         }
 

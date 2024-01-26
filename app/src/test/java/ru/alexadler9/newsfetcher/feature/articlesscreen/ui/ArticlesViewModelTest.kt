@@ -58,7 +58,8 @@ class ArticlesViewModelTest {
         `when`(
             newsRepository.getTopHeadlinesArticlesPagingSource(
                 anyExt(ArticlesCountry::class.java),
-                anyExt(ArticlesCategory::class.java)
+                anyExt(ArticlesCategory::class.java),
+                anyString()
             )
         ).thenReturn(
             listOf(ARTICLE_MODEL_1, ARTICLE_MODEL_2)
@@ -72,7 +73,8 @@ class ArticlesViewModelTest {
         verify(newsRepository, times(1))
             .getTopHeadlinesArticlesPagingSource(
                 anyExt(ArticlesCountry::class.java),
-                anyExt(ArticlesCategory::class.java)
+                anyExt(ArticlesCategory::class.java),
+                anyString()
             )
         verify(newsRepository, times(1)).getArticleBookmarks()
         assertThat(subject.viewState.value, notNullValue())
@@ -101,7 +103,8 @@ class ArticlesViewModelTest {
         `when`(
             newsRepository.getTopHeadlinesArticlesPagingSource(
                 anyExt(ArticlesCountry::class.java),
-                anyExt(ArticlesCategory::class.java)
+                anyExt(ArticlesCategory::class.java),
+                anyString()
             )
         ).thenReturn(
             listOf(ARTICLE_MODEL_1)
@@ -154,7 +157,8 @@ class ArticlesViewModelTest {
         `when`(
             newsRepository.getTopHeadlinesArticlesPagingSource(
                 anyExt(ArticlesCountry::class.java),
-                anyExt(ArticlesCategory::class.java)
+                anyExt(ArticlesCategory::class.java),
+                anyString()
             )
         ).thenReturn(
             listOf(ARTICLE_MODEL_1)
@@ -200,7 +204,8 @@ class ArticlesViewModelTest {
         `when`(
             newsRepository.getTopHeadlinesArticlesPagingSource(
                 anyExt(ArticlesCountry::class.java),
-                anyExt(ArticlesCategory::class.java)
+                anyExt(ArticlesCategory::class.java),
+                anyString()
             )
         ).thenReturn(
             emptyList<ArticleModel>()
@@ -214,7 +219,8 @@ class ArticlesViewModelTest {
         verify(newsRepository, times(1))
             .getTopHeadlinesArticlesPagingSource(
                 anyExt(ArticlesCountry::class.java),
-                anyExt(ArticlesCategory::class.java)
+                anyExt(ArticlesCategory::class.java),
+                anyString()
             )
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Error, equalTo(true))

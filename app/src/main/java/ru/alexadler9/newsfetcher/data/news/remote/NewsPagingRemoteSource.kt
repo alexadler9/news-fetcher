@@ -14,7 +14,8 @@ import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 class NewsPagingRemoteSource @AssistedInject constructor(
     private val newsApi: NewsApi,
     @Assisted("country") private val country: ArticlesCountryRemote,
-    @Assisted("category") private val category: ArticlesCategoryRemote
+    @Assisted("category") private val category: ArticlesCategoryRemote,
+    @Assisted("query") private val query: String
 ) : PagingSource<Int, ArticleModel>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ArticleModel> {
@@ -24,6 +25,7 @@ class NewsPagingRemoteSource @AssistedInject constructor(
             val response = newsApi.getTopHeadlinesArticles(
                 country = country,
                 category = category,
+                query = query,
                 pageSize = pageSize,
                 page = pageNumber
             )
@@ -53,7 +55,8 @@ class NewsPagingRemoteSource @AssistedInject constructor(
 
         fun create(
             @Assisted("country") country: ArticlesCountryRemote,
-            @Assisted("category") category: ArticlesCategoryRemote
+            @Assisted("category") category: ArticlesCategoryRemote,
+            @Assisted("query") query: String
         ): NewsPagingRemoteSource
     }
 }

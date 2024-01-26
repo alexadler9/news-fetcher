@@ -28,11 +28,13 @@ class ArticlesInteractor @Inject constructor(private val repository: NewsReposit
      * Get live top articles headlines via paging source.
      * @param country The country for which the articles will be searched.
      * @param category The category in which the articles will be searched.
+     * @param query Keywords or a phrase by which the articles will be searched.
      */
     fun getTopHeadlinesArticlesPagingSource(
         country: ArticlesCountry,
-        category: ArticlesCategory
-    ) = repository.getTopHeadlinesArticlesPagingSource(country, category)
+        category: ArticlesCategory,
+        query: String
+    ) = repository.getTopHeadlinesArticlesPagingSource(country, category, query)
 
     /**
      * Get list of article bookmarks.

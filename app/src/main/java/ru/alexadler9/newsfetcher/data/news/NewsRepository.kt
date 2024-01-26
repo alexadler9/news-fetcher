@@ -63,14 +63,17 @@ class NewsRepository @Inject constructor(
      * Get live top articles headlines.
      * @param country The country for which the articles will be searched.
      * @param category The category in which the articles will be searched.
+     * @param query Keywords or a phrase by which the articles will be searched.
      */
     suspend fun getTopHeadlinesArticles(
         country: ArticlesCountry,
-        category: ArticlesCategory
+        category: ArticlesCategory,
+        query: String
     ): List<ArticleModel> {
         return newsRemoteSource.getTopHeadlinesArticles(
             country.toRemote(),
-            category.toRemote()
+            category.toRemote(),
+            query
         ).articleList.filter {
             it.title != "[Removed]" && it.description != ""
         }.map {
@@ -82,14 +85,17 @@ class NewsRepository @Inject constructor(
      * Get live top articles headlines via paging source.
      * @param country The country for which the articles will be searched.
      * @param category The category in which the articles will be searched.
+     * @param query Keywords or a phrase by which the articles will be searched.
      */
     fun getTopHeadlinesArticlesPagingSource(
         country: ArticlesCountry,
-        category: ArticlesCategory
+        category: ArticlesCategory,
+        query: String
     ): PagingSource<Int, ArticleModel> {
         return newsPagingRemoteSourceFactory.create(
             country.toRemote(),
-            category.toRemote()
+            category.toRemote(),
+            query
         )
     }
 
