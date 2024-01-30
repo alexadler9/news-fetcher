@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -52,8 +53,43 @@ class SettingsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         with(binding) {
-            spCountries.adapter = countriesAdapter
-            spCategories.adapter = categoriesAdapter
+            spCountries.apply {
+                adapter = countriesAdapter
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                    }
+
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        val country = ArticlesCountry.forTitle(spCountries.selectedItem.toString())
+                        viewModel.processUiAction(UiAction.OnCountryChanged(country))
+                    }
+                }
+            }
+            spCategories.apply {
+                adapter = categoriesAdapter
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
+                    override fun onNothingSelected(parent: AdapterView<*>?) {
+                    }
+
+                    override fun onItemSelected(
+                        parent: AdapterView<*>?,
+                        view: View?,
+                        position: Int,
+                        id: Long
+                    ) {
+                        val category =
+                            ArticlesCategory.forTitle(spCategories.selectedItem.toString())
+                        viewModel.processUiAction(UiAction.OnCategoryChanged(category))
+                    }
+                }
+            }
         }
 
         viewModel.viewState
@@ -67,6 +103,10 @@ class SettingsFragment : Fragment() {
     }
 
     private fun render(viewState: ViewState) {
+        with(binding) {
+            spCountries.setSelection(ArticlesCountry.values().indexOf(viewState.country))
+            spCategories.setSelection(ArticlesCategory.values().indexOf(viewState.category))
+        }
     }
 
     companion object {

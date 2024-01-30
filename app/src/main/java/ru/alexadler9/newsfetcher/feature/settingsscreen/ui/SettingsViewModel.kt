@@ -17,6 +17,22 @@ class SettingsViewModel @Inject constructor(private val interactor: SettingsInte
 
     override fun reduce(action: Action, previousState: ViewState): ViewState? {
         return when (action) {
+            is UiAction.OnCountryChanged -> {
+                if (action.country != previousState.country) {
+                    interactor.saveArticlesCountry(action.country)
+                    return previousState.copy(country = action.country)
+                }
+                null
+            }
+
+            is UiAction.OnCategoryChanged -> {
+                if (action.category != previousState.category) {
+                    interactor.saveArticlesCategory(action.category)
+                    return previousState.copy(category = action.category)
+                }
+                null
+            }
+
             else -> null
         }
     }

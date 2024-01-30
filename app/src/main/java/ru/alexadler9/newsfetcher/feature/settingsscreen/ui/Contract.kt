@@ -13,6 +13,8 @@ sealed class ViewEvent {
 }
 
 sealed class UiAction : Action {
+    data class OnCountryChanged(val country: ArticlesCountry) : UiAction()
+    data class OnCategoryChanged(val category: ArticlesCategory) : UiAction()
 }
 
 sealed class DataAction : Action {
