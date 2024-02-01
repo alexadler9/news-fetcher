@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.ActivityMainBinding
 
@@ -19,14 +20,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val toolbar = findViewById<MaterialToolbar>(R.id.toolbar)
+        setSupportActionBar(toolbar)
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
         val navController = navHostFragment.navController
 
         with(binding) {
             navController.addOnDestinationChangedListener { _, destination, _ ->
-                bottomNav.isVisible =
-                    (destination.id == R.id.articlesFragment || destination.id == R.id.bookmarksFragment)
+                bottomNav.isVisible = (destination.id != R.id.detailsFragment)
             }
             bottomNav.setupWithNavController(navController)
         }

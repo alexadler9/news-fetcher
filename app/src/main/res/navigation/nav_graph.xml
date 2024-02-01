@@ -33,4 +33,10 @@
             android:name="article"
             app:argType="ru.alexadler9.newsfetcher.domain.model.ArticleModel" />
     </fragment>
+
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="ru.alexadler9.newsfetcher.feature.settingsscreen.ui.SettingsFragment"
+        android:label="SettingsFragment" />
+
 </navigation>
