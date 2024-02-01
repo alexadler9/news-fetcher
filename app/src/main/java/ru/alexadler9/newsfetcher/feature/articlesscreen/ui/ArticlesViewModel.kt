@@ -27,6 +27,7 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
 
     override val initialViewState = ViewState(
         articlesPagingData = PagingData.empty(),
+        articlesQuery = "",
         state = State.Load
     )
 
@@ -89,6 +90,18 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
                     )
                 )
                 null
+            }
+
+            is UiAction.OnApplyQuery -> {
+                queryParamsFlow.compareAndSet(
+                    queryParamsFlow.value,
+                    QueryParams(
+                        interactor.getArticlesCountry(),
+                        interactor.getArticlesCategory(),
+                        action.query
+                    )
+                )
+                return previousState.copy(articlesQuery = action.query)
             }
 
             is UiAction.OnPagerStateChanged -> {

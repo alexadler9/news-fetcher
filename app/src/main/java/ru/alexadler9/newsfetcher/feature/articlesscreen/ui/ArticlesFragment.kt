@@ -1,9 +1,13 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.ImageView
+import androidx.appcompat.widget.SearchView
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,6 +18,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import ru.alexadler9.newsfetcher.R
+import ru.alexadler9.newsfetcher.base.ext.toEditable
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesLoaderStateAdapter
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesPagingAdapter
@@ -59,12 +65,70 @@ class ArticlesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        // Configure recyclerview adapter.
+
         binding.rvArticles.adapter = articlesAdapter.withLoadStateHeaderAndFooter(
             header = ArticlesLoaderStateAdapter(),
             footer = ArticlesLoaderStateAdapter()
         )
 
         articlesAdapter.addLoadStateListener(::pagerLoadStateProcess)
+
+        // Add menu items using the MenuProvider API.
+
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_articles, menu)
+
+                val searchItem: MenuItem = menu.findItem(R.id.menuItemSearch)
+                val searchView = searchItem.actionView as SearchView
+                searchView.apply {
+                    // setOnQueryTextListener not used because it doesn't handle empty requests.
+                    // See workaround below.
+                    setOnSearchClickListener {
+                        // Show last query.
+                        searchView.setQuery(viewModel.viewState.value.articlesQuery, false)
+                    }
+                    queryHint = requireContext().getString(R.string.search_hint)
+                }
+                // Workaround for handling empty requests.
+                val searchPlate =
+                    searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
+                searchPlate.apply {
+                    setOnEditorActionListener { textView, actionId, _ ->
+                        if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                            textView.text?.let {
+                                viewModel.processUiAction(UiAction.OnApplyQuery(it.toString()))
+                                searchView.clearFocus()
+                            }
+                        }
+                        false
+                    }
+                    setOnFocusChangeListener { _, hasFocus ->
+                        if (!hasFocus) {
+                            // Return last query.
+                            searchView.setQuery(viewModel.viewState.value.articlesQuery, false)
+                        }
+                    }
+                }
+                val closeButton =
+                    searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
+                closeButton.setOnClickListener {
+                    viewModel.processUiAction(UiAction.OnApplyQuery(""))
+                    searchPlate.text = "".toEditable()
+                    searchView.clearFocus()
+                }
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                // Handle the menu selection
+                return true
+            }
+        }, viewLifecycleOwner)
+
+        // Configure viewModel.
 
         viewModel.viewState
             .onEach(::render)

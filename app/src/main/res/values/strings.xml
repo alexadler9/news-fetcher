@@ -5,9 +5,12 @@
     <string name="date_label">Дата</string>
     <string name="title_label">Заголовок</string>
     <string name="description_label">Описание</string>
+    <string name="search_hint">Введите запрос…</string>
 
     <string name="menu_main">ГЛАВНАЯ</string>
     <string name="menu_favorite">ИЗБРАННОЕ</string>
+    <string name="menu_settings">НАСТРОЙКИ</string>
+    <string name="menu_search">Поиск</string>
 
     <string name="article_link_share_message">%1$s\n%2$s</string>
     <string name="article_link_share_title">Поделиться ссылкой на статью</string>
