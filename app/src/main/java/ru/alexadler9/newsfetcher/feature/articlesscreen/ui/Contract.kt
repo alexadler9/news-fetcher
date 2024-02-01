@@ -13,6 +13,7 @@ sealed class State {
 
 data class ViewState(
     val articlesPagingData: PagingData<ArticleItem>,
+    val articlesQuery: String,
     val state: State
 )
 
@@ -21,6 +22,7 @@ sealed class ViewEvent {
 
 sealed class UiAction : Action {
     object OnApplySettings : UiAction()
+    data class OnApplyQuery(val query: String) : UiAction()
     data class OnPagerStateChanged(val state: LoadStates) : UiAction()
     data class OnBookmarkButtonClicked(val article: ArticleItem) : UiAction()
 }
