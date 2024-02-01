@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity() {
         with(binding) {
             navController.addOnDestinationChangedListener { _, destination, _ ->
                 bottomNav.isVisible = (destination.id != R.id.detailsFragment)
+                toolbar.isVisible = (destination.id != R.id.detailsFragment)
             }
             bottomNav.setupWithNavController(navController)
         }
