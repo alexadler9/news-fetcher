@@ -1,5 +1,6 @@
 package ru.alexadler9.newsfetcher.feature.detailsscreen.ui
 
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,7 @@ import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.FragmentDetailsBinding
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
 import javax.inject.Inject
+import kotlin.math.abs
 
 /**
  * Fragment is responsible for for displaying the article details.
@@ -45,6 +47,31 @@ class DetailsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        with(binding) {
+            ablDetails.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
+                val percent = (abs(appBarLayout.totalScrollRange + verticalOffset).toFloat() /
+                        appBarLayout.totalScrollRange)
+
+                // Change scrim transparency.
+                if ((appBarLayout.totalScrollRange + verticalOffset) < toolbarScrimBottom.height) {
+                    val max =
+                        (abs(toolbarScrimBottom.height).toFloat() / appBarLayout.totalScrollRange)
+                    toolbarScrimBottom.alpha = 1.0f - ((max - percent) / max)
+                } else {
+                    toolbarScrimBottom.alpha = 1.0f
+                }
+
+                // Change background corners radius.
+                nsvContent.background?.let {
+                    val background = it as GradientDrawable
+                    background.mutate()
+
+                    background.cornerRadius = resources
+                        .getDimensionPixelOffset(R.dimen.nested_scroll_view_radius) * percent
+                }
+            }
+        }
 
         viewModel.viewState
             .onEach(::render)

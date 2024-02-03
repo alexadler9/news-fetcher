@@ -33,6 +33,14 @@
                 android:layout_height="?attr/actionBarSize"
                 app:layout_collapseMode="pin" />
 
+            <View
+                android:id="@+id/toolbarScrimBottom"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/heightWallpaperToolbarScrim"
+                android:layout_alignBottom="@+id/ivWallpaper"
+                android:layout_gravity="bottom"
+                android:background="@drawable/scrim_bottom" />
+
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -41,6 +49,8 @@
         android:id="@+id/nsvContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/background_nested"
+        app:behavior_overlapTop="?attr/radiusDetailsContent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout

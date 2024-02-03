@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorBackground" format="color" />
+    <attr name="heightWallpaperToolbarImage" format="dimension" />
+    <attr name="heightWallpaperToolbarScrim" format="dimension" />
+    <attr name="radiusDetailsContent" format="dimension" />
+    <attr name="gradientScrimDenser" format="color" />
+    <attr name="gradientScrimDenserLess" format="color" />
+</resources>

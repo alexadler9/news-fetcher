@@ -12,8 +12,13 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+        <item name="colorBackground">?android:colorBackground</item>
         <item name="heightWallpaperToolbarImage">300dp</item>
+        <item name="heightWallpaperToolbarScrim">100dp</item>
+        <item name="radiusDetailsContent">@dimen/nested_scroll_view_radius</item>
         <item name="searchViewStyle">@style/SearchView</item>
+        <item name="gradientScrimDenser">@color/black_transparent_50</item>
+        <item name="gradientScrimDenserLess">@color/black_transparent_05</item>
     </style>
 
     <style name="SearchView" parent="Widget.AppCompat.Light.SearchView">
