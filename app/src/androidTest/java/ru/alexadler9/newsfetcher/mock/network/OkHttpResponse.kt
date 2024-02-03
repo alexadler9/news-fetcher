@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.mock
+package ru.alexadler9.newsfetcher.mock.network
 
 import okhttp3.*
 import okio.Buffer

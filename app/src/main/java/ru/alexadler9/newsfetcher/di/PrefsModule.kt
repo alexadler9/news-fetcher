@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import ru.alexadler9.newsfetcher.data.news.local.prefs.INewsPreferencesSource
 import ru.alexadler9.newsfetcher.data.news.local.prefs.NewsPreferencesSource
 import javax.inject.Singleton
 
@@ -15,7 +16,7 @@ class PrefsModule {
 
     @Singleton
     @Provides
-    fun provideNewsPreferencesSource(@ApplicationContext appContext: Context): NewsPreferencesSource {
+    fun provideNewsPreferencesSource(@ApplicationContext appContext: Context): INewsPreferencesSource {
         return NewsPreferencesSource(appContext)
     }
 }

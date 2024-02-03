@@ -16,7 +16,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import ru.alexadler9.newsfetcher.mock.RESPONSE_DELAY
+import ru.alexadler9.newsfetcher.mock.network.RESPONSE_DELAY
 import ru.alexadler9.newsfetcher.utility.RecyclerViewChild.Companion.actionOnChildAtPosition
 import ru.alexadler9.newsfetcher.utility.RecyclerViewChild.Companion.childAtPositionWithMatcher
 import ru.alexadler9.newsfetcher.utility.waitFor

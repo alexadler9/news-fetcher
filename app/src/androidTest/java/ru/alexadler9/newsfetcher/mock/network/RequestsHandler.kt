@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.mock
+package ru.alexadler9.newsfetcher.mock.network
 
 import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.Request
@@ -9,7 +9,7 @@ import java.io.InputStream
 /**
  * Determines which requests should be mocked using test responses.
  */
-class RequestsHandler() {
+class RequestsHandler {
 
     // List of requests that will be mocked
     // Key is the intercepted request path, and value is the map of pairs [query -> path to JSON file with the response]

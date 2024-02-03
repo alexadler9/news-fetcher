@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.map
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.base.ext.enumContains
 import ru.alexadler9.newsfetcher.data.news.local.db.NewsLocalSource
-import ru.alexadler9.newsfetcher.data.news.local.prefs.NewsPreferencesSource
+import ru.alexadler9.newsfetcher.data.news.local.prefs.INewsPreferencesSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsPagingRemoteSource
 import ru.alexadler9.newsfetcher.data.news.remote.NewsRemoteSource
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
@@ -24,7 +24,7 @@ class NewsRepository @Inject constructor(
     private val newsRemoteSource: NewsRemoteSource,
     private val newsPagingRemoteSourceFactory: NewsPagingRemoteSource.Factory,
     private val newsLocalSource: NewsLocalSource,
-    private val newsPreferencesSource: NewsPreferencesSource
+    private val newsPreferencesSource: INewsPreferencesSource
 ) {
 
     /**
