@@ -23,7 +23,6 @@ import ru.alexadler9.newsfetcher.base.ext.toEditable
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesLoaderStateAdapter
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesPagingAdapter
-import ru.alexadler9.newsfetcher.feature.articleLinkShare
 
 /**
  * Fragment is responsible for loading, displaying and managing the list of article headlines.
@@ -47,10 +46,23 @@ class ArticlesFragment : Fragment() {
                     }
             },
             onIconShareClicked = { article ->
-                articleLinkShare(this@ArticlesFragment.requireContext(), article.data)
+                viewModel.processUiAction(
+                    UiAction.OnShareButtonClicked(
+                        this@ArticlesFragment.requireContext(),
+                        article
+                    )
+                )
             },
-            onIconBookmarkClicked = {
-                viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(it))
+            onIconBrowserClicked = { article ->
+                viewModel.processUiAction(
+                    UiAction.OnBrowserButtonClicked(
+                        this@ArticlesFragment.requireContext(),
+                        article
+                    )
+                )
+            },
+            onIconBookmarkClicked = { article ->
+                viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(article))
             })
     }
 

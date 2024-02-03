@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.ItemArticleBinding
-import ru.alexadler9.newsfetcher.feature.articleLinkOpen
 
 class ArticlesListAdapter(
     val onItemClicked: (ArticleItem) -> Unit = {},
     val onIconShareClicked: (ArticleItem) -> Unit = {},
+    val onIconBrowserClicked: (ArticleItem) -> Unit = {},
     val onIconBookmarkClicked: (ArticleItem) -> Unit = {}
 ) : ListAdapter<ArticleItem, ArticlesListAdapter.ArticleViewHolder>(ArticlesDiffItemCallback()) {
 
@@ -19,9 +19,10 @@ class ArticlesListAdapter(
 
         fun bind(
             item: ArticleItem,
-            onItemClicked: (ArticleItem) -> Unit = {},
-            onIconShareClicked: (ArticleItem) -> Unit = {},
-            onIconBookmarkClicked: (ArticleItem) -> Unit = {}
+            onItemClicked: (ArticleItem) -> Unit,
+            onIconShareClicked: (ArticleItem) -> Unit,
+            onIconBrowserClicked: (ArticleItem) -> Unit,
+            onIconBookmarkClicked: (ArticleItem) -> Unit
         ) {
             with(binding) {
                 itemView.setOnClickListener {
@@ -45,7 +46,7 @@ class ArticlesListAdapter(
                 }
                 ivBrowser.apply {
                     setOnClickListener {
-                        articleLinkOpen(context, item.data)
+                        onIconBrowserClicked(item)
                     }
                 }
                 tvAuthor.text = item.data.author.ifBlank { "[Undefined]" }
@@ -70,6 +71,12 @@ class ArticlesListAdapter(
 
     override fun onBindViewHolder(holder: ArticleViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(item, onItemClicked, onIconShareClicked, onIconBookmarkClicked)
+        holder.bind(
+            item,
+            onItemClicked,
+            onIconShareClicked,
+            onIconBrowserClicked,
+            onIconBookmarkClicked
+        )
     }
 }

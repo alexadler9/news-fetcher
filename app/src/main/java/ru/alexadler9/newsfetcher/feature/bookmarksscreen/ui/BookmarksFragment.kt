@@ -14,7 +14,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesListAdapter
-import ru.alexadler9.newsfetcher.feature.articleLinkShare
 
 /**
  * Fragment is responsible for loading, displaying and managing article bookmarks.
@@ -38,7 +37,20 @@ class BookmarksFragment : Fragment() {
                     }
             },
             onIconShareClicked = { article ->
-                articleLinkShare(this@BookmarksFragment.requireContext(), article.data)
+                viewModel.processUiAction(
+                    UiAction.OnShareButtonClicked(
+                        this@BookmarksFragment.requireContext(),
+                        article
+                    )
+                )
+            },
+            onIconBrowserClicked = { article ->
+                viewModel.processUiAction(
+                    UiAction.OnBrowserButtonClicked(
+                        this@BookmarksFragment.requireContext(),
+                        article
+                    )
+                )
             },
             onIconBookmarkClicked = { article ->
                 viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(article))

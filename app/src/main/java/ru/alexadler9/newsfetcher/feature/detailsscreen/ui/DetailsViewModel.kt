@@ -33,29 +33,37 @@ class DetailsViewModel @AssistedInject constructor(
 
     override fun reduce(action: Action, previousState: ViewState): ViewState? {
         return when (action) {
+            is UiAction.OnShareMenuClicked -> {
+                interactor.shareArticle(action.context, previousState.article)
+                null
+            }
+
+            is UiAction.OnBrowserMenuClicked -> {
+                interactor.openArticleInBrowser(action.context, previousState.article)
+                null
+            }
+
             is DataAction.OnWallpaperLoadSucceed -> {
-                return previousState.copy(state = State.Content(wallpaper = action.wallpaper))
+                previousState.copy(state = State.Content(wallpaper = action.wallpaper))
             }
 
             is DataAction.OnWallpaperLoadFailed -> {
-                return previousState.copy(state = State.Error(throwable = action.error))
+                previousState.copy(state = State.Error(throwable = action.error))
             }
 
             else -> null
         }
     }
 
-    private fun wallpaperLoad(article: ArticleModel) {
-        viewModelScope.launch {
-            interactor.getArticleWallpaper(article).fold(
-                onError = {
-                    processDataAction(DataAction.OnWallpaperLoadFailed(error = it))
-                },
-                onSuccess = {
-                    processDataAction(DataAction.OnWallpaperLoadSucceed(wallpaper = it))
-                }
-            )
-        }
+    private fun wallpaperLoad(article: ArticleModel) = viewModelScope.launch {
+        interactor.getArticleWallpaper(article).fold(
+            onError = {
+                processDataAction(DataAction.OnWallpaperLoadFailed(error = it))
+            },
+            onSuccess = {
+                processDataAction(DataAction.OnWallpaperLoadSucceed(wallpaper = it))
+            }
+        )
     }
 
     companion object {

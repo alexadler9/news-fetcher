@@ -132,6 +132,16 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
                 null
             }
 
+            is UiAction.OnShareButtonClicked -> {
+                interactor.shareArticle(action.context, action.article.data)
+                null
+            }
+
+            is UiAction.OnBrowserButtonClicked -> {
+                interactor.openArticleInBrowser(action.context, action.article.data)
+                null
+            }
+
             is DataAction.OnArticlesLoadSucceed -> {
                 val articlesPagingData = action.articlesPagingData.map {
                     bookmarkArticle(it, bookmarksUrlsFlow.value)

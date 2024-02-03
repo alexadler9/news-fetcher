@@ -1,9 +1,13 @@
 package ru.alexadler9.newsfetcher.data.news
 
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
+import android.net.Uri
 import androidx.paging.PagingSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.base.ext.enumContains
 import ru.alexadler9.newsfetcher.data.news.local.db.NewsLocalSource
 import ru.alexadler9.newsfetcher.data.news.local.prefs.NewsPreferencesSource
@@ -140,5 +144,38 @@ class NewsRepository @Inject constructor(
      */
     suspend fun articleBookmarkExist(url: String): Boolean {
         return newsLocalSource.bookmarkExist(url)
+    }
+
+    /**
+     * Share article in messengers.
+     * The message will be generated from the title and URL of the article.
+     * @param context The context.
+     * @param article The article.
+     */
+    fun shareArticle(context: Context, article: ArticleModel) {
+        Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(
+                Intent.EXTRA_TEXT,
+                context.getString(R.string.article_link_share_message, article.title, article.url)
+            )
+        }.also { intent ->
+            val chooserIntent = Intent.createChooser(
+                intent,
+                context.getString(R.string.article_link_share_title)
+            )
+            context.startActivity(chooserIntent)
+        }
+    }
+
+    /**
+     * Open original article in browser.
+     * @param context The context.
+     * @param article The article.
+     */
+    fun openArticleInBrowser(context: Context, article: ArticleModel) {
+        Intent(Intent.ACTION_VIEW, Uri.parse(article.url)).apply {
+            context.startActivity(this)
+        }
     }
 }

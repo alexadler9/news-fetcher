@@ -44,6 +44,16 @@ class BookmarksViewModel @Inject constructor(private val interactor: BookmarksIn
                 null
             }
 
+            is UiAction.OnShareButtonClicked -> {
+                interactor.shareArticle(action.context, action.article.data)
+                null
+            }
+
+            is UiAction.OnBrowserButtonClicked -> {
+                interactor.openArticleInBrowser(action.context, action.article.data)
+                null
+            }
+
             is DataAction.OnBookmarksLoaded -> {
                 previousState.copy(
                     state = State.Content(bookmarks = action.bookmarks)

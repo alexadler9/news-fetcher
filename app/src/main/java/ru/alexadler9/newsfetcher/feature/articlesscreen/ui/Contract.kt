@@ -1,5 +1,6 @@
 package ru.alexadler9.newsfetcher.feature.articlesscreen.ui
 
+import android.content.Context
 import androidx.paging.LoadStates
 import androidx.paging.PagingData
 import ru.alexadler9.newsfetcher.base.Action
@@ -25,6 +26,8 @@ sealed class UiAction : Action {
     data class OnApplyQuery(val query: String) : UiAction()
     data class OnPagerStateChanged(val state: LoadStates) : UiAction()
     data class OnBookmarkButtonClicked(val article: ArticleItem) : UiAction()
+    data class OnShareButtonClicked(val context: Context, val article: ArticleItem) : UiAction()
+    data class OnBrowserButtonClicked(val context: Context, val article: ArticleItem) : UiAction()
 }
 
 sealed class DataAction : Action {
