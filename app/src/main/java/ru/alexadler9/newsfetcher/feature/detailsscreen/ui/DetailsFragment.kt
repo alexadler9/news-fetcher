@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.onEach
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.databinding.FragmentDetailsBinding
 import ru.alexadler9.newsfetcher.domain.model.ArticleModel
+import ru.alexadler9.newsfetcher.feature.articleLinkOpen
+import ru.alexadler9.newsfetcher.feature.articleLinkShare
 import javax.inject.Inject
 import kotlin.math.abs
 
@@ -69,6 +71,22 @@ class DetailsFragment : Fragment() {
 
                     background.cornerRadius = resources
                         .getDimensionPixelOffset(R.dimen.nested_scroll_view_radius) * percent
+                }
+            }
+
+            toolbar.setOnMenuItemClickListener { item ->
+                return@setOnMenuItemClickListener when (item.itemId) {
+                    R.id.menuItemShare -> {
+                        articleLinkShare(requireContext(), viewModel.viewState.value.article)
+                        true
+                    }
+
+                    R.id.menuItemBrowser -> {
+                        articleLinkOpen(requireContext(), viewModel.viewState.value.article)
+                        true
+                    }
+
+                    else -> false
                 }
             }
         }
