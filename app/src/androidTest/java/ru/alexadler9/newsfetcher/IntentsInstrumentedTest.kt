@@ -59,7 +59,7 @@ class IntentsInstrumentedTest {
         onView(withId(R.id.rvArticles))
             .perform(actionOnChildAtPosition<RecyclerView.ViewHolder>(0, R.id.ivBrowser, click()))
 
-        intended(hasData(Uri.parse("https://www.tampabay.com/life-culture/")))
+        intended(hasData(Uri.parse(ARTICLE_FIRST.url)))
         intended(hasAction(Intent.ACTION_VIEW))
     }
 

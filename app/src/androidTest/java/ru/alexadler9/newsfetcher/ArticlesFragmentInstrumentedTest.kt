@@ -64,12 +64,16 @@ class ArticlesFragmentInstrumentedTest {
             .check(
                 matches(
                     allOf(
-                        childAtPositionWithMatcher(0, R.id.tvAuthor, withText("Christopher")),
+                        childAtPositionWithMatcher(
+                            0,
+                            R.id.tvAuthor,
+                            withText(ARTICLE_FIRST.author)
+                        ),
                         childAtPositionWithMatcher(0, R.id.tvDate, withText("23.01.2024 20:53")),
                         childAtPositionWithMatcher(
                             0,
                             R.id.tvTitle,
-                            withText(containsString("opening monologues"))
+                            withText(containsString(ARTICLE_FIRST.title))
                         ),
                     )
                 )
@@ -116,12 +120,16 @@ class ArticlesFragmentInstrumentedTest {
             .check(
                 matches(
                     allOf(
-                        childAtPositionWithMatcher(0, R.id.tvAuthor, withText("Michael Potuck")),
+                        childAtPositionWithMatcher(
+                            0,
+                            R.id.tvAuthor,
+                            withText(ARTICLE_QUERY.author)
+                        ),
                         childAtPositionWithMatcher(0, R.id.tvDate, withText("23.01.2024 19:45")),
                         childAtPositionWithMatcher(
                             0,
                             R.id.tvTitle,
-                            withText(containsString("Apple Vision"))
+                            withText(containsString(ARTICLE_QUERY.title))
                         ),
                     )
                 )
