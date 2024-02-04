@@ -2,7 +2,7 @@ package ru.alexadler9.newsfetcher
 
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -19,6 +19,7 @@ import org.junit.runner.RunWith
 import ru.alexadler9.newsfetcher.mock.network.RESPONSE_DELAY
 import ru.alexadler9.newsfetcher.utility.RecyclerViewChild.Companion.actionOnChildAtPosition
 import ru.alexadler9.newsfetcher.utility.RecyclerViewChild.Companion.childAtPositionWithMatcher
+import ru.alexadler9.newsfetcher.utility.RecyclerViewItemCountAssertion
 import ru.alexadler9.newsfetcher.utility.waitFor
 import ru.alexadler9.newsfetcher.utility.withDrawableId
 
@@ -50,18 +51,20 @@ class ArticlesFragmentInstrumentedTest {
     @Test
     fun testArticlesLoadedSuccessfully() {
         onView(withId(R.id.pbArticles)).check(matches(isDisplayed()))
-        onView(withId(R.id.rvArticles)).check(matches(not(isDisplayed())))
+        onView(withId(R.id.rvArticles))
+            .check(matches(isDisplayed()))
+            .check(RecyclerViewItemCountAssertion(equalTo(0)))
 
         onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
 
         onView(withId(R.id.pbArticles)).check(matches(not(isDisplayed())))
-        onView(withId(R.id.rvArticles)).check(matches(isDisplayed()))
-
         onView(withId(R.id.rvArticles))
+            .check(matches(isDisplayed()))
+            .check(RecyclerViewItemCountAssertion(greaterThanOrEqualTo(FIRST_PAGE_ITEMS_COUNT)))
             .check(
                 matches(
                     allOf(
-                        childAtPositionWithMatcher(0, R.id.tvAuthor, withText("Christopher Spata")),
+                        childAtPositionWithMatcher(0, R.id.tvAuthor, withText("Christopher")),
                         childAtPositionWithMatcher(0, R.id.tvDate, withText("23.01.2024 20:53")),
                         childAtPositionWithMatcher(
                             0,
@@ -88,6 +91,68 @@ class ArticlesFragmentInstrumentedTest {
                 isDescendantOfA(withId(R.id.rvArticles))
             )
         ).check(matches(isDisplayed()))
+    }
+
+    @Test
+    fun testArticlesQueryAppliedSuccessfully() {
+        onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
+
+        onView(withId(R.id.rvArticles))
+            .check(matches(isDisplayed()))
+            .check(RecyclerViewItemCountAssertion(greaterThanOrEqualTo(FIRST_PAGE_ITEMS_COUNT)))
+
+        onView(withId(R.id.menuItemSearch))
+            .check(matches(isDisplayed()))
+            .perform(click())
+        onView(withId(androidx.appcompat.R.id.search_src_text))
+            .check(matches(isDisplayed()))
+            .perform(clearText(), typeText("query"), pressImeActionButton())
+
+        onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
+
+        // Taking into account a possible progress item
+        onView(withId(R.id.rvArticles))
+            .check(RecyclerViewItemCountAssertion(lessThanOrEqualTo(QUERY_PAGE_ITEMS_COUNT + 1)))
+            .check(
+                matches(
+                    allOf(
+                        childAtPositionWithMatcher(0, R.id.tvAuthor, withText("Michael Potuck")),
+                        childAtPositionWithMatcher(0, R.id.tvDate, withText("23.01.2024 19:45")),
+                        childAtPositionWithMatcher(
+                            0,
+                            R.id.tvTitle,
+                            withText(containsString("Apple Vision"))
+                        ),
+                    )
+                )
+            )
+    }
+
+    @Test
+    fun testArticlesLoadedUnsuccessfully() {
+        onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
+
+        onView(withId(R.id.menuItemSearch))
+            .check(matches(isDisplayed()))
+            .perform(click())
+        onView(withId(androidx.appcompat.R.id.search_src_text))
+            .check(matches(isDisplayed()))
+            .perform(
+                clearText(),
+                // Testing agreement: code 400 will be issued for the "bad-request" query.
+                typeText("bad-request"),
+                pressImeActionButton()
+            )
+
+        onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
+
+        onView(withId(R.id.rvArticles))
+            .check(matches(isDisplayed()))
+            .check(RecyclerViewItemCountAssertion(equalTo(0)))
+        onView((withId(R.id.layoutError))).check(matches(isDisplayed()))
+        onView((withId(R.id.tvError)))
+            .check(matches(isDisplayed()))
+            .check(matches(withText(containsString("HTTP 400"))))
     }
 
     @Test
@@ -143,5 +208,11 @@ class ArticlesFragmentInstrumentedTest {
                     )
                 )
             )
+    }
+
+    companion object {
+
+        const val FIRST_PAGE_ITEMS_COUNT = 15
+        const val QUERY_PAGE_ITEMS_COUNT = 1
     }
 }

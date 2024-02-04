@@ -1,6 +1,6 @@
 {
   "status": "ok",
-  "totalResults": 17,
+  "totalResults": 15,
   "articles": [
     {
       "source": {
@@ -14,19 +14,6 @@
       "urlToImage": "https://www.tampabay.com/resizer/LJ_F1nb6XodgoXYY_np7LuOP0dw=/1200x675/smart/cloudfront-us-east-1.images.arcpublishing.com/tbt/7XW5VC47CRABBGTXJZDGYGVQBY.jpg",
       "publishedAt": "2024-01-23T15:53:29Z",
       "content": "Ron DeSantis eight-month presidential campaign never spawned Donald Trump levels of comedy material few people ever have but by dropping out on Sunday, DeSantis finally dominated Mondays late-night T… [+5183 chars]"
-    },
-    {
-      "source": {
-        "id": null,
-        "name": "[Removed]"
-      },
-      "author": null,
-      "title": "[Removed]",
-      "description": "[Removed]",
-      "url": "https://removed.com",
-      "urlToImage": null,
-      "publishedAt": "1970-01-01T00:00:00Z",
-      "content": "[Removed]"
     },
     {
       "source": {
@@ -196,19 +183,6 @@
       "urlToImage": "https://media.cnn.com/api/v1/images/stellar/prod/240123103705-amazon-france-file-2022.jpg?c=16x9&q=w_800,c_fill",
       "publishedAt": "2024-01-23T13:47:00Z",
       "content": "A French regulator has fined the local operator of Amazons warehouses 32 million ($35 million) for using an excessively intrusive surveillance system to track the activities of its workers.\r\nThe Fren… [+2761 chars]"
-    },
-    {
-      "source": {
-        "id": null,
-        "name": "[Removed]"
-      },
-      "author": null,
-      "title": "[Removed]",
-      "description": "[Removed]",
-      "url": "https://removed.com",
-      "urlToImage": null,
-      "publishedAt": "1970-01-01T00:00:00Z",
-      "content": "[Removed]"
     },
     {
       "source": {
