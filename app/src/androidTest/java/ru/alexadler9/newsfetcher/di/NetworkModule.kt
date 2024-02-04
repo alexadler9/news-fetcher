@@ -8,8 +8,8 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import ru.alexadler9.newsfetcher.data.news.remote.NewsApi
-import ru.alexadler9.newsfetcher.mock.MockingInterceptor
-import ru.alexadler9.newsfetcher.mock.RequestsHandler
+import ru.alexadler9.newsfetcher.mock.network.MockingInterceptor
+import ru.alexadler9.newsfetcher.mock.network.RequestsHandler
 import javax.inject.Singleton
 
 @Module

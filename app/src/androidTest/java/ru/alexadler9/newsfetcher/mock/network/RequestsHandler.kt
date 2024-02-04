@@ -1,4 +1,4 @@
-package ru.alexadler9.newsfetcher.mock
+package ru.alexadler9.newsfetcher.mock.network
 
 import androidx.test.platform.app.InstrumentationRegistry
 import okhttp3.Request
@@ -9,15 +9,17 @@ import java.io.InputStream
 /**
  * Determines which requests should be mocked using test responses.
  */
-class RequestsHandler() {
+class RequestsHandler {
 
     // List of requests that will be mocked
-    // Key is the intercepted request path, and value is the map of pairs [query -> path to JSON file with the response]
+    // Key is the intercepted request path, and value is the map of pairs [query-pattern -> path-to-JSON-file with the response]
     private val responsesMap = mapOf(
         "v2/top-headlines" to mapOf(
-            "page=1" to "articles-p1.json",
-            "page=2" to "articles-p2.json",
-            "page=3" to "articles-p3.json"
+            ".*q=query.*page=1".toRegex() to "articles-query.json",
+            ".*q=query.*page=2".toRegex() to "articles-empty.json",
+            ".*q=&.*page=1".toRegex() to "articles-p1.json",
+            ".*q=&.*page=2".toRegex() to "articles-p2.json",
+            ".*q=&.*page=3".toRegex() to "articles-empty.json"
         )
     )
 
@@ -33,14 +35,18 @@ class RequestsHandler() {
         return false
     }
 
-    fun proceed(request: Request, path: String, query: String?): Response {
+    fun proceed(request: Request, path: String, q: String?): Response {
+        val query: String = q ?: ""
+        if (query.contains("bad-request", ignoreCase = true)) {
+            // Testing agreement: code 400 will be issued for the "bad-request" query.
+            return errorResponse(request, 400, "Error for path $path")
+        }
         responsesMap.keys.forEach { pathKey ->
             if (path.contains(pathKey)) {
                 val mockResponsePaths = responsesMap[pathKey]!!
-                val q = query ?: ""
-                mockResponsePaths.keys.forEach { queryKey ->
-                    if (q.contains(queryKey)) {
-                        val mockResponsePath: String = mockResponsePaths[queryKey]!!
+                mockResponsePaths.keys.forEach { pattern ->
+                    if (pattern.matches(query)) {
+                        val mockResponsePath: String = mockResponsePaths[pattern]!!
                         return createResponseFromAssets(request, mockResponsePath)
                     }
                 }

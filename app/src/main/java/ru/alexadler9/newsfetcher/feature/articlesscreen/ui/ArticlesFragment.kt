@@ -17,7 +17,6 @@ import androidx.paging.CombinedLoadStates
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.launch
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.base.ext.toEditable
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
@@ -106,9 +105,9 @@ class ArticlesFragment : Fragment() {
                     queryHint = requireContext().getString(R.string.search_hint)
                 }
                 // Workaround for handling empty requests.
-                val searchPlate =
+                val searchEditText =
                     searchView.findViewById<EditText>(androidx.appcompat.R.id.search_src_text)
-                searchPlate.apply {
+                searchEditText.apply {
                     setOnEditorActionListener { textView, actionId, _ ->
                         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                             textView.text?.let {
@@ -129,7 +128,7 @@ class ArticlesFragment : Fragment() {
                     searchView.findViewById<ImageView>(androidx.appcompat.R.id.search_close_btn)
                 closeButton.setOnClickListener {
                     viewModel.processUiAction(UiAction.OnApplyQuery(""))
-                    searchPlate.text = "".toEditable()
+                    searchEditText.text = "".toEditable()
                     searchView.clearFocus()
                 }
             }
@@ -162,27 +161,25 @@ class ArticlesFragment : Fragment() {
     }
 
     private fun render(viewState: ViewState) {
-        viewLifecycleOwner.lifecycleScope.launch {
-            articlesAdapter.submitData(viewState.articlesPagingData)
-        }
+        articlesAdapter.submitData(
+            viewLifecycleOwner.lifecycle,
+            viewState.articlesPagingData
+        )
         with(binding) {
             when (viewState.state) {
                 is State.Load -> {
                     pbArticles.isVisible = true
                     layoutError.isVisible = false
-                    rvArticles.isVisible = false
                 }
 
                 is State.Content -> {
                     pbArticles.isVisible = false
                     layoutError.isVisible = false
-                    rvArticles.isVisible = true
                 }
 
                 is State.Error -> {
                     pbArticles.isVisible = false
                     layoutError.isVisible = true
-                    rvArticles.isVisible = false
                     tvError.text = viewState.state.throwable.localizedMessage
                 }
             }

@@ -81,27 +81,36 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
     override fun reduce(action: Action, previousState: ViewState): ViewState? {
         return when (action) {
             is UiAction.OnApplySettings -> {
-                queryParamsFlow.compareAndSet(
-                    queryParamsFlow.value,
-                    QueryParams(
-                        interactor.getArticlesCountry(),
-                        interactor.getArticlesCategory(),
-                        queryParamsFlow.value.query
-                    )
+                val queryParams = QueryParams(
+                    interactor.getArticlesCountry(),
+                    interactor.getArticlesCategory(),
+                    previousState.articlesQuery
                 )
+                if (queryParamsFlow.value != queryParams) {
+                    queryParamsFlow.value = queryParams
+                    return previousState.copy(
+                        articlesPagingData = PagingData.empty(),
+                        state = State.Load
+                    )
+                }
                 null
             }
 
             is UiAction.OnApplyQuery -> {
-                queryParamsFlow.compareAndSet(
-                    queryParamsFlow.value,
-                    QueryParams(
-                        interactor.getArticlesCountry(),
-                        interactor.getArticlesCategory(),
-                        action.query
-                    )
+                val queryParams = QueryParams(
+                    interactor.getArticlesCountry(),
+                    interactor.getArticlesCategory(),
+                    action.query
                 )
-                return previousState.copy(articlesQuery = action.query)
+                if (queryParamsFlow.value != queryParams) {
+                    queryParamsFlow.value = queryParams
+                    return previousState.copy(
+                        articlesPagingData = PagingData.empty(),
+                        articlesQuery = action.query,
+                        state = State.Load
+                    )
+                }
+                previousState.copy(articlesQuery = action.query)
             }
 
             is UiAction.OnPagerStateChanged -> {
