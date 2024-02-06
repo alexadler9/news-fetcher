@@ -170,17 +170,20 @@ class ArticlesFragment : Fragment() {
                 is State.Load -> {
                     pbArticles.isVisible = true
                     layoutError.isVisible = false
+                    layoutEmpty.isVisible = false
                 }
 
                 is State.Content -> {
                     pbArticles.isVisible = false
                     layoutError.isVisible = false
+                    layoutEmpty.isVisible = (articlesAdapter.itemCount == 0)
                 }
 
                 is State.Error -> {
                     pbArticles.isVisible = false
                     layoutError.isVisible = true
                     tvError.text = viewState.state.throwable.localizedMessage
+                    layoutEmpty.isVisible = false
                 }
             }
         }

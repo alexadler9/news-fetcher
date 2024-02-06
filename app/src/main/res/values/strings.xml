@@ -21,4 +21,6 @@
     <string name="article_link_share_title">Поделиться ссылкой на статью</string>
 
     <string name="load_error">ОШИБКА ЗАГРУЗКИ ДАННЫХ</string>
+    <string name="bookmarks_empty">В ИЗБРАННОМ ПУСТО</string>
+    <string name="no_results">НЕТ РЕЗУЛЬТАТОВ</string>
 </resources>
