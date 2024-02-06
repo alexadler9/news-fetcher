@@ -164,6 +164,28 @@ class ArticlesFragmentInstrumentedTest {
     }
 
     @Test
+    fun testNoArticles() {
+        onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
+
+        onView(withId(R.id.menuItemSearch))
+            .check(matches(isDisplayed()))
+            .perform(click())
+        onView(withId(androidx.appcompat.R.id.search_src_text))
+            .check(matches(isDisplayed()))
+            .perform(
+                clearText(),
+                typeText("empty"),
+                pressImeActionButton()
+            )
+
+        onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
+
+        onView(withId(R.id.rvArticles))
+            .check(RecyclerViewItemCountAssertion(equalTo(0)))
+        onView(withId(R.id.layoutEmpty)).check(matches(isDisplayed()))
+    }
+
+    @Test
     fun testAddArticleToBookmark() {
         onView(isRoot()).perform(waitFor(RESPONSE_DELAY))
 

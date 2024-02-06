@@ -17,6 +17,7 @@ class RequestsHandler {
         "v2/top-headlines" to mapOf(
             ".*q=query.*page=1".toRegex() to "articles-query.json",
             ".*q=query.*page=2".toRegex() to "articles-empty.json",
+            ".*q=empty.*page=1".toRegex() to "articles-empty.json",
             ".*q=&.*page=1".toRegex() to "articles-p1.json",
             ".*q=&.*page=2".toRegex() to "articles-p2.json",
             ".*q=&.*page=3".toRegex() to "articles-empty.json"
