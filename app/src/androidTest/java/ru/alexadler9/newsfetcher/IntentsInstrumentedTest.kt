@@ -12,13 +12,10 @@ import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers.*
 import androidx.test.espresso.intent.rule.IntentsRule
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers.*
 import org.junit.Assert.*
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -28,21 +25,10 @@ import ru.alexadler9.newsfetcher.utility.waitFor
 
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
-class IntentsInstrumentedTest {
-
-    @get:Rule
-    var hiltRule = HiltAndroidRule(this)
-
-    @get:Rule
-    val rule = ActivityScenarioRule(MainActivity::class.java)
+class IntentsInstrumentedTest : TestActivity() {
 
     @get:Rule
     val intentsRule = IntentsRule()
-
-    @Before
-    fun setup() {
-        hiltRule.inject()
-    }
 
     @Test
     fun testArticlesOpenedInBrowserSuccessfully() {
