@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import ru.alexadler9.newsfetcher.BuildConfig
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesListAdapter
 
@@ -31,10 +32,12 @@ class BookmarksFragment : Fragment() {
     private val bookmarksAdapter: ArticlesListAdapter by lazy {
         ArticlesListAdapter(
             onItemClicked = { article ->
-                BookmarksFragmentDirections.actionBookmarksFragmentToDetailsFragment(article.data)
-                    .apply {
-                        findNavController().navigate(this)
-                    }
+                if (BuildConfig.FLAVOR != "demo") {
+                    BookmarksFragmentDirections.actionBookmarksFragmentToDetailsFragment(article.data)
+                        .apply {
+                            findNavController().navigate(this)
+                        }
+                }
             },
             onIconShareClicked = { article ->
                 viewModel.processUiAction(

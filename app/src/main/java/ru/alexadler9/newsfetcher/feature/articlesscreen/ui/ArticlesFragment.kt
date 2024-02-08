@@ -17,6 +17,7 @@ import androidx.paging.CombinedLoadStates
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import ru.alexadler9.newsfetcher.BuildConfig
 import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.base.ext.toEditable
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
@@ -39,10 +40,12 @@ class ArticlesFragment : Fragment() {
     private val articlesAdapter: ArticlesPagingAdapter by lazy {
         ArticlesPagingAdapter(
             onItemClicked = { article ->
-                ArticlesFragmentDirections.actionArticlesFragmentToDetailsFragment(article.data)
-                    .apply {
-                        findNavController().navigate(this)
-                    }
+                if (BuildConfig.FLAVOR != "demo") {
+                    ArticlesFragmentDirections.actionArticlesFragmentToDetailsFragment(article.data)
+                        .apply {
+                            findNavController().navigate(this)
+                        }
+                }
             },
             onIconShareClicked = { article ->
                 viewModel.processUiAction(
