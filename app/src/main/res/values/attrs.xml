@@ -1,9 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <attr name="colorBackground" format="color" />
+    <!-- Warning messages. -->
+    <attr name="colorWarningPrimary" format="color" />
+    <attr name="colorWarningSecondary" format="color" />
+    <!-- Status bar. -->
+    <attr name="colorToolbarIconTint" format="color" />-->
+    <!-- Status bar search. -->
+    <attr name="colorToolbarSearchBackground" format="color" />
+    <attr name="colorToolbarSearchBorder" format="color" />
+    <attr name="colorToolbarSearchIconTint" format="color" />
+    <!-- Cards. -->
+    <attr name="colorCardBorder" format="color" />
+    <attr name="colorCardBackground" format="color" />
+    <attr name="radiusCardBackground" format="dimension" />
+    <attr name="colorCardTitleText" format="color" />
+    <attr name="colorCardMainText" format="color" />
+    <attr name="colorCardIconTint" format="color" />
+    <!-- Nested and wallpaper. -->
+    <attr name="colorNestedBackground" format="color" />
+    <attr name="colorNestedTitleText" format="color" />
+    <attr name="colorNestedMainText" format="color" />
+    <attr name="radiusNestedContent" format="dimension" />
+    <attr name="colorWallpaperToolbarText" format="color" />
     <attr name="heightWallpaperToolbarImage" format="dimension" />
     <attr name="heightWallpaperToolbarScrim" format="dimension" />
-    <attr name="radiusDetailsContent" format="dimension" />
-    <attr name="gradientScrimDenser" format="color" />
-    <attr name="gradientScrimDenserLess" format="color" />
+    <attr name="gradientToolbarScrimDenser" format="color" />
+    <attr name="gradientToolbarScrimDenserLess" format="color" />
 </resources>

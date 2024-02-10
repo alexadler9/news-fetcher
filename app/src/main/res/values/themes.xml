@@ -1,27 +1,37 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.NewsFetcher" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+        <item name="android:colorBackground">@color/white</item>
         <item name="colorBackground">?android:colorBackground</item>
+        <item name="colorPrimary">@color/teal_700</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Status bar. -->
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
+        <item name="colorToolbarIconTint">?attr/colorOnPrimary</item>
+        <!-- Status bar search. -->
+        <item name="searchViewStyle">@style/SearchViewStyle</item>
+        <item name="colorToolbarSearchBackground">@color/white</item>
+        <item name="colorToolbarSearchBorder">@color/teal_800</item>
+        <item name="colorToolbarSearchIconTint">@color/gray_700</item>
+        <!-- Warning messages. -->
+        <item name="colorWarningPrimary">@color/gray_500</item>
+        <item name="colorWarningSecondary">@color/red_900</item>
+        <!-- Cards. -->
+        <item name="colorCardBorder">@color/gray_300</item>
+        <item name="colorCardBackground">?attr/colorBackground</item>
+        <item name="radiusCardBackground">8dp</item>
+        <item name="colorCardTitleText">@color/gray_700</item>
+        <item name="colorCardMainText">@color/gray_700</item>
+        <item name="colorCardIconTint">@color/peru_html</item>
+        <!-- Nested. -->
+        <item name="colorNestedBackground">?attr/colorBackground</item>
+        <item name="colorNestedTitleText">@color/gray_700</item>
+        <item name="colorNestedMainText">@color/gray_700</item>
+        <item name="radiusNestedContent">@dimen/nested_scroll_view_radius</item>
+        <item name="colorWallpaperToolbarText">@color/white</item>
         <item name="heightWallpaperToolbarImage">300dp</item>
         <item name="heightWallpaperToolbarScrim">100dp</item>
-        <item name="radiusDetailsContent">@dimen/nested_scroll_view_radius</item>
-        <item name="searchViewStyle">@style/SearchView</item>
-        <item name="gradientScrimDenser">@color/black_transparent_50</item>
-        <item name="gradientScrimDenserLess">@color/black_transparent_05</item>
-    </style>
-
-    <style name="SearchView" parent="Widget.AppCompat.Light.SearchView">
-        <item name="searchHintIcon">@null</item>
+        <item name="gradientToolbarScrimDenser">@color/black_transparent_50</item>
+        <item name="gradientToolbarScrimDenserLess">@color/black_transparent_05</item>
     </style>
 </resources>

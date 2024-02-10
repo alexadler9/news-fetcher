@@ -36,18 +36,22 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:src="@drawable/ic_baseline_error_outline_24"
+            app:tint="?attr/colorWarningPrimary"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/load_error" />
+            android:text="@string/load_error"
+            android:textAppearance="@style/WarningTextAppearance" />
 
         <TextView
             android:id="@+id/tvError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textAppearance="@style/WarningTextAppearance.Error"
             tools:text="Unknown error" />
 
     </LinearLayout>
@@ -68,17 +72,26 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:src="@drawable/ic_baseline_search_off_24"
+            app:tint="?attr/colorWarningPrimary"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_results" />
+            android:text="@string/no_results"
+            android:textAppearance="@style/WarningTextAppearance" />
+
+        <TextView
+            android:id="@+id/tvQuery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center" />
 
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/pbArticles"
+        android:theme="@style/ProgressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

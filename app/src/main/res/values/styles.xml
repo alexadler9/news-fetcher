@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="AppTextAppearance">
+        <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="ProgressBarStyle">
+        <item name="colorAccent">?attr/colorPrimary</item>
+    </style>
+
+    <style name="SearchViewStyle" parent="Widget.AppCompat.Light.SearchView">
+        <item name="searchHintIcon">@null</item>
+        <item name="closeIcon">@drawable/ic_toolbar_search_clear</item>
+        <item name="queryBackground">@drawable/background_search</item>
+    </style>
+
+    <!-- Warning messages style -->
+
+    <style name="WarningTextAppearance" parent="AppTextAppearance">
+        <item name="android:textColor">?attr/colorWarningPrimary</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="WarningTextAppearance.Error">
+        <item name="android:textColor">?attr/colorWarningSecondary</item>
+    </style>
+
+    <!-- Card style -->
+
+    <style name="CardTextAppearance" parent="AppTextAppearance" />
+
+    <style name="CardTextTitleStyle">
+        <item name="android:textAppearance">@style/CardTextAppearance</item>
+        <item name="android:textColor">?attr/colorCardTitleText</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="CardTextTitleStyle.Level1">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
+    <style name="CardTextTitleStyle.Level2">
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="CardTextContentStyle">
+        <item name="android:textAppearance">@style/CardTextAppearance</item>
+        <item name="android:textColor">?attr/colorCardMainText</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:minHeight">50dp</item>
+    </style>
+
+    <!-- Wallpaper toolbar style -->
+
+    <style name="WallpaperToolbarTextAppearance" parent="AppTextAppearance">
+        <item name="android:textColor">?attr/colorWallpaperToolbarText</item>
+    </style>
+
+    <!-- Nested style -->
+
+    <style name="NestedTextAppearance" parent="AppTextAppearance" />
+
+    <style name="NestedTextTitleStyle">
+        <item name="android:textAppearance">@style/NestedTextAppearance</item>
+        <item name="android:textColor">?attr/colorNestedTitleText</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="NestedTextTitleStyle.Level1">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold|italic</item>
+    </style>
+
+    <style name="NestedTextTitleStyle.Level2">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="NestedTextContentStyle">
+        <item name="android:textAppearance">@style/NestedTextAppearance</item>
+        <item name="android:textColor">?attr/colorNestedMainText</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:lineSpacingExtra">10sp</item>
+    </style>
+
+</resources>

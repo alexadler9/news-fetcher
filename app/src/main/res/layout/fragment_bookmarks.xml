@@ -34,17 +34,20 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:src="@drawable/ic_baseline_search_off_24"
+            app:tint="?attr/colorWarningPrimary"
             tools:ignore="ContentDescription" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/bookmarks_empty" />
+            android:text="@string/bookmarks_empty"
+            android:textAppearance="@style/WarningTextAppearance" />
 
     </LinearLayout>
 
     <ProgressBar
         android:id="@+id/pbBookmarks"
+        android:theme="@style/ProgressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"

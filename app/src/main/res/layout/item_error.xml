@@ -8,4 +8,5 @@
     android:minHeight="56dp"
     android:padding="4dp"
     android:textAllCaps="true"
+    android:textAppearance="@style/WarningTextAppearance.Error"
     tools:text="Unknown error" />

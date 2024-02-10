@@ -180,6 +180,7 @@ class ArticlesFragment : Fragment() {
                     pbArticles.isVisible = false
                     layoutError.isVisible = false
                     layoutEmpty.isVisible = (articlesAdapter.itemCount == 0)
+                    tvQuery.text = viewState.articlesQuery
                 }
 
                 is State.Error -> {

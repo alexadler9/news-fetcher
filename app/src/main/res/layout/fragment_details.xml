@@ -17,6 +17,8 @@
             android:id="@+id/ctlDetails"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:collapsedTitleTextAppearance="@style/WallpaperToolbarTextAppearance"
+            app:expandedTitleTextAppearance="@style/WallpaperToolbarTextAppearance"
             app:contentScrim="?attr/colorPrimary"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -60,18 +62,20 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@drawable/background_nested"
-        app:behavior_overlapTop="?attr/radiusDetailsContent"
+        app:behavior_overlapTop="?attr/radiusNestedContent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp">
 
             <TextView
                 android:id="@+id/tvDetailsAuthor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/author_label"
+                style="@style/NestedTextTitleStyle.Level1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,6 +84,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/date_label"
+                style="@style/NestedTextTitleStyle.Level2"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvDetailsAuthor" />
 
@@ -88,8 +93,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:lineSpacingExtra="10sp"
                 android:text="@string/description_label"
+                style="@style/NestedTextContentStyle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tvDetailsDate" />
 
@@ -99,6 +104,7 @@
 
     <ProgressBar
         android:id="@+id/pbDetails"
+        android:theme="@style/ProgressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
