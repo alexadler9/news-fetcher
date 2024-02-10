@@ -6,6 +6,9 @@
     <string name="title_label">Заголовок</string>
     <string name="description_label">Описание</string>
     <string name="search_hint">Введите запрос…</string>
+    <string name="settings_search_label">Параметры поиска</string>
+    <string name="settings_country_label">Страна</string>
+    <string name="settings_category_label">Категория</string>
 
     <!-- Bottom menu items. -->
     <string name="menu_main">ГЛАВНАЯ</string>
@@ -23,4 +26,9 @@
     <string name="load_error">ОШИБКА ЗАГРУЗКИ ДАННЫХ:</string>
     <string name="bookmarks_empty">В ИЗБРАННОМ ПУСТО</string>
     <string name="no_results">НЕТ РЕЗУЛЬТАТОВ ДЛЯ</string>
+
+    <!-- Picker dialog. -->
+    <string name="picker_country_title">Страна</string>
+    <string name="picker_category_title">Категория</string>
+    <string name="picker_button_negative">ОТМЕНА</string>
 </resources>

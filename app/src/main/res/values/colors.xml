@@ -16,5 +16,6 @@
     <color name="teal_700">#FF018786</color>
     <color name="teal_800">#FF00695C</color>
     <color name="peru_html">#FFCD853F</color>
+    <color name="peru_html_transparent_30">#4DCD853F</color>
     <color name="red_900">#FFB71C1C</color>
 </resources>

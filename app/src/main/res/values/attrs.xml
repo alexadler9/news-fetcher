@@ -27,4 +27,9 @@
     <attr name="heightWallpaperToolbarScrim" format="dimension" />
     <attr name="gradientToolbarScrimDenser" format="color" />
     <attr name="gradientToolbarScrimDenserLess" format="color" />
+    <!-- Settings. -->
+    <attr name="colorSettingsTitleText" format="color" />
+    <attr name="colorSettingsTitleDivider" format="color" />
+    <attr name="colorSettingsMenuText" format="color" />
+    <attr name="colorSettingsSubmenuText" format="color" />
 </resources>

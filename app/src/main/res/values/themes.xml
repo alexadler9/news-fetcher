@@ -33,6 +33,12 @@
         <item name="heightWallpaperToolbarScrim">100dp</item>
         <item name="gradientToolbarScrimDenser">@color/black_transparent_50</item>
         <item name="gradientToolbarScrimDenserLess">@color/black_transparent_05</item>
+        <!-- Settings. -->
+        <item name="colorSettingsTitleText">@color/peru_html</item>
+        <item name="colorSettingsTitleDivider">@color/peru_html_transparent_30</item>
+        <item name="colorSettingsMenuText">@color/gray_700</item>
+        <item name="colorSettingsSubmenuText">@color/gray_500</item>
+        <item name="android:radioButtonStyle">@style/RadioButtonStyle</item>
     </style>
 
     <!-- Light application theme. -->

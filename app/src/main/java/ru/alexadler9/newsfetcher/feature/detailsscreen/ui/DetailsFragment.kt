@@ -139,7 +139,6 @@ class DetailsFragment : Fragment() {
 
         /**
          * Create a new instance of this fragment.
-         *
          * @param article The article.
          * @return A new instance of fragment DetailsFragment.
          */

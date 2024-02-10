@@ -4,18 +4,20 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
-import ru.alexadler9.newsfetcher.R
+import ru.alexadler9.newsfetcher.base.ext.serializable
 import ru.alexadler9.newsfetcher.databinding.FragmentSettingsBinding
 import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
 import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
+import ru.alexadler9.newsfetcher.feature.settingsscreen.ui.dialog.CategoryPickerFragment
+import ru.alexadler9.newsfetcher.feature.settingsscreen.ui.dialog.CountryPickerFragment
 
 /**
  * Fragment is responsible for setting parameters of the articles list.
@@ -30,17 +32,6 @@ class SettingsFragment : Fragment() {
 
     private val viewModel: SettingsViewModel by viewModels()
 
-    private val countriesAdapter: ArrayAdapter<ArticlesCountry> by lazy {
-        ArrayAdapter(requireContext(), R.layout.item_spinner, ArticlesCountry.values()).also {
-            it.setDropDownViewResource(R.layout.item_spinner)
-        }
-    }
-    private val categoriesAdapter: ArrayAdapter<ArticlesCategory> by lazy {
-        ArrayAdapter(requireContext(), R.layout.item_spinner, ArticlesCategory.values()).also {
-            it.setDropDownViewResource(R.layout.item_spinner)
-        }
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -52,44 +43,32 @@ class SettingsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        with(binding) {
-            spCountries.apply {
-                adapter = countriesAdapter
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                    }
-
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        val country = ArticlesCountry.forTitle(spCountries.selectedItem.toString())
-                        viewModel.processUiAction(UiAction.OnCountryChanged(country))
-                    }
-                }
+        binding.btnCountry.setOnClickListener {
+            SettingsFragmentDirections.actionSettingsFragmentToCountryPickerFragment(
+                viewModel.viewState.value.country
+            ).apply {
+                findNavController().navigate(this)
             }
-            spCategories.apply {
-                adapter = categoriesAdapter
-                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-
-                    override fun onNothingSelected(parent: AdapterView<*>?) {
-                    }
-
-                    override fun onItemSelected(
-                        parent: AdapterView<*>?,
-                        view: View?,
-                        position: Int,
-                        id: Long
-                    ) {
-                        val category =
-                            ArticlesCategory.forTitle(spCategories.selectedItem.toString())
-                        viewModel.processUiAction(UiAction.OnCategoryChanged(category))
-                    }
+        }
+        setFragmentResultListener(CountryPickerFragment.REQUEST_COUNTRY) { _, bundle ->
+            bundle.serializable<ArticlesCountry>(CountryPickerFragment.ARG_COUNTRY)
+                ?.let { country ->
+                    viewModel.processUiAction(UiAction.OnCountryChanged(country))
                 }
+        }
+
+        binding.btnCategory.setOnClickListener {
+            SettingsFragmentDirections.actionSettingsFragmentToCategoryPickerFragment(
+                viewModel.viewState.value.category
+            ).apply {
+                findNavController().navigate(this)
             }
+        }
+        setFragmentResultListener(CategoryPickerFragment.REQUEST_CATEGORY) { _, bundle ->
+            bundle.serializable<ArticlesCategory>(CategoryPickerFragment.ARG_CATEGORY)
+                ?.let { category ->
+                    viewModel.processUiAction(UiAction.OnCategoryChanged(category))
+                }
         }
 
         viewModel.viewState
@@ -104,8 +83,8 @@ class SettingsFragment : Fragment() {
 
     private fun render(viewState: ViewState) {
         with(binding) {
-            spCountries.setSelection(ArticlesCountry.values().indexOf(viewState.country))
-            spCategories.setSelection(ArticlesCategory.values().indexOf(viewState.category))
+            tvSelectedCountry.text = viewState.country.title
+            tvSelectedCategory.text = viewState.category.title
         }
     }
 

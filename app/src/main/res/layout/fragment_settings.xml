@@ -4,30 +4,67 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_margin="16dp"
     tools:context=".feature.settingsscreen.SettingsFragment">
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Страна:" />
-
-    <Spinner
-        android:id="@+id/spCountries"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:spinnerMode="dropdown" />
+        android:text="@string/settings_search_label"
+        android:textAppearance="@style/SettingsTextAppearance.Title" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Категория:" />
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="8dp"
+        android:background="?attr/colorSettingsTitleDivider" />
 
-    <Spinner
-        android:id="@+id/spCategories"
+    <LinearLayout
+        android:id="@+id/btnCountry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="4dp"
-        android:spinnerMode="dropdown" />
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_country_label"
+            android:textAppearance="@style/SettingsTextAppearance.Menu" />
+
+        <TextView
+            android:id="@+id/tvSelectedCountry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_country_label"
+            android:textAllCaps="true"
+            android:textAppearance="@style/SettingsTextAppearance.Submenu" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btnCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground"
+        android:orientation="vertical"
+        android:paddingVertical="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_category_label"
+            android:textAppearance="@style/SettingsTextAppearance.Menu" />
+
+        <TextView
+            android:id="@+id/tvSelectedCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/settings_category_label"
+            android:textAllCaps="true"
+            android:textAppearance="@style/SettingsTextAppearance.Submenu" />
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -15,6 +15,13 @@
         <item name="queryBackground">@drawable/background_search</item>
     </style>
 
+    <style name="RadioButtonStyle" parent="Base.Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:buttonTint">@color/peru_html</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:textColor">@color/gray_700</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <!-- Warning messages style -->
 
     <style name="WarningTextAppearance" parent="AppTextAppearance">
@@ -86,6 +93,26 @@
         <item name="android:textColor">?attr/colorNestedMainText</item>
         <item name="android:textSize">22sp</item>
         <item name="android:lineSpacingExtra">10sp</item>
+    </style>
+
+    <!-- Settings style. -->
+
+    <style name="SettingsTextAppearance" parent="AppTextAppearance" />
+
+    <style name="SettingsTextAppearance.Title">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">?attr/colorSettingsTitleText</item>
+    </style>
+
+    <style name="SettingsTextAppearance.Menu">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">?attr/colorSettingsMenuText</item>
+    </style>
+
+    <style name="SettingsTextAppearance.Submenu">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">?attr/colorSettingsSubmenuText</item>
+        <item name="android:textStyle">italic</item>
     </style>
 
 </resources>

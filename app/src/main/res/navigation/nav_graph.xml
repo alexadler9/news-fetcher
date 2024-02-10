@@ -37,6 +37,29 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="ru.alexadler9.newsfetcher.feature.settingsscreen.ui.SettingsFragment"
-        android:label="SettingsFragment" />
+        android:label="SettingsFragment">
+        <action
+            android:id="@+id/action_settingsFragment_to_countryPickerFragment"
+            app:destination="@id/countryPickerFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_categoryPickerFragment"
+            app:destination="@id/categoryPickerFragment" />
+    </fragment>
+    <dialog
+        android:id="@+id/countryPickerFragment"
+        android:name="ru.alexadler9.newsfetcher.feature.settingsscreen.ui.dialog.CountryPickerFragment"
+        android:label="CountryPickerFragment">
+        <argument
+            android:name="country"
+            app:argType="ru.alexadler9.newsfetcher.domain.type.ArticlesCountry" />
+    </dialog>
+    <dialog
+        android:id="@+id/categoryPickerFragment"
+        android:name="ru.alexadler9.newsfetcher.feature.settingsscreen.ui.dialog.CategoryPickerFragment"
+        android:label="CategoryPickerFragment">
+        <argument
+            android:name="category"
+            app:argType="ru.alexadler9.newsfetcher.domain.type.ArticlesCategory" />
+    </dialog>
 
 </navigation>
