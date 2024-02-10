@@ -159,7 +159,7 @@ class ArticlesFragment : Fragment() {
     private fun pagerLoadStateProcess(state: CombinedLoadStates) {
         // Notify the ViewModel about current state. It will decide what to do next.
         viewModel.processUiAction(
-            UiAction.OnPagerStateChanged(state = state.source)
+            UiAction.OnPagerStateChanged(state = state.source, articlesAdapter.itemCount)
         )
     }
 
@@ -179,7 +179,7 @@ class ArticlesFragment : Fragment() {
                 is State.Content -> {
                     pbArticles.isVisible = false
                     layoutError.isVisible = false
-                    layoutEmpty.isVisible = (articlesAdapter.itemCount == 0)
+                    layoutEmpty.isVisible = (viewState.state.itemCount == 0)
                     tvQuery.text = viewState.articlesQuery
                 }
 

@@ -120,15 +120,15 @@ class ArticlesViewModel @Inject constructor(private val interactor: ArticlesInte
                         return previousState.copy(state = State.Error(refreshState.error))
                     }
                     if (refreshState is LoadState.NotLoading) {
-                        return previousState.copy(state = State.Content)
+                        return previousState.copy(state = State.Content(action.itemCount))
                     }
                     return null
                 }
                 if (previousState.state is State.Content) {
                     val appendState = action.state.append
                     if ((appendState is LoadState.Error) || (appendState is LoadState.NotLoading)) {
-                        // Pager itself will display display an error or loading.
-                        return null
+                        // Pager itself will display display an error or loading state.
+                        return previousState.copy(state = State.Content(action.itemCount))
                     }
                 }
                 null

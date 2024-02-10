@@ -8,7 +8,7 @@ import ru.alexadler9.newsfetcher.feature.adapter.ArticleItem
 
 sealed class State {
     object Load : State()
-    object Content : State()
+    data class Content(val itemCount: Int) : State()
     data class Error(val throwable: Throwable) : State()
 }
 
@@ -24,7 +24,7 @@ sealed class ViewEvent {
 sealed class UiAction : Action {
     object OnApplySettings : UiAction()
     data class OnApplyQuery(val query: String) : UiAction()
-    data class OnPagerStateChanged(val state: LoadStates) : UiAction()
+    data class OnPagerStateChanged(val state: LoadStates, val itemCount: Int) : UiAction()
     data class OnBookmarkButtonClicked(val article: ArticleItem) : UiAction()
     data class OnShareButtonClicked(val context: Context, val article: ArticleItem) : UiAction()
     data class OnBrowserButtonClicked(val context: Context, val article: ArticleItem) : UiAction()
