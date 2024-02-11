@@ -1,16 +1,17 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Theme.NewsFetcher" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
-        <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
-        <item name="colorOnPrimary">@color/black</item>
-        <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
-        <item name="colorOnSecondary">@color/black</item>
-        <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
-        <!-- Customize your theme here. -->
+<resources>
+    <!-- Dark application theme. -->
+    <style name="Theme.NewsFetcher" parent="BaseTheme">
+        <item name="colorPrimary">@color/purple_700</item>
+        <item name="colorOnPrimary">@color/gray_300</item>
+        <!-- Status bar search. -->
+        <item name="colorToolbarSearchBackground">@color/purple_200</item>
+        <item name="colorToolbarSearchBorder">@color/purple_900</item>
+        <item name="colorToolbarSearchIconTint">@color/gray_700</item>
+        <!-- Cards. -->
+        <item name="colorCardTitleText">@color/gray_300</item>
+        <item name="colorCardMainText">@color/gray_300</item>
+        <!-- Nested. -->
+        <item name="colorNestedTitleText">@color/gray_300</item>
+        <item name="colorNestedMainText">@color/gray_300</item>
     </style>
 </resources>

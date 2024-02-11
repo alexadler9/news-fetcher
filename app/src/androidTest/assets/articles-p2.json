@@ -1,0 +1,45 @@
+{
+  "status": "ok",
+  "totalResults": 3,
+  "articles": [
+    {
+      "source": {
+        "id": null,
+        "name": "Yahoo Entertainment"
+      },
+      "author": "Jason Owens",
+      "title": "Joel Embiid bullies Victor Wembanyama, breaks Wilt Chamberlain's 76ers record with historic 70-point night - Yahoo Sports",
+      "description": "Embiid made history Monday night.",
+      "url": "https://sports.yahoo.com/joel-embiid-bullies-victor-wembanyama-breaks-wilt-chamberlains-76ers-record-historic-70-point-night-030948048.html",
+      "urlToImage": "https://s.yimg.com/os/creatr-uploaded-images/2024-01/74581f00-b992-11ee-9fad-95e5ed968a0e",
+      "publishedAt": "2024-01-23T12:48:12Z",
+      "content": "Joel Embiid sized up Victor Wembanyama before his first game against the star San Antonio Spurs rookie.\r\nHe then delivered a welcome-to-the-NBA moment for the ages.\r\nThe reigning MVP dominated the pa… [+3698 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "CNBC"
+      },
+      "author": "Alex Sherman, Jacob Pramuk",
+      "title": "Netflix to stream WWE's Raw starting next year in its biggest jump into live entertainment - CNBC",
+      "description": "Netflix adds WWE Raw after making only a few forays into live programming in its history.",
+      "url": "https://www.cnbc.com/2024/01/23/netflix-to-stream-wwes-raw-starting-next-year.html",
+      "urlToImage": "https://image.cnbcfm.com/api/v1/image/106864891-1617815886936-CLG_7232-Panob.jpg?v=1617816018&w=1920&h=1080",
+      "publishedAt": "2024-01-23T12:31:50Z",
+      "content": "Netflix and TKO Group Holdings said Tuesday that the streaming platform will air WWE's flagship program \"Raw\" starting next year, in Netflix's first major foray into live sports.\r\nThe 10-year deal is… [+3580 chars]"
+    },
+    {
+      "source": {
+        "id": null,
+        "name": "BBC News"
+      },
+      "author": null,
+      "title": "New Hampshire primary: Donald Trump and Nikki Haley to go head-to-head - BBC.com",
+      "description": "Voters go to the polls on Tuesday as the race for the presidential nomination enters its next stage.",
+      "url": "https://www.bbc.com/news/world-us-canada-68064703",
+      "urlToImage": "https://ichef.bbci.co.uk/news/1024/branded_news/B176/production/_132403454_haley_trump_getty.jpg",
+      "publishedAt": "2024-01-23T12:15:00Z",
+      "content": "By Francesca GillettBBC News\r\nWatch: Whats at stake for Trump and Haley in New Hampshire?\r\nDonald Trump is facing his last remaining Republican opponent, Nikki Haley, in a primary election in New Ham… [+4991 chars]"
+    }
+  ]
+}

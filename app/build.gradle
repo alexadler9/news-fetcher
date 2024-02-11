@@ -1,6 +1,9 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -14,7 +17,10 @@ android {
         versionCode 1
         versionName "1.0"
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "ru.alexadler9.newsfetcher.TestRunner"
+
+        buildConfigField "String", "NEWS_BASE_URL", '"https://newsapi.org/"'
+        buildConfigField "String", "NEWS_API_KEY", '"bc33b7b73046427086a29f4de576e5dc"'
     }
 
     buildTypes {
@@ -32,15 +38,103 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    testOptions {
+        unitTests.all {
+            useJUnitPlatform()
+        }
+    }
+
+    buildFeatures {
+        viewBinding true
+    }
+
+    sourceSets {
+        androidTest {
+            assets.srcDirs = ['src/androidTest/assets']
+        }
+    }
+
+    flavorDimensions 'version'
+    productFlavors {
+        demo {
+            dimension 'version'
+            applicationIdSuffix ".demo"
+        }
+        full {
+            dimension 'version'
+            applicationIdSuffix ".full"
+        }
+    }
 }
 
 dependencies {
+
+    def lifecycle_version = "2.6.2"
+    def prefs_version = "1.5.0"
+    def retrofit_version = "2.9.0"
+    def gson_version = "2.10.1"
+    def glide_version = "4.13.0"
+    def room_version = "2.6.1"
+    def nav_version = "2.7.6"
+    def paging_version = "3.2.1"
+    def junit5_version = "5.10.1"
+    def espresso_version = "3.5.1"
 
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    testImplementation 'junit:junit:4.13.2'
+    implementation 'androidx.fragment:fragment-ktx:1.6.2'
+    // Android Lifecycle ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // Android Lifecycle LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // This library incorporates annotation processing to ensure the compile time verification for user-defined shared preferences
+    implementation "co.windly:ktx-prefs:$prefs_version"
+    kapt "co.windly:ktx-prefs-compiler:$prefs_version"
+    // A type-safe HTTP client for Android and Java
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    // Library that can be used to convert Java Objects into their JSON representation
+    implementation "com.google.code.gson:gson:$gson_version"
+    // A Retrofit Converter which uses Gson for serialization
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    // An image loading
+    implementation "com.github.bumptech.glide:glide:$glide_version"
+    kapt "com.github.bumptech.glide:compiler:$glide_version"
+    // Dependency injection library based Dagger
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+    // Library provides an abstraction layer over SQLite
+    implementation "androidx.room:room-runtime:$room_version"
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    // Navigation
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
+    // The Paging Library makes it easier to load data within RecyclerView
+    implementation "androidx.paging:paging-runtime:$paging_version"
+    testImplementation "androidx.paging:paging-testing:$paging_version"
+
+    testImplementation "org.junit.jupiter:junit-jupiter:$junit5_version"
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"
+    // Library for checking conditions
+    testImplementation 'org.hamcrest:hamcrest-all:1.3'
+    // Mockito mock objects library core API
+    testImplementation 'org.mockito:mockito-core:5.7.0'
+    // Mockito preconfigured inline mock maker
+    testImplementation 'org.mockito:mockito-inline:5.2.0'
+    // Framework that allows to write unit tests and run them on a JVM while still using Android API
+    testImplementation 'org.robolectric:robolectric:4.2.1'
+    // To work in conjunction with Robolectric
+    testImplementation "org.junit.vintage:junit-vintage-engine:$junit5_version"
+    testImplementation 'androidx.test:core:1.5.0'
+
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    androidTestImplementation "androidx.test.espresso:espresso-core:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$espresso_version"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$espresso_version"
+    // Dependency injection for tests
+    androidTestImplementation "com.google.dagger:hilt-android-testing:$hilt_version"
+    kaptAndroidTest "com.google.dagger:hilt-android-compiler:$hilt_version"
 }

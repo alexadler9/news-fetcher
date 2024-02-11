@@ -1,0 +1,19 @@
+{
+  "status": "ok",
+  "totalResults": 1,
+  "articles": [
+    {
+      "source": {
+        "id": null,
+        "name": "9to5Mac"
+      },
+      "author": "Michael Potuck",
+      "title": "Apple Vision Pro resellers already price gouging on eBay, here's how much they're asking - 9to5Mac",
+      "description": "Vision Pro is landing at the end of next week and with pre-orders locked in for the first customers, eBay...",
+      "url": "https://9to5mac.com/2024/01/23/apple-vision-pro-ebay-scalper-prices/",
+      "urlToImage": "https://i0.wp.com/9to5mac.com/wp-content/uploads/sites/6/2024/01/apple-vision-pro.jpg?resize=1200%2C628&quality=82&strip=all&ssl=1",
+      "publishedAt": "2024-01-23T14:45:00Z",
+      "content": "Vision Pro is landing at the end of next week and with pre-orders locked in for the first customers, eBay listings with exorbitant prices are piling in. Here’s how much scalpers hope to get for Apple… [+1251 chars]"
+    }
+  ]
+}
