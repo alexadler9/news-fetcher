@@ -81,6 +81,9 @@ dependencies {
     def junit5_version = "5.10.1"
     def espresso_version = "3.5.1"
 
+    // Memory leak detection library for Android
+    // debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.2'
+
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'

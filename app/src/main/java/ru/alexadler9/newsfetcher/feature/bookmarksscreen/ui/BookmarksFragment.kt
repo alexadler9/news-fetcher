@@ -13,6 +13,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.alexadler9.newsfetcher.BuildConfig
+import ru.alexadler9.newsfetcher.base.ext.setAdapterAndCleanupOnDetachFromWindow
 import ru.alexadler9.newsfetcher.databinding.FragmentBookmarksBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesListAdapter
 
@@ -71,7 +72,10 @@ class BookmarksFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.rvBookmarks.adapter = bookmarksAdapter
+        binding.rvBookmarks.apply {
+            adapter = bookmarksAdapter
+            setAdapterAndCleanupOnDetachFromWindow(bookmarksAdapter)
+        }
 
         viewModel.viewState
             .onEach(::render)
