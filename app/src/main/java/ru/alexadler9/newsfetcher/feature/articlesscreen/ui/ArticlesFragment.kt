@@ -19,6 +19,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import ru.alexadler9.newsfetcher.BuildConfig
 import ru.alexadler9.newsfetcher.R
+import ru.alexadler9.newsfetcher.base.ext.setAdapterAndCleanupOnDetachFromWindow
 import ru.alexadler9.newsfetcher.base.ext.toEditable
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesLoaderStateAdapter
@@ -81,10 +82,13 @@ class ArticlesFragment : Fragment() {
 
         // Configure recyclerview adapter.
 
-        binding.rvArticles.adapter = articlesAdapter.withLoadStateHeaderAndFooter(
-            header = ArticlesLoaderStateAdapter(),
-            footer = ArticlesLoaderStateAdapter()
-        )
+        binding.rvArticles.apply {
+            adapter = articlesAdapter.withLoadStateHeaderAndFooter(
+                header = ArticlesLoaderStateAdapter(),
+                footer = ArticlesLoaderStateAdapter()
+            )
+            setAdapterAndCleanupOnDetachFromWindow(articlesAdapter)
+        }
 
         articlesAdapter.addLoadStateListener(::pagerLoadStateProcess)
 
