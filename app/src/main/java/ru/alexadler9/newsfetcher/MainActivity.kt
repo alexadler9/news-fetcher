@@ -5,9 +5,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.ActivityMainBinding
+import ru.alexadler9.newsfetcher.feature.newsworker.NewsPollWorker
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -34,5 +37,9 @@ class MainActivity : AppCompatActivity() {
             }
             bottomNav.setupWithNavController(navController)
         }
+
+        // Test worker
+        val workRequest = OneTimeWorkRequestBuilder<NewsPollWorker>().build()
+        WorkManager.getInstance(applicationContext).enqueue(workRequest)
     }
 }
