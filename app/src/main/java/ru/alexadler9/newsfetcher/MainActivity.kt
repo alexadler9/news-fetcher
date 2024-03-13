@@ -1,5 +1,7 @@
 package ru.alexadler9.newsfetcher
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -41,5 +43,12 @@ class MainActivity : AppCompatActivity() {
         // Test worker
         val workRequest = OneTimeWorkRequestBuilder<NewsPollWorker>().build()
         WorkManager.getInstance(applicationContext).enqueue(workRequest)
+    }
+
+    companion object {
+
+        fun newIntent(context: Context): Intent {
+            return Intent(context, MainActivity::class.java)
+        }
     }
 }
