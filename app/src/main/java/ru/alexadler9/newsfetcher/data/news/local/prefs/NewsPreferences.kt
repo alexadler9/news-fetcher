@@ -11,5 +11,9 @@ class NewsPreferences(
 
     /** The category in which the articles will be searched. */
     @DefaultString(value = "")
-    internal val category: String
+    internal val category: String,
+
+    /** Last received URL to the article. */
+    @DefaultString(value = "")
+    internal val lastUrl: String
 )

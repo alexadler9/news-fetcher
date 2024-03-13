@@ -64,6 +64,19 @@ class NewsRepository @Inject constructor(
     }
 
     /**
+     * Get last received URL to the article.
+     */
+    fun getLastArticleUrl() = newsPreferencesSource.getLastUrl()
+
+    /**
+     * Save last received URL to the article.
+     * @param url URL to the article.
+     */
+    fun saveLastArticleUrl(url: String) {
+        newsPreferencesSource.setLastUrl(url)
+    }
+
+    /**
      * Get live top articles headlines.
      * @param country The country for which the articles will be searched.
      * @param category The category in which the articles will be searched.

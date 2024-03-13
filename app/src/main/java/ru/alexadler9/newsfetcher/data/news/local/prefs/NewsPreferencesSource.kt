@@ -32,4 +32,17 @@ class NewsPreferencesSource(private val appContext: Context) : INewsPreferencesS
     override fun setCategory(category: String) {
         appContext.requireNewsPreferences().setCategory(category)
     }
+
+    /**
+     * Get last received URL to the article.
+     */
+    override fun getLastUrl() = appContext.requireNewsPreferences().getLastUrl()
+
+    /**
+     * Save last received URL to the article.
+     * @param url URL to the article.
+     */
+    override fun setLastUrl(url: String) {
+        appContext.requireNewsPreferences().setLastUrl(url)
+    }
 }
