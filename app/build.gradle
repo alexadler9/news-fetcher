@@ -89,9 +89,13 @@ dependencies {
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.fragment:fragment-ktx:1.6.2'
-    // Android Lifecycle ViewModel
+    // Dependency injection library based Dagger
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    implementation "androidx.hilt:hilt-work:$hilt_work_version"
+    kapt "com.google.dagger:hilt-android-compiler:$hilt_version"
+    kapt "androidx.hilt:hilt-compiler:$hilt_work_version"
+    // Android Lifecycle ViewModel, LiveData
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
-    // Android Lifecycle LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     // This library incorporates annotation processing to ensure the compile time verification for user-defined shared preferences
     implementation "co.windly:ktx-prefs:$prefs_version"
@@ -105,9 +109,6 @@ dependencies {
     // An image loading
     implementation "com.github.bumptech.glide:glide:$glide_version"
     kapt "com.github.bumptech.glide:compiler:$glide_version"
-    // Dependency injection library based Dagger
-    implementation "com.google.dagger:hilt-android:$hilt_version"
-    kapt "com.google.dagger:hilt-compiler:$hilt_version"
     // Library provides an abstraction layer over SQLite
     implementation "androidx.room:room-runtime:$room_version"
     implementation "androidx.room:room-ktx:$room_version"
@@ -118,6 +119,8 @@ dependencies {
     // The Paging Library makes it easier to load data within RecyclerView
     implementation "androidx.paging:paging-runtime:$paging_version"
     testImplementation "androidx.paging:paging-testing:$paging_version"
+    // Work Manager
+    implementation 'androidx.work:work-runtime-ktx:2.7.1'
 
     testImplementation "org.junit.jupiter:junit-jupiter:$junit5_version"
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3"

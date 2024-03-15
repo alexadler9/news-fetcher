@@ -9,4 +9,8 @@ interface INewsPreferencesSource {
     fun getCategory(): String
 
     fun setCategory(category: String)
+
+    fun getLastUrl(): String
+
+    fun setLastUrl(url: String)
 }

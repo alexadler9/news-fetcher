@@ -8,10 +8,12 @@ class MockingNewsPreferencesSource : INewsPreferencesSource {
 
     private val countryKey = "COUNTRY"
     private val categoryKey = "CATEGORY"
+    private val lastUrlKey = "LAST_URL"
 
     private val map = hashMapOf<String, Any>(
         countryKey to ArticlesCountry.USA.name,
-        categoryKey to ArticlesCategory.GENERAL.name
+        categoryKey to ArticlesCategory.GENERAL.name,
+        lastUrlKey to ""
     )
 
     override fun getCountry() = map[countryKey].toString()
@@ -24,5 +26,11 @@ class MockingNewsPreferencesSource : INewsPreferencesSource {
 
     override fun setCategory(category: String) {
         map[categoryKey] = category
+    }
+
+    override fun getLastUrl() = map[lastUrlKey].toString()
+
+    override fun setLastUrl(url: String) {
+        map[lastUrlKey] = url
     }
 }
