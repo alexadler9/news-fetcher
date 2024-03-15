@@ -2,20 +2,15 @@ package ru.alexadler9.newsfetcher.feature.newsworker
 
 import android.annotation.SuppressLint
 import android.app.Notification
-import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.util.Log
-import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
-import androidx.work.CoroutineWorker
-import androidx.work.WorkerParameters
+import androidx.work.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import ru.alexadler9.newsfetcher.MainActivity
-import ru.alexadler9.newsfetcher.NOTIFICATION_CHANNEL_ID
-import ru.alexadler9.newsfetcher.R
 import ru.alexadler9.newsfetcher.data.news.NewsRepository
+import java.util.concurrent.TimeUnit
 
 private const val TAG = "NEWS_POLL_WORKER"
 
@@ -25,6 +20,8 @@ class NewsPollWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val repository: NewsRepository
 ) : CoroutineWorker(context, workerParams) {
+
+    private val notificationHelper by lazy { NewsNotificationHelper(context) }
 
     @SuppressLint("UnspecifiedImmutableFlag")
     override suspend fun doWork(): Result {
@@ -43,40 +40,26 @@ class NewsPollWorker @AssistedInject constructor(
             Log.i(TAG, "Got an old URL: $articleUrl")
         } else {
             Log.i(TAG, "Got a new URL: $articleUrl")
-
             repository.saveLastArticleUrl(articleUrl)
-
-            val intent = MainActivity.newIntent(context)
-            val pendingIntent =
-                PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT)
-            val resources = context.resources
-            val notification = NotificationCompat
-                .Builder(context, NOTIFICATION_CHANNEL_ID)
-                .setTicker(resources.getString(R.string.new_articles_title))
-                .setSmallIcon(android.R.drawable.ic_menu_report_image)
-                .setContentTitle(resources.getString(R.string.new_articles_title))
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .build()
-
-            showBackgroundNotification(0, notification)
+            showBackgroundNotification(notificationHelper.getNotification())
         }
 
         return Result.success()
     }
 
-    private fun showBackgroundNotification(
-        requestCode: Int,
-        notification: Notification
-    ) {
+    private fun showBackgroundNotification(notification: Notification) {
         val intent = Intent(ACTION_SHOW_NEWS_NOTIFICATION).apply {
-            putExtra(EXTRA_REQUEST_CODE, requestCode)
+            putExtra(EXTRA_REQUEST_CODE, 0)
             putExtra(EXTRA_NOTIFICATION, notification)
         }
         context.sendOrderedBroadcast(intent, PERM_PRIVATE_NEWS_NOTIFICATIONS)
     }
 
     companion object {
+
+        const val NEWS_POLL_WORKER_NAME =
+            "ru.alexadler9.newsfetcher.NEWS_POLL_WORKER"
+
         const val ACTION_SHOW_NEWS_NOTIFICATION =
             "ru.alexadler9.newsfetcher.SHOW_NEWS_NOTIFICATION"
 
@@ -85,5 +68,20 @@ class NewsPollWorker @AssistedInject constructor(
 
         const val EXTRA_REQUEST_CODE = "REQUEST_CODE"
         const val EXTRA_NOTIFICATION = "NOTIFICATION"
+
+        fun start(context: Context) {
+            val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .build()
+            val periodicRequest = PeriodicWorkRequest
+                .Builder(NewsPollWorker::class.java, 15, TimeUnit.MINUTES)
+                .setConstraints(constraints)
+                .build()
+            WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+                NEWS_POLL_WORKER_NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                periodicRequest
+            )
+        }
     }
 }
