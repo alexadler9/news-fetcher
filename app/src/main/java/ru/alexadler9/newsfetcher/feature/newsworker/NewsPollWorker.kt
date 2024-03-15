@@ -83,5 +83,9 @@ class NewsPollWorker @AssistedInject constructor(
                 periodicRequest
             )
         }
+
+        fun stop(context: Context) {
+            WorkManager.getInstance(context).cancelUniqueWork(NEWS_POLL_WORKER_NAME)
+        }
     }
 }
