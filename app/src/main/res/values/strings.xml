@@ -33,6 +33,6 @@
     <string name="picker_button_negative">ОТМЕНА</string>
 
     <!-- Notifications. -->
-    <string name="notification_channel_name">New articles</string>
-    <string name="new_articles_title">Новые статьи в NewsFetcher</string>
+    <string name="new_articles_notification_title">@string/app_name</string>
+    <string name="new_articles_notification_content">Новые статьи в NewsFetcher</string>
 </resources>

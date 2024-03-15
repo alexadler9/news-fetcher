@@ -13,17 +13,18 @@ import ru.alexadler9.newsfetcher.MainActivity
 import ru.alexadler9.newsfetcher.R
 
 private const val CHANNEL_ID = "NewArticlesChannel"
-private const val CHANNEL_NAME = "NewArticlesChannelName"
-private const val CHANNEL_DESCRIPTION = "NewArticlesChannelDescription"
+private const val CHANNEL_NAME = "Новости"
+private const val CHANNEL_DESCRIPTION = "Уведомления о новых статьях"
 
 @SuppressLint("UnspecifiedImmutableFlag")
 class NewsNotificationHelper(private val context: Context) {
 
     private val notificationBuilder: NotificationCompat.Builder by lazy {
         NotificationCompat.Builder(context, CHANNEL_ID)
-            .setTicker(context.getString(R.string.new_articles_title))
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
-            .setContentTitle(context.getString(R.string.new_articles_title))
+            .setTicker(context.getString(R.string.new_articles_notification_title))
+            .setSmallIcon(R.drawable.ic_baseline_campaign_24)
+            .setContentTitle(context.getString(R.string.new_articles_notification_title))
+            .setContentText(context.getString(R.string.new_articles_notification_content))
             .setContentIntent(contentIntent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
