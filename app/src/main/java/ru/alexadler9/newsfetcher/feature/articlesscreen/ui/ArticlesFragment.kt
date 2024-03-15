@@ -9,7 +9,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.isVisible
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -24,6 +23,7 @@ import ru.alexadler9.newsfetcher.base.ext.toEditable
 import ru.alexadler9.newsfetcher.databinding.FragmentArticlesBinding
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesLoaderStateAdapter
 import ru.alexadler9.newsfetcher.feature.adapter.ArticlesPagingAdapter
+import ru.alexadler9.newsfetcher.feature.newsworker.NewsNotificationsReceiverFragment
 
 /**
  * Fragment is responsible for loading, displaying and managing the list of article headlines.
@@ -31,7 +31,7 @@ import ru.alexadler9.newsfetcher.feature.adapter.ArticlesPagingAdapter
  * create an instance of this fragment.
  */
 @AndroidEntryPoint
-class ArticlesFragment : Fragment() {
+class ArticlesFragment : NewsNotificationsReceiverFragment() {
 
     private var _binding: FragmentArticlesBinding? = null
     private val binding get() = _binding!!

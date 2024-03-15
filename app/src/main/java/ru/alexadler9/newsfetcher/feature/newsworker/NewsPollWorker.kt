@@ -1,11 +1,12 @@
 package ru.alexadler9.newsfetcher.feature.newsworker
 
 import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import androidx.core.app.NotificationCompat
-import androidx.core.app.NotificationManagerCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
@@ -58,10 +59,31 @@ class NewsPollWorker @AssistedInject constructor(
                 .setAutoCancel(true)
                 .build()
 
-            val notificationManager = NotificationManagerCompat.from(context)
-            notificationManager.notify(0, notification)
+            showBackgroundNotification(0, notification)
         }
 
         return Result.success()
+    }
+
+    private fun showBackgroundNotification(
+        requestCode: Int,
+        notification: Notification
+    ) {
+        val intent = Intent(ACTION_SHOW_NEWS_NOTIFICATION).apply {
+            putExtra(EXTRA_REQUEST_CODE, requestCode)
+            putExtra(EXTRA_NOTIFICATION, notification)
+        }
+        context.sendOrderedBroadcast(intent, PERM_PRIVATE_NEWS_NOTIFICATIONS)
+    }
+
+    companion object {
+        const val ACTION_SHOW_NEWS_NOTIFICATION =
+            "ru.alexadler9.newsfetcher.SHOW_NEWS_NOTIFICATION"
+
+        const val PERM_PRIVATE_NEWS_NOTIFICATIONS =
+            "ru.alexadler9.newsfetcher.PRIVATE_NEWS_NOTIFICATIONS"
+
+        const val EXTRA_REQUEST_CODE = "REQUEST_CODE"
+        const val EXTRA_NOTIFICATION = "NOTIFICATION"
     }
 }

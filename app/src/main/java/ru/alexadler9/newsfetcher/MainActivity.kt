@@ -7,12 +7,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.ActivityMainBinding
 import ru.alexadler9.newsfetcher.feature.newsworker.NewsPollWorker
+import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -41,8 +41,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Test worker
-        val workRequest = OneTimeWorkRequestBuilder<NewsPollWorker>().build()
-        WorkManager.getInstance(applicationContext).enqueue(workRequest)
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.UNMETERED)
+            .build()
+        val periodicRequest = PeriodicWorkRequest
+            .Builder(NewsPollWorker::class.java, 15, TimeUnit.MINUTES)
+            .setConstraints(constraints)
+            .build()
+        WorkManager.getInstance(applicationContext).enqueueUniquePeriodicWork(
+            "NEWS_POLL_WORK",
+            ExistingPeriodicWorkPolicy.KEEP,
+            periodicRequest
+        )
     }
 
     companion object {
