@@ -68,7 +68,7 @@ class ArticlesViewModelTest {
         )
 
         subject = ArticlesViewModel(articlesInteractor)
-        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED))
+        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED, 2))
 
         verify(newsRepository, times(1))
             .getTopHeadlinesArticlesPagingSource(
@@ -114,7 +114,7 @@ class ArticlesViewModelTest {
         `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(false)
 
         subject = ArticlesViewModel(articlesInteractor)
-        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED))
+        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED, 1))
 
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
@@ -168,7 +168,7 @@ class ArticlesViewModelTest {
         `when`(newsRepository.articleBookmarkExist(anyString())).thenReturn(true)
 
         subject = ArticlesViewModel(articlesInteractor)
-        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED))
+        subject.processUiAction(UiAction.OnPagerStateChanged(PAGER_STATES_LOADED, 1))
 
         assertThat(subject.viewState.value, notNullValue())
         assertThat(subject.viewState.value.state is State.Content, equalTo(true))
@@ -214,7 +214,7 @@ class ArticlesViewModelTest {
         )
 
         subject = ArticlesViewModel(articlesInteractor)
-        subject.processUiAction((UiAction.OnPagerStateChanged(PAGER_STATES_ERROR)))
+        subject.processUiAction((UiAction.OnPagerStateChanged(PAGER_STATES_ERROR, 0)))
 
         verify(newsRepository, times(1))
             .getTopHeadlinesArticlesPagingSource(
