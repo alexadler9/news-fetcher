@@ -1,6 +1,5 @@
 package ru.alexadler9.newsfetcher.feature.newsworker
 
-import android.annotation.SuppressLint
 import android.app.Notification
 import android.content.Context
 import android.content.Intent
@@ -23,25 +22,26 @@ class NewsPollWorker @AssistedInject constructor(
 
     private val notificationHelper by lazy { NewsNotificationHelper(context) }
 
-    @SuppressLint("UnspecifiedImmutableFlag")
     override suspend fun doWork(): Result {
-        val articles = repository.getTopHeadlinesArticles(
-            country = repository.getArticlesCountry(),
-            category = repository.getArticlesCategory(),
-            query = ""
-        )
-
-        if (articles.isEmpty()) {
+        val articles = try {
+            repository.getTopHeadlinesArticles(
+                country = repository.getArticlesCountry(),
+                category = repository.getArticlesCategory(),
+                query = ""
+            )
+        } catch (e: Throwable) {
             return Result.success()
         }
 
-        val articleUrl = articles.first().url
-        if (articleUrl == repository.getLastArticleUrl()) {
-            Log.i(TAG, "Got an old URL: $articleUrl")
-        } else {
-            Log.i(TAG, "Got a new URL: $articleUrl")
-            repository.saveLastArticleUrl(articleUrl)
-            showBackgroundNotification(notificationHelper.getNotification())
+        if (articles.isNotEmpty()) {
+            val articleUrl = articles.first().url
+            if (articleUrl == repository.getLastArticleUrl()) {
+                Log.i(TAG, "Got an old URL: $articleUrl")
+            } else {
+                Log.i(TAG, "Got a new URL: $articleUrl")
+                repository.saveLastArticleUrl(articleUrl)
+                showBackgroundNotification(notificationHelper.getNotification())
+            }
         }
 
         return Result.success()
