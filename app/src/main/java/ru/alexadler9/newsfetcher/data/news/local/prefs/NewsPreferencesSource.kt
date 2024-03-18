@@ -45,4 +45,17 @@ class NewsPreferencesSource(private val appContext: Context) : INewsPreferencesS
     override fun setLastUrl(url: String) {
         appContext.requireNewsPreferences().setLastUrl(url)
     }
+
+    /**
+     * Get flag indicating whether detection of new articles in the background is enabled.
+     */
+    override fun newsPollEnabled() = appContext.requireNewsPreferences().getNewsPollEnabled()
+
+    /**
+     * Save the flag indicating whether detection of new articles in the background is enabled.
+     * @param isOn Flag state.
+     */
+    override fun setNewsPoll(isOn: Boolean) {
+        appContext.requireNewsPreferences().setNewsPollEnabled(isOn)
+    }
 }
