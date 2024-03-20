@@ -71,6 +71,10 @@ class SettingsFragment : Fragment() {
                 }
         }
 
+        binding.switchNewsPolling.setOnCheckedChangeListener { _, checked ->
+            viewModel.processUiAction(UiAction.OnNewsPollingChanged(checked))
+        }
+
         viewModel.viewState
             .onEach(::render)
             .launchIn(viewLifecycleOwner.lifecycleScope)
@@ -85,6 +89,7 @@ class SettingsFragment : Fragment() {
         with(binding) {
             tvSelectedCountry.text = viewState.country.title
             tvSelectedCategory.text = viewState.category.title
+            switchNewsPolling.isChecked = viewState.isPolling
         }
     }
 
