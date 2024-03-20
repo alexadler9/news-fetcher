@@ -67,4 +67,29 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/settings_notifications_label"
+        android:textAppearance="@style/SettingsTextAppearance.Title" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginVertical="8dp"
+        android:background="?attr/colorSettingsTitleDivider" />
+
+    <androidx.appcompat.widget.SwitchCompat
+        android:id="@+id/switchNewsPolling"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:checked="true"
+        android:paddingVertical="8dp"
+        android:text="@string/settings_notification_articles_label"
+        android:textAppearance="@style/SettingsTextAppearance.Menu"
+        android:textColor="?attr/colorSettingsMenuText"
+        android:theme="@style/ThemeOverlay.SwitchStyle"
+        tools:ignore="UseSwitchCompatOrMaterialXml" />
+
 </LinearLayout>
