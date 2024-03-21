@@ -16,6 +16,7 @@ import ru.alexadler9.newsfetcher.base.ext.serializable
 import ru.alexadler9.newsfetcher.databinding.FragmentSettingsBinding
 import ru.alexadler9.newsfetcher.domain.type.ArticlesCategory
 import ru.alexadler9.newsfetcher.domain.type.ArticlesCountry
+import ru.alexadler9.newsfetcher.feature.newsworker.NewsPollWorker
 import ru.alexadler9.newsfetcher.feature.settingsscreen.ui.dialog.CategoryPickerFragment
 import ru.alexadler9.newsfetcher.feature.settingsscreen.ui.dialog.CountryPickerFragment
 
@@ -78,6 +79,10 @@ class SettingsFragment : Fragment() {
         viewModel.viewState
             .onEach(::render)
             .launchIn(viewLifecycleOwner.lifecycleScope)
+
+        viewModel.viewEvents
+            .onEach(::handleEvent)
+            .launchIn(lifecycleScope)
     }
 
     override fun onDestroyView() {
@@ -90,6 +95,19 @@ class SettingsFragment : Fragment() {
             tvSelectedCountry.text = viewState.country.title
             tvSelectedCategory.text = viewState.category.title
             switchNewsPolling.isChecked = viewState.isPolling
+        }
+    }
+
+    private fun handleEvent(viewEvent: ViewEvent?) {
+        viewEvent?.let {
+            when (viewEvent) {
+                is ViewEvent.OnStartNewsPolling -> {
+                    NewsPollWorker.start(requireContext())
+                }
+                is ViewEvent.OnStopNewsPolling -> {
+                    NewsPollWorker.stop(requireContext())
+                }
+            }
         }
     }
 

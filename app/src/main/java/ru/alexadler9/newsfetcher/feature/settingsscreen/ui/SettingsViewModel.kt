@@ -36,6 +36,7 @@ class SettingsViewModel @Inject constructor(private val interactor: SettingsInte
 
             is UiAction.OnNewsPollingChanged -> {
                 interactor.saveNewsPoll(action.isOn)
+                sendViewEvent(if (action.isOn) ViewEvent.OnStartNewsPolling else ViewEvent.OnStopNewsPolling)
                 previousState.copy(isPolling = action.isOn)
             }
 

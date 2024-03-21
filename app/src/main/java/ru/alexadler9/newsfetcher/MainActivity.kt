@@ -10,7 +10,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.appbar.MaterialToolbar
 import dagger.hilt.android.AndroidEntryPoint
 import ru.alexadler9.newsfetcher.databinding.ActivityMainBinding
-import ru.alexadler9.newsfetcher.feature.newsworker.NewsPollWorker
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -37,9 +36,6 @@ class MainActivity : AppCompatActivity() {
             }
             bottomNav.setupWithNavController(navController)
         }
-
-        // Test worker
-        NewsPollWorker.start(applicationContext)
     }
 
     companion object {

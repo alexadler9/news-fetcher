@@ -11,6 +11,8 @@ data class ViewState(
 )
 
 sealed class ViewEvent {
+    object OnStartNewsPolling : ViewEvent()
+    object OnStopNewsPolling : ViewEvent()
 }
 
 sealed class UiAction : Action {
