@@ -9,6 +9,8 @@
     <string name="settings_search_label">Параметры поиска</string>
     <string name="settings_country_label">Страна</string>
     <string name="settings_category_label">Категория</string>
+    <string name="settings_notifications_label">Уведомления</string>
+    <string name="settings_notification_articles_label">Новые статьи</string>
 
     <!-- Bottom menu items. -->
     <string name="menu_main">ГЛАВНАЯ</string>

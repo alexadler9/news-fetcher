@@ -1,5 +1,6 @@
 package ru.alexadler9.newsfetcher.data.news.local.prefs
 
+import co.windly.ktxprefs.annotation.DefaultBoolean
 import co.windly.ktxprefs.annotation.DefaultString
 import co.windly.ktxprefs.annotation.Prefs
 
@@ -15,5 +16,9 @@ class NewsPreferences(
 
     /** Last received URL to the article. */
     @DefaultString(value = "")
-    internal val lastUrl: String
+    internal val lastUrl: String,
+
+    /** Flag indicating whether detection of new articles in the background is enabled. */
+    @DefaultBoolean(value = false)
+    internal val newsPollEnabled: Boolean
 )

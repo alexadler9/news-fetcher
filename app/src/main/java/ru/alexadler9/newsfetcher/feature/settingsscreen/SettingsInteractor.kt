@@ -31,4 +31,17 @@ class SettingsInteractor @Inject constructor(private val repository: NewsReposit
      * @param category The category.
      */
     fun saveArticlesCategory(category: ArticlesCategory) = repository.saveArticlesCategory(category)
+
+    /**
+     * Get flag indicating whether detection of new articles in the background is enabled.
+     */
+    fun newsPollEnabled() = repository.newsPollEnabled()
+
+    /**
+     * Save the flag indicating whether detection of new articles in the background is enabled.
+     * @param isOn Flag state.
+     */
+    fun saveNewsPoll(isOn: Boolean) {
+        repository.setNewsPoll(isOn)
+    }
 }

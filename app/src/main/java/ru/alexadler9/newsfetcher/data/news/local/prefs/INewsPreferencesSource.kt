@@ -13,4 +13,8 @@ interface INewsPreferencesSource {
     fun getLastUrl(): String
 
     fun setLastUrl(url: String)
+
+    fun newsPollEnabled(): Boolean
+
+    fun setNewsPoll(isOn: Boolean)
 }

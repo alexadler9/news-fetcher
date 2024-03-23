@@ -77,6 +77,19 @@ class NewsRepository @Inject constructor(
     }
 
     /**
+     * Get flag indicating whether detection of new articles in the background is enabled.
+     */
+    fun newsPollEnabled() = newsPreferencesSource.newsPollEnabled()
+
+    /**
+     * Save the flag indicating whether detection of new articles in the background is enabled.
+     * @param isOn Flag state.
+     */
+    fun setNewsPoll(isOn: Boolean) {
+        newsPreferencesSource.setNewsPoll(isOn)
+    }
+
+    /**
      * Get live top articles headlines.
      * @param country The country for which the articles will be searched.
      * @param category The category in which the articles will be searched.

@@ -22,6 +22,10 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="ThemeOverlay.SwitchStyle" parent="">
+        <item name="colorControlActivated">@color/peru_html</item>
+    </style>
+
     <!-- Warning messages style -->
 
     <style name="WarningTextAppearance" parent="AppTextAppearance">

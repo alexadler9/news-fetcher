@@ -12,7 +12,8 @@ class SettingsViewModel @Inject constructor(private val interactor: SettingsInte
 
     override val initialViewState = ViewState(
         country = interactor.getArticlesCountry(),
-        category = interactor.getArticlesCategory()
+        category = interactor.getArticlesCategory(),
+        isPolling = interactor.newsPollEnabled()
     )
 
     override fun reduce(action: Action, previousState: ViewState): ViewState? {
@@ -31,6 +32,12 @@ class SettingsViewModel @Inject constructor(private val interactor: SettingsInte
                     return previousState.copy(category = action.category)
                 }
                 null
+            }
+
+            is UiAction.OnNewsPollingChanged -> {
+                interactor.saveNewsPoll(action.isOn)
+                sendViewEvent(if (action.isOn) ViewEvent.OnStartNewsPolling else ViewEvent.OnStopNewsPolling)
+                previousState.copy(isPolling = action.isOn)
             }
 
             else -> null
