@@ -13,6 +13,11 @@ import java.util.concurrent.TimeUnit
 
 private const val TAG = "NEWS_POLL_WORKER"
 
+/**
+ * A worker for periodically checking for new articles on a web service.
+ * Sends a notification if new articles are found.
+ * Use the [NewsPollWorker.start] and [NewsPollWorker.stop] methods to control the worker.
+ */
 @HiltWorker
 class NewsPollWorker @AssistedInject constructor(
     @Assisted val context: Context,
@@ -69,9 +74,15 @@ class NewsPollWorker @AssistedInject constructor(
         const val EXTRA_REQUEST_CODE = "REQUEST_CODE"
         const val EXTRA_NOTIFICATION = "NOTIFICATION"
 
+        /**
+         * Queues the periodic work with the following parameters:
+         * - starts with a period of 15 minutes;
+         * - requires Internet access.
+         * If the work is already running, the restart is ignored.
+         */
         fun start(context: Context) {
             val constraints = Constraints.Builder()
-                .setRequiredNetworkType(NetworkType.UNMETERED)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
             val periodicRequest = PeriodicWorkRequest
                 .Builder(NewsPollWorker::class.java, 15, TimeUnit.MINUTES)
@@ -84,6 +95,9 @@ class NewsPollWorker @AssistedInject constructor(
             )
         }
 
+        /**
+         * Stops the periodic work.
+         */
         fun stop(context: Context) {
             WorkManager.getInstance(context).cancelUniqueWork(NEWS_POLL_WORKER_NAME)
         }

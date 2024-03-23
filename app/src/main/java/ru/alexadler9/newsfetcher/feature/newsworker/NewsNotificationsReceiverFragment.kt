@@ -7,8 +7,17 @@ import android.content.Intent
 import android.content.IntentFilter
 import androidx.fragment.app.Fragment
 
+/**
+ * A fragment subclass that performs registration and unregistration of a dynamic BroadcastReceiver,
+ * which receives a message only when the fragment is visible to the user.
+ */
 abstract class NewsNotificationsReceiverFragment : Fragment() {
 
+    /**
+     * The receiver is used in conjunction with a static receiver declared in the manifest:
+     * it cancels further processing of the message (sending a notification in this case)
+     * if the fragment is visible.
+     */
     private val onShowNewsNotification = object : BroadcastReceiver() {
 
         override fun onReceive(context: Context, intent: Intent) {
