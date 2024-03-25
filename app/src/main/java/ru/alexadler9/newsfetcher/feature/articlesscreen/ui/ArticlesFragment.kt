@@ -66,7 +66,8 @@ class ArticlesFragment : NewsNotificationsReceiverFragment() {
             },
             onIconBookmarkClicked = { article ->
                 viewModel.processUiAction(UiAction.OnBookmarkButtonClicked(article))
-            })
+            }
+        )
     }
 
     override fun onCreateView(
@@ -82,13 +83,11 @@ class ArticlesFragment : NewsNotificationsReceiverFragment() {
 
         // Configure recyclerview adapter.
 
-        binding.rvArticles.apply {
-            adapter = articlesAdapter.withLoadStateHeaderAndFooter(
-                header = ArticlesLoaderStateAdapter(),
-                footer = ArticlesLoaderStateAdapter()
-            )
-            setAdapterAndCleanupOnDetachFromWindow(articlesAdapter)
-        }
+        val concatAdapter = articlesAdapter.withLoadStateHeaderAndFooter(
+            header = ArticlesLoaderStateAdapter(),
+            footer = ArticlesLoaderStateAdapter()
+        )
+        binding.rvArticles.setAdapterAndCleanupOnDetachFromWindow(concatAdapter)
 
         articlesAdapter.addLoadStateListener(::pagerLoadStateProcess)
 
